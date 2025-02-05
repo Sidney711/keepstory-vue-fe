@@ -50,17 +50,17 @@
       </div>
 
       <v-text-field
-        v-model="state.confirmPassword"
+        v-model="state['password-confirm']"
         :append-inner-icon="visibleConfirmPassword ? 'mdi-eye-off' : 'mdi-eye'"
         :type="visibleConfirmPassword ? 'text' : 'password'"
         density="compact"
         placeholder="Enter your password"
-        :error-messages="v$.confirmPassword.$errors.map(e => e.$message)"
+        :error-messages="v$['password-confirm'].$errors.map(e => e.$message)"
         prepend-inner-icon="mdi-lock-outline"
         variant="outlined"
         @click:append-inner="visibleConfirmPassword = !visibleConfirmPassword"
-        @blur="v$.confirmPassword.$touch"
-        @input="v$.confirmPassword.$touch"
+        @blur="v$['password-confirm'].$touch"
+        @input="v$['password-confirm'].$touch"
         required
       ></v-text-field>
 
@@ -70,7 +70,7 @@
         size="large"
         variant="tonal"
         block
-        @click="v$.$validate"
+        @click="submitForm"
       >
         Sign up
       </v-btn>
@@ -92,6 +92,8 @@
 import { computed, reactive, ref } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 import { email, maxLength, minLength, required, sameAs } from '@vuelidate/validators'
+import type { AccountRequest } from '@/interfaces/accounts/createAccount.ts'
+import { AccountService } from '@/services/accountService.ts'
 
 const visiblePassword = ref(false)
 const visibleConfirmPassword = ref(false)
@@ -99,10 +101,10 @@ const visibleConfirmPassword = ref(false)
 const initialState = {
   email: '',
   password: '',
-  confirmPassword: '',
+  'password-confirm': '',
 }
 
-const state = reactive({
+const state = reactive<AccountRequest>({
   ...initialState,
 })
 
@@ -111,11 +113,29 @@ const passwordRef = computed(() => state.password)
 const rules = {
   email: { required, email },
   password: { required, minLength: minLength(8), maxLength: maxLength(64) },
-  confirmPassword: { required, minLength: minLength(8), maxLength: maxLength(64),
+  'password-confirm': { required, minLength: minLength(8), maxLength: maxLength(64),
                      sameAsPassword: sameAs(passwordRef) },
 }
 
 const v$ = useVuelidate(rules, state)
+
+const submitForm = async () => {
+  const isValid = await v$.value.$validate()
+
+  if (!isValid) {
+    console.log('Formulář není validní')
+    return
+  }
+
+  try {
+    const response = await AccountService.createAccount(state)
+    console.log('Úspěšně odesláno:', response.data)
+    alert('Účet byl úspěšně vytvořen!')
+  } catch (error) {
+    console.error('Chyba při odesílání:', error)
+    alert('Chyba při vytváření účtu. Zkontrolujte data a zkuste to znovu.')
+  }
+}
 </script>
 
 <style scoped>
