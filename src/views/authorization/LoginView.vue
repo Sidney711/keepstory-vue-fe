@@ -1,10 +1,3 @@
-<script>
-export default {
-  data: () => ({
-    visible: false,
-  }),
-}
-</script>
 <template>
   <div>
     <v-img
@@ -50,16 +43,6 @@ export default {
         @click:append-inner="visible = !visible"
       ></v-text-field>
 
-      <v-card
-        class="mb-12"
-        color="surface-variant"
-        variant="tonal"
-      >
-        <v-card-text class="text-medium-emphasis text-caption">
-          Warning: After 3 consecutive failed login attempts, you account will be temporarily locked for three hours. If you must login now, you can also click "Forgot login password?" below to reset the login password.
-        </v-card-text>
-      </v-card>
-
       <v-btn
         class="mb-8"
         color="blue"
@@ -71,15 +54,25 @@ export default {
       </v-btn>
 
       <v-card-text class="text-center">
-        <a
+        <router-link
           class="text-blue text-decoration-none"
-          href="#"
+          to="/registration"
           rel="noopener noreferrer"
-          target="_blank"
         >
           Sign up now <v-icon icon="mdi-chevron-right"></v-icon>
-        </a>
+        </router-link>
       </v-card-text>
     </v-card>
   </div>
 </template>
+
+<script lang="ts">
+export default {
+  data: () => ({
+    visible: false,
+  }),
+}
+</script>
+
+<style scoped>
+</style>
