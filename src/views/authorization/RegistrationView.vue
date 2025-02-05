@@ -92,8 +92,8 @@
 import { computed, reactive, ref } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 import { email, maxLength, minLength, required, sameAs } from '@vuelidate/validators'
-import type { AccountRequest } from '@/interfaces/accounts/createAccount.ts'
 import { AccountService } from '@/services/accountService.ts'
+import type { AccountRequest } from '@/interfaces/accounts.ts'
 
 const visiblePassword = ref(false)
 const visibleConfirmPassword = ref(false)
