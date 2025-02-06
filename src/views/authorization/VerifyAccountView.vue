@@ -7,7 +7,7 @@
 <script lang="ts">
 import { defineComponent, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { AccountService } from '@/services/accountService.ts'
+import { AccountService } from '@/services/AccountService.ts'
 
 export default defineComponent({
   name: 'VerifyAccountView',

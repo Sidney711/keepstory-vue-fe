@@ -10,7 +10,7 @@ export interface LoginRequest {
 }
 
 export interface VerifyAccountResendRequest {
-  'e-mail': string;
+  email: string;
 }
 
 export interface VerifyAccountRequest {

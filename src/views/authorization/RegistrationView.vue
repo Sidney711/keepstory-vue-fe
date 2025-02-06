@@ -92,8 +92,9 @@
 import { computed, reactive, ref } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 import { email, maxLength, minLength, required, sameAs } from '@vuelidate/validators'
-import { AccountService } from '@/services/accountService.ts'
+import { AccountService } from '@/services/AccountService.ts'
 import type { AccountRequest } from '@/interfaces/accounts.ts'
+import router from '@/router'
 
 const visiblePassword = ref(false)
 const visibleConfirmPassword = ref(false)
@@ -131,6 +132,7 @@ const submitForm = async () => {
     const response = await AccountService.createAccount(state)
     console.log('Úspěšně odesláno:', response.data)
     alert('Účet byl úspěšně vytvořen!')
+    await router.push({ name: 'login' });
   } catch (error) {
     console.error('Chyba při odesílání:', error)
     alert('Chyba při vytváření účtu. Zkontrolujte data a zkuste to znovu.')

@@ -28,13 +28,13 @@
 
       <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
         Password
-        <a
+        <router-link
           class="text-caption text-decoration-none text-blue"
-          href="#"
+          to="/reset-password-request"
           rel="noopener noreferrer"
         >
           Forgot login password?
-        </a>
+        </router-link>
       </div>
 
       <v-text-field
@@ -72,6 +72,16 @@
           Don't have an account? Sign up now <v-icon icon="mdi-chevron-right"></v-icon>
         </router-link>
       </v-card-text>
+
+      <v-card-text class="text-center">
+        <router-link
+          class="text-blue text-decoration-none"
+          to="/verify-account-resend"
+          rel="noopener noreferrer"
+        >
+          Didn't get verification e-mail? Get it here!<v-icon icon="mdi-chevron-right"></v-icon>
+        </router-link>
+      </v-card-text>
     </v-card>
   </div>
 </template>
@@ -82,7 +92,7 @@ import { useVuelidate } from '@vuelidate/core'
 import { required, email, minLength, maxLength } from '@vuelidate/validators'
 import { useRouter } from 'vue-router'
 import type { LoginRequest } from '@/interfaces/accounts'
-import { AccountService } from '@/services/accountService.ts'
+import { AccountService } from '@/services/AccountService.ts'
 
 const state = reactive<LoginRequest>({
   email: '',

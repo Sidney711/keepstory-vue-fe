@@ -1,8 +1,8 @@
 // src/stores/authorizationStore.ts
 import { defineStore } from 'pinia';
 import type { LoggedInResponse } from '@/interfaces/accounts';
-import { AccountService } from '@/services/accountService';
 import router from '@/router';
+import { AccountService } from '@/services/AccountService.ts'
 
 interface Account {
   id: number;
