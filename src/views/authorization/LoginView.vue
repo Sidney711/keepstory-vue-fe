@@ -3,7 +3,7 @@
     <v-img
       class="mx-auto my-6"
       max-width="228"
-      src="https://cdn.vuetifyjs.com/docs/images/logos/vuetify-logo-v3-slim-text-light.svg"
+      src="/logos/keepstory-logo.png"
     ></v-img>
 
     <v-card
@@ -29,7 +29,7 @@
       <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
         Password
         <router-link
-          class="text-caption text-decoration-none text-blue"
+          class="text-caption text-decoration-none text-red"
           to="/reset-password-request"
           rel="noopener noreferrer"
         >
@@ -54,7 +54,7 @@
 
       <v-btn
         class="mb-8"
-        color="blue"
+        color="red"
         size="large"
         variant="tonal"
         block
@@ -65,7 +65,7 @@
 
       <v-card-text class="text-center">
         <router-link
-          class="text-blue text-decoration-none"
+          class="text-red text-decoration-none"
           to="/registration"
           rel="noopener noreferrer"
         >
@@ -75,7 +75,7 @@
 
       <v-card-text class="text-center">
         <router-link
-          class="text-blue text-decoration-none"
+          class="text-red text-decoration-none"
           to="/verify-account-resend"
           rel="noopener noreferrer"
         >

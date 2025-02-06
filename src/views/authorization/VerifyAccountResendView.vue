@@ -3,7 +3,7 @@
     <v-img
       class="mx-auto my-6"
       max-width="228"
-      src="https://cdn.vuetifyjs.com/docs/images/logos/vuetify-logo-v3-slim-text-light.svg"
+      src="/logos/keepstory-logo.png"
     ></v-img>
 
     <v-card class="mx-auto pa-12 pb-8" elevation="8" max-width="448" rounded="lg">
@@ -27,13 +27,13 @@
       </v-card-text>
 
       <v-card-actions>
-        <v-btn color="blue" size="large" variant="tonal" block @click="submitForm">
+        <v-btn color="red" size="large" variant="tonal" block @click="submitForm">
           Resend Verification Email
         </v-btn>
       </v-card-actions>
 
       <v-card-text class="text-center">
-        <router-link class="text-blue text-decoration-none" to="/login" rel="noopener noreferrer">
+        <router-link class="text-red text-decoration-none" to="/login" rel="noopener noreferrer">
           Back to login <v-icon icon="mdi-chevron-right"></v-icon>
         </router-link>
       </v-card-text>

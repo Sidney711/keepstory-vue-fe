@@ -2,7 +2,8 @@
   <div class="d-flex flex-column align-center justify-center pa-6">
     <v-img
       class="mx-auto my-6"
-      src="https://cdn.vuetifyjs.com/docs/images/logos/vuetify-logo-v3-slim-text-light.svg"
+      max-width="228"
+      src="/logos/keepstory-logo.png"
     ></v-img>
 
     <v-card
@@ -50,7 +51,7 @@
 
       <v-card-actions>
         <v-btn
-          color="blue"
+          color="red"
           size="large"
           variant="tonal"
           block
@@ -62,7 +63,7 @@
 
       <v-card-text class="text-center">
         <router-link
-          class="text-blue text-decoration-none"
+          class="text-red text-decoration-none"
           to="/login"
           rel="noopener noreferrer"
         >
