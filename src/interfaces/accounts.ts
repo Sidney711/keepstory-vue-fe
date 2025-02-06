@@ -45,3 +45,11 @@ export interface VerifyLoginChangeRequest {
 export interface CloseAccountRequest {
   password: string;
 }
+
+export interface LoggedInResponse {
+  logged_in: boolean;
+  account?: {
+    id: number;
+    email: string;
+  }
+}

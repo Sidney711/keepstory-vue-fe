@@ -84,13 +84,11 @@ import { useRouter } from 'vue-router'
 import type { LoginRequest } from '@/interfaces/accounts'
 import { AccountService } from '@/services/accountService.ts'
 
-// Počáteční stav formuláře
 const state = reactive<LoginRequest>({
   email: '',
   password: '',
 })
 
-// Definice validačních pravidel pro email a heslo
 const rules = {
   email: { required, email },
   password: { required, minLength: minLength(8), maxLength: maxLength(64) },
@@ -108,23 +106,10 @@ const submitForm = async () => {
   }
 
   try {
-    const response = await AccountService.login({
+    await AccountService.login({
       email: state.email,
       password: state.password,
     })
-
-    console.log('Přihlášení úspěšné:', response.data)
-
-    // Extrakce JWT tokenu z hlavičky odpovědi
-    const token = response.headers['authorization'] || response.headers['Authorization']
-
-    console.log(response);
-
-    if (token) {
-      localStorage.setItem('jwt-authorization-token', token)
-    } else {
-      console.warn('JWT token nebyl nalezen v odpovědi.')
-    }
 
     await router.push({ name: 'homepage' })
   } catch (error) {

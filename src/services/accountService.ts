@@ -1,7 +1,7 @@
 import axios from 'axios';
-import { BACKEND_URL } from '@/env-constants.ts';
+import { BACKEND_URL, BACKEND_URL_WITH_API } from '@/env-constants.ts'
 import type {
-  AccountRequest, ChangeLoginRequest, ChangePasswordRequest, CloseAccountRequest,
+  AccountRequest, ChangeLoginRequest, ChangePasswordRequest, CloseAccountRequest, LoggedInResponse,
   LoginRequest, ResetPasswordPayload, ResetPasswordRequest, VerifyAccountRequest,
   VerifyAccountResendRequest, VerifyLoginChangeRequest
 } from '@/interfaces/accounts.ts'
@@ -49,5 +49,9 @@ export class AccountService {
 
   static async closeAccount(payload: CloseAccountRequest) {
     return axios.post(BACKEND_URL + '/close-account', payload);
+  }
+
+  static async loggedIn() {
+    return axios.get<LoggedInResponse>(BACKEND_URL_WITH_API + '/accounts/logged_in');
   }
 }

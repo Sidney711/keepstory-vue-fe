@@ -11,6 +11,9 @@ import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 
 import './style.css'
+import axios from 'axios'
+
+axios.defaults.withCredentials = true;
 
 const app = createApp(App)
 const vuetify = createVuetify({
