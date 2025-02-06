@@ -1,6 +1,6 @@
 <template>
   <AppLayout>
-    <h1>Welcome to homepage</h1>
+    <h1>Welcome to the profile</h1>
   </AppLayout>
 </template>
 

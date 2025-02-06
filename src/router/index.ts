@@ -8,6 +8,7 @@ import { useAuthorizationStore } from '@/stores/authorizationStore.ts'
 import VerifyAccountResendView from '@/views/authorization/VerifyAccountResendView.vue'
 import ResetPasswordRequestView from '@/views/authorization/ResetPasswordRequestView.vue'
 import ResetPasswordView from '@/views/authorization/ResetPasswordView.vue'
+import ProfileView from '@/views/settings/ProfileView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -46,6 +47,11 @@ const router = createRouter({
       path: '/reset-password',
       name: 'reset-password',
       component: ResetPasswordView,
+    },
+    {
+      path: '/profile',
+      name: 'profile',
+      component: ProfileView,
     },
   ],
 });
