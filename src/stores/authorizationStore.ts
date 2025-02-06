@@ -1,6 +1,8 @@
+// src/stores/authorizationStore.ts
 import { defineStore } from 'pinia';
 import type { LoggedInResponse } from '@/interfaces/accounts';
-import { AccountService } from '@/services/accountService.ts'
+import { AccountService } from '@/services/accountService';
+import router from '@/router';
 
 interface Account {
   id: number;
@@ -19,7 +21,7 @@ export const useAuthorizationStore = defineStore('authorization', {
   }),
   actions: {
     async checkLoggedIn() {
-      if (this.loggedIn !== null) {
+      if (this.loggedIn == true) {
         return this.loggedIn;
       } else {
         try {
@@ -37,9 +39,18 @@ export const useAuthorizationStore = defineStore('authorization', {
           this.loggedIn = false;
           this.account = null;
         }
-
         return this.loggedIn;
       }
+    },
+    async logout() {
+      try {
+        await AccountService.logout();
+      } catch (error) {
+        console.error('Chyba při odhlašování:', error);
+      }
+      this.loggedIn = false;
+      this.account = null;
+      await router.push({ name: 'login' });
     },
   },
 });
