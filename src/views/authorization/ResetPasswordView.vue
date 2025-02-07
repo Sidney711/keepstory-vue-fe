@@ -84,6 +84,7 @@ import { required, minLength, maxLength, sameAs } from '@/utils/i18n-validators'
 import { AccountService } from '@/services/AccountService';
 import type { ResetPasswordPayload } from '@/interfaces/accounts';
 import { useI18n } from 'vue-i18n';
+import { useSnackbar } from '@/composables/useSnackbar';
 
 const { t } = useI18n();
 
@@ -121,6 +122,7 @@ const rules = {
 };
 
 const v$ = useVuelidate(rules, state);
+const { showSnackbar } = useSnackbar();
 
 const submitForm = async () => {
   const isValid = await v$.value.$validate();
@@ -130,10 +132,10 @@ const submitForm = async () => {
 
   try {
     await AccountService.resetPassword(state);
-    alert(t('resetPasswordPage.alert.passwordResetSuccess'));
+    showSnackbar(t('resetPasswordPage.alert.passwordResetSuccess'), 'success');
     await router.push({ name: 'login' });
   } catch {
-    alert(t('resetPasswordPage.alert.error'));
+    showSnackbar(t('resetPasswordPage.alert.error'), 'error');
   }
 };
 </script>

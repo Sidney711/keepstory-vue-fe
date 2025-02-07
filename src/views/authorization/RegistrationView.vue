@@ -100,6 +100,7 @@ import { email, maxLength, minLength, required, sameAs } from '@/utils/i18n-vali
 import { AccountService } from '@/services/AccountService.ts'
 import type { AccountRequest } from '@/interfaces/accounts'
 import router from '@/router'
+import { useSnackbar } from '@/composables/useSnackbar'
 
 const { t } = useI18n()
 
@@ -130,6 +131,7 @@ const rules = {
 }
 
 const v$ = useVuelidate(rules, state)
+const { showSnackbar } = useSnackbar()
 
 const submitForm = async () => {
   const isValid = await v$.value.$validate()
@@ -140,10 +142,10 @@ const submitForm = async () => {
 
   try {
     await AccountService.createAccount(state)
-    alert(t('registration.alert.accountCreated'))
+    showSnackbar(t('registration.alert.accountCreated'), 'success')
     await router.push({ name: 'login' })
   } catch {
-    alert(t('registration.alert.registrationError'))
+    showSnackbar(t('registration.alert.registrationError'), 'error')
   }
 }
 </script>

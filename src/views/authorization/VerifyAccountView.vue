@@ -7,6 +7,7 @@ import { defineComponent, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { AccountService } from '@/services/AccountService.ts';
+import { useSnackbar } from '@/composables/useSnackbar';
 
 export default defineComponent({
   name: 'VerifyAccountView',
@@ -14,16 +15,17 @@ export default defineComponent({
     const router = useRouter();
     const route = useRoute();
     const { t } = useI18n();
+    const { showSnackbar } = useSnackbar();
 
     onMounted(async () => {
       const key = route.query.key;
       if (typeof key === 'string') {
         try {
           await AccountService.verifyAccount({ key });
-          alert(t('verifyAccount.alert.verified'));
+          showSnackbar(t('verifyAccount.alert.verified'), 'success');
           await router.push({ name: 'homepage' });
         } catch {
-          alert(t('verifyAccount.alert.failed'));
+          showSnackbar(t('verifyAccount.alert.failed'), 'error');
           await router.push({ name: 'homepage' });
         }
       } else {

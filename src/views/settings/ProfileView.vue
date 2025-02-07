@@ -121,8 +121,10 @@ import { useI18n } from 'vue-i18n'
 import { required, email, minLength, maxLength, sameAs } from '@/utils/i18n-validators'
 import AppLayout from '@/layouts/AppLayout.vue'
 import { AccountService } from '@/services/AccountService'
+import { useSnackbar } from '@/composables/useSnackbar'
 
 const { t } = useI18n()
+const { showSnackbar } = useSnackbar()
 
 interface ChangePasswordState {
   password: string;
@@ -167,9 +169,9 @@ const submitChangePassword = async () => {
       'password-confirm': changePasswordState['password-confirm']
     }
     await AccountService.changePassword(payload)
-    alert(t('profile.changePassword.alert.success'))
+    showSnackbar(t('profile.changePassword.alert.success'), 'success')
   } catch {
-    alert(t('profile.changePassword.alert.error'))
+    showSnackbar(t('profile.changePassword.alert.error'), 'error')
   }
 }
 
@@ -202,9 +204,9 @@ const submitChangeEmail = async () => {
       password: changeEmailState.password
     }
     await AccountService.changeLogin(payload)
-    alert(t('profile.changeEmail.alert.success'))
+    showSnackbar(t('profile.changeEmail.alert.success'), 'success')
   } catch {
-    alert(t('profile.changeEmail.alert.error'))
+    showSnackbar(t('profile.changeEmail.alert.error'), 'error')
   }
 }
 
@@ -234,13 +236,12 @@ const submitCloseAccount = async () => {
   try {
     const payload = { password: closeAccountState.password }
     await AccountService.closeAccount(payload)
-    alert(t('profile.deleteAccount.alert.success'))
+    showSnackbar(t('profile.deleteAccount.alert.success'), 'success')
   } catch {
-    alert(t('profile.deleteAccount.alert.error'))
+    showSnackbar(t('profile.deleteAccount.alert.error'), 'error')
   }
 }
 </script>
 
 <style scoped>
-/* Vaše styly */
 </style>

@@ -60,8 +60,10 @@ import { required, email } from '@/utils/i18n-validators';
 import { AccountService } from '@/services/AccountService';
 import type { ResetPasswordRequest } from '@/interfaces/accounts';
 import router from '@/router';
+import { useSnackbar } from '@/composables/useSnackbar';
 
 const { t } = useI18n();
+const { showSnackbar } = useSnackbar();
 
 const state = reactive<ResetPasswordRequest>({
   email: '',
@@ -81,10 +83,10 @@ const submitForm = async () => {
 
   try {
     await AccountService.resetPasswordRequest(state);
-    alert(t('resetPassword.alert.linkSent'));
+    showSnackbar(t('resetPassword.alert.linkSent'), 'success');
     await router.push({ name: 'login' });
   } catch {
-    alert(t('resetPassword.alert.error'));
+    showSnackbar(t('resetPassword.alert.error'), 'error');
   }
 };
 </script>

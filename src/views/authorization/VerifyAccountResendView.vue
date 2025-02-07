@@ -53,8 +53,10 @@ import { required, email } from '@/utils/i18n-validators';
 import { AccountService } from '@/services/AccountService';
 import type { VerifyAccountResendRequest } from '@/interfaces/accounts';
 import router from '@/router';
+import { useSnackbar } from '@/composables/useSnackbar';
 
 const { t } = useI18n();
+const { showSnackbar } = useSnackbar();
 
 const state = reactive<VerifyAccountResendRequest>({
   email: '',
@@ -74,10 +76,10 @@ const submitForm = async () => {
 
   try {
     await AccountService.verifyAccountResend(state);
-    alert(t('verifyEmail.alert.emailSent'));
+    showSnackbar(t('verifyEmail.alert.emailSent'), 'success');
     await router.push({ name: 'login' });
   } catch {
-    alert(t('verifyEmail.alert.error'));
+    showSnackbar(t('verifyEmail.alert.error'), 'error');
   }
 };
 </script>
