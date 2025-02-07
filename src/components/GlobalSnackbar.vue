@@ -1,5 +1,6 @@
 <template>
   <v-snackbar
+    data-testid="snackbar"
     v-model="snackbarVisible"
     timeout="3000"
     location="top"
@@ -9,6 +10,7 @@
     {{ snackbarMessage }}
     <template #actions>
       <v-btn
+        data-testid="snackbar-close"
         color="white"
         variant="text"
         @click="snackbarVisible = false"
@@ -24,3 +26,6 @@ import { useSnackbar } from '@/composables/useSnackbar'
 
 const { snackbarVisible, snackbarMessage, snackbarColor } = useSnackbar()
 </script>
+
+<style scoped>
+</style>

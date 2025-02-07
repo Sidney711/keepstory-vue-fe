@@ -17,6 +17,7 @@
       </div>
 
       <v-text-field
+        data-testid="email-field"
         v-model="state.email"
         density="compact"
         :placeholder="$t('login.placeholder.email')"
@@ -40,6 +41,7 @@
       </div>
 
       <v-text-field
+        data-testid="password-field"
         v-model="state.password"
         :append-inner-icon="visiblePassword ? 'mdi-eye-off' : 'mdi-eye'"
         :type="visiblePassword ? 'text' : 'password'"
@@ -55,6 +57,7 @@
       ></v-text-field>
 
       <v-btn
+        data-testid="login-button"
         class="mb-8"
         color="red"
         size="large"
@@ -67,6 +70,7 @@
 
       <v-card-text class="text-center flex flex-col gap-4">
         <router-link
+          data-testid="register-link"
           class="text-red text-decoration-none"
           to="/registration"
           rel="noopener noreferrer"
@@ -75,6 +79,7 @@
           <v-icon icon="mdi-chevron-right"></v-icon>
         </router-link>
         <router-link
+          data-testid="resend-verification-link"
           class="text-red text-decoration-none"
           to="/verify-account-resend"
           rel="noopener noreferrer"
@@ -98,7 +103,6 @@ import { required, minLength, email, maxLength } from '@/utils/i18n-validators'
 import { useSnackbar } from '@/composables/useSnackbar'
 
 const { showSnackbar } = useSnackbar()
-
 const { t } = useI18n()
 
 const state = reactive<LoginRequest>({
