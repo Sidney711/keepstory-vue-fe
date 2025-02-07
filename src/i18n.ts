@@ -173,7 +173,10 @@ const messages = {
       }
     },
     general: {
-      close: "Zavřít"
+      close: "Zavřít",
+      delete: "Smazat",
+      cancel: "Zrušit",
+      "confirmation": "Potvrzení"
     }
   },
   en: {
@@ -348,7 +351,10 @@ const messages = {
       }
     },
     general: {
-      close: "Close"
+      close: "Close",
+      delete: "Delete",
+      cancel: "Cancel",
+      confirmation: "Confirmation"
     }
   }
 }

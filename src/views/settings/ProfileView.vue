@@ -122,6 +122,9 @@ import { required, email, minLength, maxLength, sameAs } from '@/utils/i18n-vali
 import AppLayout from '@/layouts/AppLayout.vue'
 import { AccountService } from '@/services/AccountService'
 import { useSnackbar } from '@/composables/useSnackbar'
+import { useConfirm } from '@/composables/useConfirm'
+
+const { showConfirm } = useConfirm()
 
 const { t } = useI18n()
 const { showSnackbar } = useSnackbar()
@@ -230,7 +233,15 @@ const submitCloseAccount = async () => {
   if (!isValid) {
     return
   }
-  if (!confirm(t('profile.deleteAccount.confirmMessage'))) {
+
+  const confirmed = await showConfirm({
+    message: t('profile.deleteAccount.confirmMessage'),
+    title: t('general.confirmation'),
+    confirmText: t('general.delete'),
+    cancelText: t('general.cancel')
+  })
+
+  if (!confirmed) {
     return
   }
   try {
