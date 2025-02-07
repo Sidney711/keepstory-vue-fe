@@ -1,6 +1,7 @@
 <template>
   <div>
     <v-img
+      data-testid="reset-password-logo"
       class="mx-auto my-6"
       max-width="228"
       src="/logos/keepstory-logo.png"
@@ -13,6 +14,7 @@
 
       <v-card-text>
         <v-text-field
+          data-testid="reset-password-email-field"
           v-model="state.email"
           :label="$t('resetPassword.label.email')"
           density="compact"
@@ -28,6 +30,7 @@
 
       <v-card-actions>
         <v-btn
+          data-testid="reset-password-sendlink-button"
           color="red"
           size="large"
           variant="tonal"
@@ -40,6 +43,7 @@
 
       <v-card-text class="text-center">
         <router-link
+          data-testid="reset-password-back-to-login"
           class="text-red text-decoration-none"
           to="/login"
           rel="noopener noreferrer"

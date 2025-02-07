@@ -1,4 +1,3 @@
-<!-- src/components/GlobalConfirm.vue -->
 <template>
   <v-dialog v-model="confirmVisible" max-width="400" persistent>
     <v-card>
@@ -6,8 +5,8 @@
       <v-card-text>{{ confirmMessage }}</v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn text color="primary" @click="onCancel">{{ confirmCancelText }}</v-btn>
-        <v-btn text color="primary" @click="onConfirm">{{ confirmConfirmText }}</v-btn>
+        <v-btn data-testid="global-confirm-cancel-button" text color="primary" @click="onCancel">{{ confirmCancelText }}</v-btn>
+        <v-btn data-testid="global-confirm-confirm-button" text color="primary" @click="onConfirm">{{ confirmConfirmText }}</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -26,3 +25,6 @@ const {
   onCancel,
 } = useConfirm()
 </script>
+
+<style scoped>
+</style>

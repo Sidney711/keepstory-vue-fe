@@ -7,6 +7,7 @@
         <h2 class="text-h6 mb-4">{{ t('profile.changePassword.title') }}</h2>
         <v-form>
           <v-text-field
+            data-testid="profile-change-password-current-field"
             v-model="changePasswordState.password"
             :type="showCurrentPassword ? 'text' : 'password'"
             :label="t('profile.changePassword.currentPasswordLabel')"
@@ -21,6 +22,7 @@
           ></v-text-field>
 
           <v-text-field
+            data-testid="profile-change-password-new-field"
             v-model="changePasswordState['new-password']"
             :type="showNewPassword ? 'text' : 'password'"
             :label="t('profile.changePassword.newPasswordLabel')"
@@ -35,6 +37,7 @@
           ></v-text-field>
 
           <v-text-field
+            data-testid="profile-change-password-confirm-field"
             v-model="changePasswordState['password-confirm']"
             :type="showConfirmNewPassword ? 'text' : 'password'"
             :label="t('profile.changePassword.confirmNewPasswordLabel')"
@@ -48,7 +51,14 @@
             density="compact"
           ></v-text-field>
 
-          <v-btn color="red" class="mt-4" @click="submitChangePassword" block variant="tonal">
+          <v-btn
+            data-testid="profile-change-password-button"
+            color="red"
+            class="mt-4"
+            @click="submitChangePassword"
+            block
+            variant="tonal"
+          >
             {{ t('profile.changePassword.button') }}
           </v-btn>
         </v-form>
@@ -58,6 +68,7 @@
         <h2 class="text-h6 mb-4">{{ t('profile.changeEmail.title') }}</h2>
         <v-form>
           <v-text-field
+            data-testid="profile-change-email-email-field"
             v-model="changeEmailState.email"
             :label="t('profile.changeEmail.newEmailLabel')"
             prepend-inner-icon="mdi-email-outline"
@@ -69,6 +80,7 @@
           ></v-text-field>
 
           <v-text-field
+            data-testid="profile-change-email-password-field"
             v-model="changeEmailState.password"
             :type="showEmailPassword ? 'text' : 'password'"
             :label="t('profile.changeEmail.passwordLabel')"
@@ -82,7 +94,14 @@
             density="compact"
           ></v-text-field>
 
-          <v-btn color="red" class="mt-4" @click="submitChangeEmail" block variant="tonal">
+          <v-btn
+            data-testid="profile-change-email-button"
+            color="red"
+            class="mt-4"
+            @click="submitChangeEmail"
+            block
+            variant="tonal"
+          >
             {{ t('profile.changeEmail.button') }}
           </v-btn>
         </v-form>
@@ -92,6 +111,7 @@
         <h2 class="text-h6 mb-4">{{ t('profile.deleteAccount.title') }}</h2>
         <v-form>
           <v-text-field
+            data-testid="profile-delete-account-password-field"
             v-model="closeAccountState.password"
             :type="showDeletePassword ? 'text' : 'password'"
             :label="t('profile.deleteAccount.confirmPasswordLabel')"
@@ -105,7 +125,13 @@
             density="compact"
           ></v-text-field>
 
-          <v-btn color="red" class="mt-4" @click="submitCloseAccount" block>
+          <v-btn
+            data-testid="profile-delete-account-button"
+            color="red"
+            class="mt-4"
+            @click="submitCloseAccount"
+            block
+          >
             {{ t('profile.deleteAccount.button') }}
           </v-btn>
         </v-form>
@@ -125,10 +151,10 @@ import { useSnackbar } from '@/composables/useSnackbar'
 import { useConfirm } from '@/composables/useConfirm'
 
 const { showConfirm } = useConfirm()
-
 const { t } = useI18n()
 const { showSnackbar } = useSnackbar()
 
+// Change Password
 interface ChangePasswordState {
   password: string;
   'new-password': string;

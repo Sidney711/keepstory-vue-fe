@@ -1,6 +1,7 @@
 <template>
   <div>
     <v-img
+      data-testid="reset-password-logo"
       class="mx-auto my-6"
       max-width="228"
       src="/logos/keepstory-logo.png"
@@ -18,6 +19,7 @@
 
       <v-card-text>
         <v-text-field
+          data-testid="reset-password-new-password-field"
           v-model="state.password"
           :append-inner-icon="visiblePassword ? 'mdi-eye-off' : 'mdi-eye'"
           :type="visiblePassword ? 'text' : 'password'"
@@ -34,6 +36,7 @@
         ></v-text-field>
 
         <v-text-field
+          data-testid="reset-password-confirm-password-field"
           v-model="state['password-confirm']"
           :append-inner-icon="visibleConfirmPassword ? 'mdi-eye-off' : 'mdi-eye'"
           :type="visibleConfirmPassword ? 'text' : 'password'"
@@ -52,6 +55,7 @@
 
       <v-card-actions>
         <v-btn
+          data-testid="reset-password-reset-button"
           color="red"
           size="large"
           variant="tonal"
@@ -64,6 +68,7 @@
 
       <v-card-text class="text-center">
         <router-link
+          data-testid="reset-password-back-to-login"
           class="text-red text-decoration-none"
           to="/login"
           rel="noopener noreferrer"

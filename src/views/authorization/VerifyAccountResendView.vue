@@ -1,6 +1,7 @@
 <template>
   <div>
     <v-img
+      data-testid="verify-email-logo"
       class="mx-auto my-6"
       max-width="228"
       src="/logos/keepstory-logo.png"
@@ -13,6 +14,7 @@
 
       <v-card-text>
         <v-text-field
+          data-testid="verify-email-email-field"
           v-model="state.email"
           :label="$t('verifyEmail.label.email')"
           density="compact"
@@ -27,13 +29,21 @@
       </v-card-text>
 
       <v-card-actions>
-        <v-btn color="red" size="large" variant="tonal" block @click="submitForm">
+        <v-btn
+          data-testid="verify-email-resend-button"
+          color="red"
+          size="large"
+          variant="tonal"
+          block
+          @click="submitForm"
+        >
           {{ $t('verifyEmail.button.resend') }}
         </v-btn>
       </v-card-actions>
 
       <v-card-text class="text-center">
         <router-link
+          data-testid="verify-email-back-to-login"
           class="text-red text-decoration-none"
           to="/login"
           rel="noopener noreferrer"

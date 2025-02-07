@@ -1,6 +1,7 @@
 <template>
   <div>
     <v-img
+      data-testid="registration-logo"
       class="mx-auto my-6"
       max-width="228"
       src="/logos/keepstory-logo.png"
@@ -12,12 +13,12 @@
       max-width="448"
       rounded="lg"
     >
-      <!-- Label pro e-mail -->
       <div class="text-subtitle-1 text-medium-emphasis">
         {{ $t('registration.label.email') }}
       </div>
 
       <v-text-field
+        data-testid="registration-email-field"
         v-model="state.email"
         density="compact"
         :placeholder="$t('registration.placeholder.email')"
@@ -34,6 +35,7 @@
       </div>
 
       <v-text-field
+        data-testid="registration-password-field"
         v-model="state.password"
         :append-inner-icon="visiblePassword ? 'mdi-eye-off' : 'mdi-eye'"
         :type="visiblePassword ? 'text' : 'password'"
@@ -53,6 +55,7 @@
       </div>
 
       <v-text-field
+        data-testid="registration-confirm-password-field"
         v-model="state['password-confirm']"
         :append-inner-icon="visibleConfirmPassword ? 'mdi-eye-off' : 'mdi-eye'"
         :type="visibleConfirmPassword ? 'text' : 'password'"
@@ -68,6 +71,7 @@
       ></v-text-field>
 
       <v-btn
+        data-testid="signup-button"
         class="mb-8"
         color="red"
         size="large"
@@ -80,6 +84,7 @@
 
       <v-card-text class="text-center">
         <router-link
+          data-testid="login-link"
           class="text-red text-decoration-none"
           to="/login"
           rel="noopener noreferrer"
