@@ -166,7 +166,11 @@ const messages = {
     menu: {
       family: "Moje rodina",
       profile: "Profil",
-      logout: "Odhlásit se"
+      logout: "Odhlásit se",
+      language: {
+        cs: "CS",
+        en: "EN"
+      }
     }
   },
   en: {
@@ -334,7 +338,11 @@ const messages = {
     menu: {
       family: "My Family",
       profile: "Profile",
-      logout: "Logout"
+      logout: "Logout",
+      language: {
+        cs: "CS",
+        en: "EN"
+      }
     }
   }
 }
