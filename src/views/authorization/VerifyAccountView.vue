@@ -1,29 +1,29 @@
 <template>
-  <div>
-    Ověřuji účet, prosím čekejte...
-  </div>
+  <div></div>
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { AccountService } from '@/services/AccountService.ts'
+import { useI18n } from 'vue-i18n';
+import { AccountService } from '@/services/AccountService.ts';
 
 export default defineComponent({
   name: 'VerifyAccountView',
   setup() {
     const router = useRouter();
     const route = useRoute();
+    const { t } = useI18n();
 
     onMounted(async () => {
       const key = route.query.key;
       if (typeof key === 'string') {
         try {
           await AccountService.verifyAccount({ key });
-          alert('Účet byl úspěšně ověřen!');
+          alert(t('verifyAccount.alert.verified'));
           await router.push({ name: 'homepage' });
         } catch {
-          alert('Něco se pokazilo při ověřování účtu!');
+          alert(t('verifyAccount.alert.failed'));
           await router.push({ name: 'homepage' });
         }
       } else {

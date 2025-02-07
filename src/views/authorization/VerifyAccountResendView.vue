@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex flex-column align-center justify-center pa-6">
+  <div>
     <v-img
       class="mx-auto my-6"
       max-width="228"
@@ -8,33 +8,37 @@
 
     <v-card class="mx-auto pa-12 pb-8" elevation="8" max-width="448" rounded="lg">
       <v-card-title class="text-h5 justify-center">
-        Resend Verification Email
+        {{ $t('verifyEmail.title') }}
       </v-card-title>
 
       <v-card-text>
         <v-text-field
-          v-model="state['email']"
-          label="Email address"
+          v-model="state.email"
+          :label="$t('verifyEmail.label.email')"
           density="compact"
-          placeholder="Enter your email"
-          :error-messages="v$['email'].$errors.map(e => e.$message)"
+          :placeholder="$t('verifyEmail.placeholder.email')"
+          :error-messages="v$.email.$errors.map(e => e.$message)"
           prepend-inner-icon="mdi-email-outline"
           variant="outlined"
-          @blur="v$['email'].$touch"
-          @input="v$['email'].$touch"
+          @blur="v$.email.$touch"
+          @input="v$.email.$touch"
           required
         ></v-text-field>
       </v-card-text>
 
       <v-card-actions>
         <v-btn color="red" size="large" variant="tonal" block @click="submitForm">
-          Resend Verification Email
+          {{ $t('verifyEmail.button.resend') }}
         </v-btn>
       </v-card-actions>
 
       <v-card-text class="text-center">
-        <router-link class="text-red text-decoration-none" to="/login" rel="noopener noreferrer">
-          Back to login <v-icon icon="mdi-chevron-right"></v-icon>
+        <router-link
+          class="text-red text-decoration-none"
+          to="/login"
+          rel="noopener noreferrer"
+        >
+          {{ $t('verifyEmail.link.backToLogin') }} <v-icon icon="mdi-chevron-right"></v-icon>
         </router-link>
       </v-card-text>
     </v-card>
@@ -44,10 +48,13 @@
 <script setup lang="ts">
 import { reactive } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
-import { required, email } from '@vuelidate/validators';
+import { useI18n } from 'vue-i18n';
+import { required, email } from '@/utils/i18n-validators';
 import { AccountService } from '@/services/AccountService';
 import type { VerifyAccountResendRequest } from '@/interfaces/accounts';
-import router from '@/router'
+import router from '@/router';
+
+const { t } = useI18n();
 
 const state = reactive<VerifyAccountResendRequest>({
   email: '',
@@ -62,18 +69,15 @@ const v$ = useVuelidate(rules, state);
 const submitForm = async () => {
   const isValid = await v$.value.$validate();
   if (!isValid) {
-    console.log('Formulář není validní');
     return;
   }
 
   try {
-    const response = await AccountService.verifyAccountResend(state);
-    console.log('Ověřovací e-mail odeslán:', response.data);
-    alert('Ověřovací e-mail byl odeslán! Zkontrolujte prosím svou schránku.');
+    await AccountService.verifyAccountResend(state);
+    alert(t('verifyEmail.alert.emailSent'));
     await router.push({ name: 'login' });
-  } catch (error) {
-    console.error('Chyba při odesílání ověřovacího e-mailu:', error);
-    alert('Chyba při odesílání ověřovacího e-mailu. Zkuste to prosím znovu.');
+  } catch {
+    alert(t('verifyEmail.alert.error'));
   }
 };
 </script>

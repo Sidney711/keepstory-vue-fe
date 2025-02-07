@@ -2,9 +2,8 @@
   <v-navigation-drawer expand-on-hover rail>
     <v-list>
       <v-list-item
-        prepend-avatar="https://randomuser.me/api/portraits/women/85.jpg"
-        :subtitle="email"
-        title="Sandra Adams"
+        prepend-avatar="/logos/keepstory-icon.png"
+        :title="email"
         height="64"
       ></v-list-item>
     </v-list>
@@ -14,13 +13,13 @@
     <v-list>
       <v-list-item
         prepend-icon="mdi-family-tree"
-        title="My family"
+        :title="t('menu.family')"
         value="family"
         @click="$emit('navigate', 'homepage')"
       ></v-list-item>
       <v-list-item
         prepend-icon="mdi-account"
-        title="My profile"
+        :title="t('menu.profile')"
         value="profile"
         @click="$emit('navigate', 'profile')"
       ></v-list-item>
@@ -31,7 +30,7 @@
     <v-list>
       <v-list-item
         prepend-icon="mdi-logout"
-        title="Logout"
+        :title="t('menu.logout')"
         @click="authorizationStore.logout"
       ></v-list-item>
     </v-list>
@@ -40,8 +39,10 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useAuthorizationStore } from '@/stores/authorizationStore';
 
+const { t } = useI18n();
 const authorizationStore = useAuthorizationStore();
 
 const email = computed(() => authorizationStore.account?.email);

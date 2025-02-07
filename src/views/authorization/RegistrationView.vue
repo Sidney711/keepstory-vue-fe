@@ -12,12 +12,15 @@
       max-width="448"
       rounded="lg"
     >
-      <div class="text-subtitle-1 text-medium-emphasis">E-mail</div>
+      <!-- Label pro e-mail -->
+      <div class="text-subtitle-1 text-medium-emphasis">
+        {{ $t('registration.label.email') }}
+      </div>
 
       <v-text-field
         v-model="state.email"
         density="compact"
-        placeholder="Email address"
+        :placeholder="$t('registration.placeholder.email')"
         :error-messages="v$.email.$errors.map(e => e.$message)"
         prepend-inner-icon="mdi-email-outline"
         variant="outlined"
@@ -27,7 +30,7 @@
       ></v-text-field>
 
       <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
-        Password
+        {{ $t('registration.label.password') }}
       </div>
 
       <v-text-field
@@ -35,7 +38,7 @@
         :append-inner-icon="visiblePassword ? 'mdi-eye-off' : 'mdi-eye'"
         :type="visiblePassword ? 'text' : 'password'"
         density="compact"
-        placeholder="Enter your password"
+        :placeholder="$t('registration.placeholder.password')"
         :error-messages="v$.password.$errors.map(e => e.$message)"
         prepend-inner-icon="mdi-lock-outline"
         variant="outlined"
@@ -46,7 +49,7 @@
       ></v-text-field>
 
       <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
-        Confirm password
+        {{ $t('registration.label.confirmPassword') }}
       </div>
 
       <v-text-field
@@ -54,7 +57,7 @@
         :append-inner-icon="visibleConfirmPassword ? 'mdi-eye-off' : 'mdi-eye'"
         :type="visibleConfirmPassword ? 'text' : 'password'"
         density="compact"
-        placeholder="Enter your password"
+        :placeholder="$t('registration.placeholder.confirmPassword')"
         :error-messages="v$['password-confirm'].$errors.map(e => e.$message)"
         prepend-inner-icon="mdi-lock-outline"
         variant="outlined"
@@ -72,7 +75,7 @@
         block
         @click="submitForm"
       >
-        Sign up
+        {{ $t('registration.button.signup') }}
       </v-btn>
 
       <v-card-text class="text-center">
@@ -81,7 +84,8 @@
           to="/login"
           rel="noopener noreferrer"
         >
-          Already have account? Log in here! <v-icon icon="mdi-chevron-right"></v-icon>
+          {{ $t('registration.link.login') }}
+          <v-icon icon="mdi-chevron-right"></v-icon>
         </router-link>
       </v-card-text>
     </v-card>
@@ -91,10 +95,13 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
-import { email, maxLength, minLength, required, sameAs } from '@vuelidate/validators'
+import { useI18n } from 'vue-i18n'
+import { email, maxLength, minLength, required, sameAs } from '@/utils/i18n-validators'
 import { AccountService } from '@/services/AccountService.ts'
-import type { AccountRequest } from '@/interfaces/accounts.ts'
+import type { AccountRequest } from '@/interfaces/accounts'
 import router from '@/router'
+
+const { t } = useI18n()
 
 const visiblePassword = ref(false)
 const visibleConfirmPassword = ref(false)
@@ -114,8 +121,12 @@ const passwordRef = computed(() => state.password)
 const rules = {
   email: { required, email },
   password: { required, minLength: minLength(8), maxLength: maxLength(64) },
-  'password-confirm': { required, minLength: minLength(8), maxLength: maxLength(64),
-                     sameAsPassword: sameAs(passwordRef) },
+  'password-confirm': {
+    required,
+    minLength: minLength(8),
+    maxLength: maxLength(64),
+    sameAsPassword: sameAs(passwordRef)
+  },
 }
 
 const v$ = useVuelidate(rules, state)
@@ -124,18 +135,15 @@ const submitForm = async () => {
   const isValid = await v$.value.$validate()
 
   if (!isValid) {
-    console.log('Formulář není validní')
     return
   }
 
   try {
-    const response = await AccountService.createAccount(state)
-    console.log('Úspěšně odesláno:', response.data)
-    alert('Účet byl úspěšně vytvořen!')
-    await router.push({ name: 'login' });
-  } catch (error) {
-    console.error('Chyba při odesílání:', error)
-    alert('Chyba při vytváření účtu. Zkontrolujte data a zkuste to znovu.')
+    await AccountService.createAccount(state)
+    alert(t('registration.alert.accountCreated'))
+    await router.push({ name: 'login' })
+  } catch {
+    alert(t('registration.alert.registrationError'))
   }
 }
 </script>

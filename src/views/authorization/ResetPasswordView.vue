@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex flex-column align-center justify-center pa-6">
+  <div>
     <v-img
       class="mx-auto my-6"
       max-width="228"
@@ -7,12 +7,13 @@
     ></v-img>
 
     <v-card
-      class="mx-auto pa-12 pb-8 min-w-[500px]"
+      class="mx-auto pa-12 pb-8"
+      max-width="448"
       elevation="8"
       rounded="lg"
     >
       <v-card-title class="text-h5 justify-center">
-        Reset Password
+        {{ $t('resetPasswordPage.title') }}
       </v-card-title>
 
       <v-card-text>
@@ -20,9 +21,9 @@
           v-model="state.password"
           :append-inner-icon="visiblePassword ? 'mdi-eye-off' : 'mdi-eye'"
           :type="visiblePassword ? 'text' : 'password'"
-          label="New Password"
+          :label="$t('resetPasswordPage.label.newPassword')"
           density="compact"
-          placeholder="Enter your new password"
+          :placeholder="$t('resetPasswordPage.placeholder.newPassword')"
           :error-messages="v$.password.$errors.map(e => e.$message)"
           prepend-inner-icon="mdi-lock-outline"
           variant="outlined"
@@ -36,9 +37,9 @@
           v-model="state['password-confirm']"
           :append-inner-icon="visibleConfirmPassword ? 'mdi-eye-off' : 'mdi-eye'"
           :type="visibleConfirmPassword ? 'text' : 'password'"
-          label="Confirm Password"
+          :label="$t('resetPasswordPage.label.confirmPassword')"
           density="compact"
-          placeholder="Confirm your new password"
+          :placeholder="$t('resetPasswordPage.placeholder.confirmPassword')"
           :error-messages="v$['password-confirm'].$errors.map(e => e.$message)"
           prepend-inner-icon="mdi-lock-outline"
           variant="outlined"
@@ -57,7 +58,7 @@
           block
           @click="submitForm"
         >
-          Reset Password
+          {{ $t('resetPasswordPage.button.resetPassword') }}
         </v-btn>
       </v-card-actions>
 
@@ -67,7 +68,8 @@
           to="/login"
           rel="noopener noreferrer"
         >
-          Back to login <v-icon icon="mdi-chevron-right"></v-icon>
+          {{ $t('resetPasswordPage.link.backToLogin') }}
+          <v-icon icon="mdi-chevron-right"></v-icon>
         </router-link>
       </v-card-text>
     </v-card>
@@ -78,9 +80,12 @@
 import { reactive, ref, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useVuelidate } from '@vuelidate/core';
-import { required, minLength, maxLength, sameAs } from '@vuelidate/validators';
+import { required, minLength, maxLength, sameAs } from '@/utils/i18n-validators';
 import { AccountService } from '@/services/AccountService';
 import type { ResetPasswordPayload } from '@/interfaces/accounts';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const visiblePassword = ref(false);
 const visibleConfirmPassword = ref(false);
@@ -120,18 +125,15 @@ const v$ = useVuelidate(rules, state);
 const submitForm = async () => {
   const isValid = await v$.value.$validate();
   if (!isValid) {
-    console.log('Formulář není validní');
     return;
   }
 
   try {
-    const response = await AccountService.resetPassword(state);
-    console.log('Password reset successful:', response.data);
-    alert('Your password has been reset successfully!');
+    await AccountService.resetPassword(state);
+    alert(t('resetPasswordPage.alert.passwordResetSuccess'));
     await router.push({ name: 'login' });
-  } catch (error) {
-    console.error('Error resetting password:', error);
-    alert('There was an error resetting your password. Please try again.');
+  } catch {
+    alert(t('resetPasswordPage.alert.error'));
   }
 };
 </script>

@@ -12,12 +12,14 @@
       max-width="448"
       rounded="lg"
     >
-      <div class="text-subtitle-1 text-medium-emphasis">E-mail</div>
+      <div class="text-subtitle-1 text-medium-emphasis">
+        {{ $t('login.label.email') }}
+      </div>
 
       <v-text-field
         v-model="state.email"
         density="compact"
-        placeholder="Email address"
+        :placeholder="$t('login.placeholder.email')"
         :error-messages="v$.email.$errors.map(e => e.$message)"
         prepend-inner-icon="mdi-email-outline"
         variant="outlined"
@@ -27,13 +29,13 @@
       ></v-text-field>
 
       <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
-        Password
+        {{ $t('login.label.password') }}
         <router-link
           class="text-caption text-decoration-none text-red"
           to="/reset-password-request"
           rel="noopener noreferrer"
         >
-          Forgot login password?
+          {{ $t('login.link.forgotPassword') }}
         </router-link>
       </div>
 
@@ -42,7 +44,7 @@
         :append-inner-icon="visiblePassword ? 'mdi-eye-off' : 'mdi-eye'"
         :type="visiblePassword ? 'text' : 'password'"
         density="compact"
-        placeholder="Enter your password"
+        :placeholder="$t('login.placeholder.password')"
         :error-messages="v$.password.$errors.map(e => e.$message)"
         prepend-inner-icon="mdi-lock-outline"
         variant="outlined"
@@ -60,26 +62,25 @@
         block
         @click="submitForm"
       >
-        Log In
+        {{ $t('login.button.login') }}
       </v-btn>
 
-      <v-card-text class="text-center">
+      <v-card-text class="text-center flex flex-col gap-4">
         <router-link
           class="text-red text-decoration-none"
           to="/registration"
           rel="noopener noreferrer"
         >
-          Don't have an account? Sign up now <v-icon icon="mdi-chevron-right"></v-icon>
+          {{ $t('login.link.register') }}
+          <v-icon icon="mdi-chevron-right"></v-icon>
         </router-link>
-      </v-card-text>
-
-      <v-card-text class="text-center">
         <router-link
           class="text-red text-decoration-none"
           to="/verify-account-resend"
           rel="noopener noreferrer"
         >
-          Didn't get verification e-mail? Get it here!<v-icon icon="mdi-chevron-right"></v-icon>
+          {{ $t('login.link.resendVerification') }}
+          <v-icon icon="mdi-chevron-right"></v-icon>
         </router-link>
       </v-card-text>
     </v-card>
@@ -89,10 +90,13 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
-import { required, email, minLength, maxLength } from '@vuelidate/validators'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import type { LoginRequest } from '@/interfaces/accounts'
 import { AccountService } from '@/services/AccountService.ts'
+import { required, minLength, email, maxLength } from '@/utils/i18n-validators'
+
+const { t } = useI18n()
 
 const state = reactive<LoginRequest>({
   email: '',
@@ -111,7 +115,6 @@ const router = useRouter()
 const submitForm = async () => {
   const isValid = await v$.value.$validate()
   if (!isValid) {
-    console.log('Formulář není validní')
     return
   }
 
@@ -122,9 +125,8 @@ const submitForm = async () => {
     })
 
     await router.push({ name: 'homepage' })
-  } catch (error) {
-    console.error('Chyba při přihlášení:', error)
-    alert('Přihlášení selhalo. Zkontrolujte přihlašovací údaje.')
+  } catch {
+    alert(t('login.alert.loginFailed'))
   }
 }
 </script>

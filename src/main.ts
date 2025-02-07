@@ -14,6 +14,8 @@ import '@mdi/font/css/materialdesignicons.css';
 import './style.css'
 import axios from 'axios'
 
+import { i18n } from './i18n'
+
 axios.defaults.withCredentials = true;
 
 const app = createApp(App)
@@ -25,5 +27,6 @@ const vuetify = createVuetify({
 app.use(createPinia())
 app.use(router)
 app.use(vuetify)
+app.use(i18n)
 
 app.mount('#app')

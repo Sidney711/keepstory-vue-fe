@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex flex-column align-center justify-center pa-6">
+  <div>
     <v-img
       class="mx-auto my-6"
       max-width="228"
@@ -8,15 +8,15 @@
 
     <v-card class="mx-auto pa-12 pb-8" elevation="8" max-width="448" rounded="lg">
       <v-card-title class="text-h5 justify-center">
-        Reset Password Request
+        {{ $t('resetPassword.title') }}
       </v-card-title>
 
       <v-card-text>
         <v-text-field
           v-model="state.email"
-          label="Email address"
+          :label="$t('resetPassword.label.email')"
           density="compact"
-          placeholder="Enter your email"
+          :placeholder="$t('resetPassword.placeholder.email')"
           :error-messages="v$.email.$errors.map(e => e.$message)"
           prepend-inner-icon="mdi-email-outline"
           variant="outlined"
@@ -34,7 +34,7 @@
           block
           @click="submitForm"
         >
-          Send Reset Link
+          {{ $t('resetPassword.button.sendLink') }}
         </v-btn>
       </v-card-actions>
 
@@ -44,7 +44,8 @@
           to="/login"
           rel="noopener noreferrer"
         >
-          Back to login <v-icon icon="mdi-chevron-right"></v-icon>
+          {{ $t('resetPassword.link.backToLogin') }}
+          <v-icon icon="mdi-chevron-right"></v-icon>
         </router-link>
       </v-card-text>
     </v-card>
@@ -54,10 +55,13 @@
 <script setup lang="ts">
 import { reactive } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
-import { required, email } from '@vuelidate/validators';
+import { useI18n } from 'vue-i18n';
+import { required, email } from '@/utils/i18n-validators';
 import { AccountService } from '@/services/AccountService';
 import type { ResetPasswordRequest } from '@/interfaces/accounts';
-import router from '@/router'
+import router from '@/router';
+
+const { t } = useI18n();
 
 const state = reactive<ResetPasswordRequest>({
   email: '',
@@ -72,18 +76,15 @@ const v$ = useVuelidate(rules, state);
 const submitForm = async () => {
   const isValid = await v$.value.$validate();
   if (!isValid) {
-    console.log('Formulář není validní');
     return;
   }
 
   try {
-    const response = await AccountService.resetPasswordRequest(state);
-    console.log('Reset password request odeslán:', response.data);
-    alert('Odkaz pro reset hesla byl odeslán! Zkontrolujte prosím svou e-mailovou schránku.');
+    await AccountService.resetPasswordRequest(state);
+    alert(t('resetPassword.alert.linkSent'));
     await router.push({ name: 'login' });
-  } catch (error) {
-    console.error('Chyba při odesílání požadavku na reset hesla:', error);
-    alert('Chyba při odesílání požadavku na reset hesla. Zkuste to prosím znovu.');
+  } catch {
+    alert(t('resetPassword.alert.error'));
   }
 };
 </script>
