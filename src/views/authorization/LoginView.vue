@@ -95,6 +95,9 @@ import { useI18n } from 'vue-i18n'
 import type { LoginRequest } from '@/interfaces/accounts'
 import { AccountService } from '@/services/AccountService.ts'
 import { required, minLength, email, maxLength } from '@/utils/i18n-validators'
+import { useSnackbar } from '@/composables/useSnackbar'
+
+const { showSnackbar } = useSnackbar()
 
 const { t } = useI18n()
 
@@ -126,7 +129,7 @@ const submitForm = async () => {
 
     await router.push({ name: 'homepage' })
   } catch {
-    alert(t('login.alert.loginFailed'))
+    showSnackbar(t('login.alert.loginFailed'), 'error')
   }
 }
 </script>

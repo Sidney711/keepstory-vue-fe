@@ -171,6 +171,9 @@ const messages = {
         cs: "CS",
         en: "EN"
       }
+    },
+    general: {
+      close: "Zavřít"
     }
   },
   en: {
@@ -343,6 +346,9 @@ const messages = {
         cs: "CS",
         en: "EN"
       }
+    },
+    general: {
+      close: "Close"
     }
   }
 }
