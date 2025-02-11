@@ -8,7 +8,9 @@ const messages = {
       email: "Zadejte platnou e-mailovou adresu.",
       maxLength: "Pole může mít maximálně {max} znaků.",
       sameAsPassword: "Pole se musí shodovat s heslem.",
-      sameAsNewPassword: "Pole se musí shodovat s novým heslem."
+      sameAsNewPassword: "Pole se musí shodovat s novým heslem.",
+      notAfterToday: "Datum nesmí být pozdější než dnešní datum.",
+      birthBeforeDeath: "Datum narození musí být stejné nebo menší než datum úmrtí."
     },
     registration: {
       label: {
@@ -177,7 +179,24 @@ const messages = {
       delete: "Smazat",
       cancel: "Zrušit",
       "confirmation": "Potvrzení"
-    }
+    },
+    family: {
+      loading: "Načítám data...",
+      createMemberTitle: "Vytvořit novou osobu",
+      button: {
+        create: "Vytvořit novou osobu"
+      },
+      label: {
+        firstName: "Jméno",
+        lastName: "Příjmení",
+        dateOfBirth: "Datum narození",
+        isAlive: "Osoba je naživu",
+        dateOfDeath: "Datum úmrtí"
+      },
+      hint: {
+        dateOfDeath: "Zadejte datum úmrtí"
+      }
+    },
   },
   en: {
     validations: {
@@ -186,7 +205,9 @@ const messages = {
       email: "Please enter a valid email address.",
       maxLength: "The field can have a maximum of {max} characters.",
       sameAsPassword: "The field must match the password.",
-      sameAsNewPassword: "The field must match the new password."
+      sameAsNewPassword: "The field must match the new password.",
+      notAfterToday: "The date must not be later than today.",
+      birthBeforeDeath: "The date of birth must be the same or before the date of death."
     },
     registration: {
       label: {
@@ -355,7 +376,24 @@ const messages = {
       delete: "Delete",
       cancel: "Cancel",
       confirmation: "Confirmation"
-    }
+    },
+    family: {
+      loading: "Loading data...",
+      createMemberTitle: "Create New Family Member",
+      button: {
+        create: "Create New Family Member"
+      },
+      label: {
+        firstName: "First Name",
+        lastName: "Last Name",
+        dateOfBirth: "Date of Birth",
+        isAlive: "Member is alive",
+        dateOfDeath: "Date of Death"
+      },
+      hint: {
+        dateOfDeath: "Enter the date of death"
+      }
+    },
   }
 }
 
