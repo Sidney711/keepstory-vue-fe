@@ -1,6 +1,5 @@
 // src/router/index.ts
 import { createRouter, createWebHistory } from 'vue-router';
-import HomepageView from '@/views/HomepageView.vue';
 import LoginView from '@/views/authorization/LoginView.vue';
 import RegistrationView from '@/views/authorization/RegistrationView.vue';
 import VerifyAccountView from '@/views/authorization/VerifyAccountView.vue';
@@ -10,6 +9,7 @@ import ResetPasswordRequestView from '@/views/authorization/ResetPasswordRequest
 import ResetPasswordView from '@/views/authorization/ResetPasswordView.vue'
 import ProfileView from '@/views/settings/ProfileView.vue'
 import VerifyEmailChangeView from '@/views/authorization/VerifyEmailChangeView.vue'
+import FamilyMembersView from '@/views/family-members/FamilyMembersView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -17,7 +17,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'homepage',
-      component: HomepageView,
+      component: FamilyMembersView,
     },
     {
       path: '/login',
