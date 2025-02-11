@@ -28,7 +28,7 @@ export const useFamilyMembersStore = defineStore('familyMembers', {
           dateOfDeath: item.attributes['date-of-death'],
         }));
       } catch (err: any) {
-        this.error = err.message || 'Chyba při načítání dat';
+        this.error = err.message;
       } finally {
         this.loading = false;
       }

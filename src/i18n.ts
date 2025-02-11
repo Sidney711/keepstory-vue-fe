@@ -195,6 +195,10 @@ const messages = {
       },
       hint: {
         dateOfDeath: "Zadejte datum úmrtí"
+      },
+      alert: {
+        successCreate: "Osoba byla úspěšně vytvořena.",
+        errorCreate: "Při vytváření osoby došlo k chybě"
       }
     },
   },
@@ -392,6 +396,10 @@ const messages = {
       },
       hint: {
         dateOfDeath: "Enter the date of death"
+      },
+      alert: {
+        successCreate: "Family member was created successfully.",
+        errorCreate: "An error occurred while creating a family member."
       }
     },
   }
