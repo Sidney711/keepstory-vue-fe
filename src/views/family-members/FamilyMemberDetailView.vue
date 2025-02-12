@@ -1,6 +1,6 @@
 <template>
   <AppLayout>
-    <v-container class="py-4">
+    <v-container class="py-4" fluid>
       <v-btn color="primary" class="mb-4" to="/">
         Zpět na rodinu
       </v-btn>

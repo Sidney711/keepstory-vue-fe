@@ -1,12 +1,10 @@
 <template>
-  <v-navigation-drawer expand-on-hover rail>
-    <v-list>
-      <v-list-item
-        prepend-avatar="/logos/keepstory-icon.png"
-        :title="email"
-        height="64"
-      ></v-list-item>
-    </v-list>
+  <v-list>
+    <v-list-item
+      prepend-avatar="/logos/keepstory-icon.png"
+      :title="email"
+      height="64"
+    ></v-list-item>
 
     <v-divider></v-divider>
 
@@ -54,7 +52,7 @@
         {{ t('menu.language.en') }}
       </span>
     </v-list>
-  </v-navigation-drawer>
+  </v-list>
 </template>
 
 <script setup lang="ts">
