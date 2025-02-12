@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card flat tile>
     <v-layout>
       <MenuSidebar @navigate="navigateTo" />
 
@@ -11,14 +11,14 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
+import { useRouter } from 'vue-router'
 import MenuSidebar from '@/components/MenuSidebar.vue'
 
-const router = useRouter();
+const router = useRouter()
 
 const navigateTo = (routeName: string) => {
-  router.push({ name: routeName });
-};
+  router.push({ name: routeName })
+}
 </script>
 
 <style scoped>

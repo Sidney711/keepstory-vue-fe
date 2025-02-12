@@ -20,21 +20,28 @@
             md="4"
             lg="3"
           >
-            <v-card class="mx-auto">
-              <v-img src="/avatar-blank.png" height="200px"></v-img>
-              <v-card-title class="text-h6">
-                {{ member.firstName }} {{ member.lastName }}
-              </v-card-title>
-              <v-card-text>
-                <p>
-                  {{ t('family.label.dateOfBirth') }}: {{ member.dateOfBirth }}
-                </p>
-                <p v-if="member.dateOfDeath">
-                  {{ t('family.label.dateOfDeath') }}:
-                  <span>{{ member.dateOfDeath }}</span>
-                </p>
-              </v-card-text>
-            </v-card>
+            <v-hover v-slot="{ hover }">
+              <v-card
+                :elevation="hover ? 12 : 2"
+                class="mx-auto cursor-pointer"
+                outlined
+                :to="{ name: 'family-member-detail', params: { id: member.id } }"
+              >
+                <v-img src="/avatar-blank.png" height="200px"></v-img>
+                <v-card-title class="text-h6">
+                  {{ member.firstName }} {{ member.lastName }}
+                </v-card-title>
+                <v-card-text>
+                  <p>
+                    {{ t('family.label.dateOfBirth') }}: {{ member.dateOfBirth }}
+                  </p>
+                  <p v-if="member.dateOfDeath">
+                    {{ t('family.label.dateOfDeath') }}:
+                    <span>{{ member.dateOfDeath }}</span>
+                  </p>
+                </v-card-text>
+              </v-card>
+            </v-hover>
           </v-col>
         </v-row>
       </v-container>
@@ -59,7 +66,9 @@ onMounted(() => {
 
 const createModal = ref(null)
 const openCreateModal = () => {
-  createModal.value.openDialog()
+  if (createModal.value) {
+    createModal.value.openDialog()
+  }
 }
 const onMemberCreated = () => {
   familyStore.fetchFamilyMembers()

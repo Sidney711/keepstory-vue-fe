@@ -10,6 +10,7 @@ import ResetPasswordView from '@/views/authorization/ResetPasswordView.vue'
 import ProfileView from '@/views/settings/ProfileView.vue'
 import VerifyEmailChangeView from '@/views/authorization/VerifyEmailChangeView.vue'
 import FamilyMembersView from '@/views/family-members/FamilyMembersView.vue'
+import FamilyMemberDetailView from '@/views/family-members/FamilyMemberDetailView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -59,6 +60,11 @@ const router = createRouter({
       name: 'verify-email-change',
       component: VerifyEmailChangeView,
     },
+    {
+      path: '/family-member-detail/:id',
+      name: 'family-member-detail',
+      component: FamilyMemberDetailView
+    }
   ],
 });
 
