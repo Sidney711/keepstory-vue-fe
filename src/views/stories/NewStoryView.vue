@@ -4,7 +4,7 @@
       <v-row>
         <v-col cols="12" md="8">
           <div>
-            <QuillEditor theme="snow" toolbar="full" class="min-h-[calc(80vh)]" />
+            <QuillEditor :modules="modules" theme="snow" toolbar="full" class="min-h-[calc(80vh)]" />
           </div>
         </v-col>
 
@@ -86,7 +86,12 @@ import { ref, computed, onMounted } from 'vue'
 import AppLayout from '@/layouts/AppLayout.vue'
 import { useFamilyMembersStore } from '@/stores/familyMemberStore'
 import { VDateInput } from 'vuetify/labs/VDateInput'
+import BlotFormatter from 'quill-blot-formatter'
 
+const modules = {
+  name: 'blotFormatter',
+  module: BlotFormatter
+}
 const storyTitle = ref('')
 const selectedPersons = ref([])
 const storyDate = ref(null)
