@@ -11,6 +11,7 @@ import ProfileView from '@/views/settings/ProfileView.vue'
 import VerifyEmailChangeView from '@/views/authorization/VerifyEmailChangeView.vue'
 import FamilyMembersView from '@/views/family-members/FamilyMembersView.vue'
 import FamilyMemberDetailView from '@/views/family-members/FamilyMemberDetailView.vue'
+import NewStoryView from '@/views/stories/NewStoryView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -64,6 +65,11 @@ const router = createRouter({
       path: '/family-member-detail/:id',
       name: 'family-member-detail',
       component: FamilyMemberDetailView
+    },
+    {
+      path: '/new-story',
+      name: 'new-story',
+      component: NewStoryView
     }
   ],
 });
