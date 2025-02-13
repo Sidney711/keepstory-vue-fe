@@ -162,7 +162,6 @@ const exportMember = () => {
   console.log("Export member:", member.value)
 }
 
-// Statická data pro příběhy
 interface Story {
   id: string
   title: string

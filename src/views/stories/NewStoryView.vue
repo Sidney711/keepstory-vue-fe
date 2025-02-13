@@ -7,7 +7,14 @@
       <v-row>
         <v-col cols="12" md="8">
           <div>
-            <QuillEditor :modules="modules" theme="snow" toolbar="full" class="min-h-[calc(80vh)]" />
+            <QuillEditor
+              v-model:content="storyContent"
+              :modules="modules"
+              content-type="html"
+              theme="snow"
+              toolbar="full"
+              class="min-h-[calc(80vh)]"
+            />
           </div>
         </v-col>
 
@@ -86,37 +93,41 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import router from '@/router'
 import AppLayout from '@/layouts/AppLayout.vue'
 import { useFamilyMembersStore } from '@/stores/familyMemberStore'
 import { VDateInput } from 'vuetify/labs/VDateInput'
 import BlotFormatter from 'quill-blot-formatter'
-import { useRoute } from 'vue-router'
-import router from '@/router'
+import { StoriesService } from '@/services/storiesService'
+import type { NewStoryPayload } from '@/interfaces/stories'
 
 const modules = {
   name: 'blotFormatter',
   module: BlotFormatter
 }
+
 const storyTitle = ref('')
-const selectedPersons = ref()
+const storyContent = ref('')
+const selectedPersons = ref<string[]>([])
 const storyDate = ref(null)
 const storyYear = ref('')
 const dateType = ref('exact')
 const isDateApprox = ref(false)
-const personId = ref()
+const personId = ref<string>('')
 
 const familyStore = useFamilyMembersStore()
 onMounted(() => {
   familyStore.fetchFamilyMembers()
-
   const route = useRoute()
-  personId.value = route.query.person
+  personId.value = route.query.person as string
   if (personId.value) {
-    selectedPersons.value = Array.isArray(personId.value) ? personId.value : [personId.value as string]
+    selectedPersons.value = [personId.value]
   } else {
     router.push('/')
   }
 })
+
 const personsItems = computed(() =>
   familyStore.familyMembers.map(person => ({
     text: `${person.firstName} ${person.lastName} (nar. ${person.dateOfBirth ? person.dateOfBirth : '-'})`,
@@ -124,13 +135,36 @@ const personsItems = computed(() =>
   }))
 )
 
-const publishStory = () => {
-  const payload = {
-    title: storyTitle.value,
-    persons: selectedPersons.value,
-    dateType: dateType.value,
-    date: dateType.value === 'exact' ? storyDate.value : storyYear.value,
-    isDateApprox: isDateApprox.value,
+const publishStory = async () => {
+  console.log(storyContent.value);
+  const payload: NewStoryPayload = {
+    data: {
+      type: 'stories',
+      attributes: {
+        title: storyTitle.value,
+        content: storyContent.value,
+        date_type: dateType.value,
+        story_date: dateType.value === 'exact' ? storyDate.value || '' : undefined,
+        story_year: dateType.value === 'year' ? storyYear.value : undefined,
+        "is_date-approx": isDateApprox.value,
+      },
+      relationships: {
+        family_members: {
+          data: selectedPersons.value.map(id => ({
+            type: 'family_members',
+            id,
+          })),
+        },
+      },
+    },
+  }
+
+  try {
+    const response = await StoriesService.createStory(payload)
+    console.log('Příběh publikován:', response.data)
+    await router.push('/')
+  } catch (error) {
+    console.error('Chyba při publikaci příběhu:', error)
   }
 }
 </script>
