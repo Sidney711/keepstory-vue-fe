@@ -10,4 +10,8 @@ export class StoriesService {
   static async createStory(payload: NewStoryPayload) {
     return axios.post(`${BACKEND_URL_WITH_API}/stories`, payload);
   }
+
+  static async fetchStory(storyId: string) {
+    return axios.get(`${BACKEND_URL_WITH_API}/stories/${storyId}`);
+  }
 }

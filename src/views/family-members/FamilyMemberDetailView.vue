@@ -222,8 +222,13 @@ const addStory = () => {
 };
 
 const goToStoryDetail = (id: string) => {
-  console.log('Navigace do detailu příběhu s id:', id);
+  if (member.value) {
+    router.push({ name: 'story-detail', params: { id }, query: { person: member.value.id } });
+  } else {
+    router.push({ name: 'story-detail', params: { id } });
+  }
 };
+
 
 const formatDate = (dateStr: string): string => {
   const dateObj = new Date(dateStr);
