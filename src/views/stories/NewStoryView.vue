@@ -146,7 +146,7 @@ const publishStory = async () => {
         date_type: dateType.value,
         story_date: dateType.value === 'exact' ? storyDate.value || '' : undefined,
         story_year: dateType.value === 'year' ? storyYear.value : undefined,
-        "is_date-approx": isDateApprox.value,
+        is_date_approx: isDateApprox.value,
       },
       relationships: {
         family_members: {

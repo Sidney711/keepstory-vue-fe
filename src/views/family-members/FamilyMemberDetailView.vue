@@ -99,7 +99,16 @@
                 </v-btn>
               </div>
 
-              <div>
+              <!-- Zobrazení načtených příběhů -->
+              <template v-if="storiesLoading">
+                <v-progress-circular indeterminate color="primary" class="mx-auto" />
+              </template>
+              <template v-else-if="storiesError">
+                <v-alert type="error">
+                  {{ storiesError }}
+                </v-alert>
+              </template>
+              <div v-else>
                 <v-card
                   v-for="story in stories"
                   :key="story.id"
@@ -110,7 +119,10 @@
                   <v-card-text class="flex items-center justify-between">
                     <div>
                       <div class="text-h6 font-medium">{{ story.title }}</div>
-                      <div class="text-body-2 text-gray-600">{{ story.date }}</div>
+                      <div class="text-body-2 text-gray-600">
+                        <span>Vytvořeno: {{ formatDate(story.createdAt) }}</span>
+                        <span v-if="story.date"> | Datum: {{ story.date }}</span>
+                      </div>
                     </div>
                     <v-icon>mdi-chevron-right</v-icon>
                   </v-card-text>
@@ -125,66 +137,99 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { useI18n } from 'vue-i18n'
-import AppLayout from '@/layouts/AppLayout.vue'
-import { useFamilyMembersStore } from '@/stores/familyMemberStore'
+import { computed, onMounted, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
+import AppLayout from '@/layouts/AppLayout.vue';
+import { useFamilyMembersStore } from '@/stores/familyMemberStore';
+import { StoriesService } from '@/services/storiesService';
 
-const { t } = useI18n()
-const route = useRoute()
-const router = useRouter()
-const familyStore = useFamilyMembersStore()
+const { t } = useI18n();
+const route = useRoute();
+const router = useRouter();
+const familyStore = useFamilyMembersStore();
 
-const memberId = route.params.id as string
+const memberId = route.params.id as string;
 
 const member = computed(() => {
-  return familyStore.familyMembers.find((m) => m.id === memberId)
-})
+  return familyStore.familyMembers.find((m) => m.id === memberId);
+});
 
 onMounted(() => {
   if (!member.value) {
-    familyStore.fetchFamilyMembers()
+    familyStore.fetchFamilyMembers();
   }
-})
-
-const activeTab = ref('info')
-
-const editMember = () => {
-  console.log("Edit member:", member.value)
-}
-
-const deleteMember = () => {
-  console.log("Delete member:", member.value)
-}
-
-const exportMember = () => {
-  console.log("Export member:", member.value)
-}
+  fetchStories(memberId);
+});
 
 interface Story {
-  id: string
-  title: string
-  date: string
+  id: string;
+  title: string;
+  date: string;
+  createdAt: string;
 }
 
-const stories = ref<Story[]>([
-  { id: '1', title: 'První příběh', date: '2025-01-01' },
-  { id: '2', title: 'Druhý příběh', date: '2025-02-15' },
-  { id: '3', title: 'Třetí příběh', date: '2025-03-10' }
-])
+const stories = ref<Story[]>([]);
+const storiesLoading = ref(false);
+const storiesError = ref<string | null>(null);
+
+const fetchStories = async (familyMemberId: string) => {
+  storiesLoading.value = true;
+  storiesError.value = null;
+  try {
+    const response = await StoriesService.fetchStoriesForFamilyMember(familyMemberId);
+    stories.value = response.data.data.map((item) => {
+      const attrs = item.attributes;
+      let dateStr = attrs["date-type"] === 'exact' ? attrs["story-date"] : attrs["story-year"];
+      if (attrs["is-date-approx"]) {
+        dateStr = dateStr ? `${dateStr} (odhad)` : 'odhad';
+      }
+      return {
+        id: item.id,
+        title: attrs.title,
+        date: dateStr || '',
+        createdAt: attrs["created-at"],
+      };
+    });
+  } catch (error: any) {
+    storiesError.value = error.message;
+  } finally {
+    storiesLoading.value = false;
+  }
+};
+
+
+const activeTab = ref('info');
+
+const editMember = () => {
+  console.log("Edit member:", member.value);
+};
+
+const deleteMember = () => {
+  console.log("Delete member:", member.value);
+};
+
+const exportMember = () => {
+  console.log("Export member:", member.value);
+};
 
 const addStory = () => {
   if (member.value) {
-    router.push({ name: 'new-story', query: { person: member.value.id } })
+    router.push({ name: 'new-story', query: { person: member.value.id } });
   } else {
-    router.push({ name: 'new-story' })
+    router.push({ name: 'new-story' });
   }
-}
+};
 
 const goToStoryDetail = (id: string) => {
-  console.log('Navigace do detailu příběhu s id:', id)
-}
+  console.log('Navigace do detailu příběhu s id:', id);
+};
+
+const formatDate = (dateStr: string): string => {
+  const dateObj = new Date(dateStr);
+  if (isNaN(dateObj.getTime())) return dateStr;
+  return dateObj.toLocaleDateString();
+};
 </script>
 
 <style scoped>
