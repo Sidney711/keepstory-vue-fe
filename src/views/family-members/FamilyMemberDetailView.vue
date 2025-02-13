@@ -176,7 +176,11 @@ const stories = ref<Story[]>([
 ])
 
 const addStory = () => {
-  console.log('Přidat nový příběh')
+  if (member.value) {
+    router.push({ name: 'new-story', query: { person: member.value.id } })
+  } else {
+    router.push({ name: 'new-story' })
+  }
 }
 
 const goToStoryDetail = (id: string) => {

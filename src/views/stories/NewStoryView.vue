@@ -1,6 +1,9 @@
 <template>
   <AppLayout>
-    <v-container fluid>
+    <v-container fluid class="py-4">
+      <v-btn color="primary" class="mb-4" :to="'/family-member-detail/' + personId">
+        Zpět na člena rodiny
+      </v-btn>
       <v-row>
         <v-col cols="12" md="8">
           <div>
@@ -87,23 +90,33 @@ import AppLayout from '@/layouts/AppLayout.vue'
 import { useFamilyMembersStore } from '@/stores/familyMemberStore'
 import { VDateInput } from 'vuetify/labs/VDateInput'
 import BlotFormatter from 'quill-blot-formatter'
+import { useRoute } from 'vue-router'
+import router from '@/router'
 
 const modules = {
   name: 'blotFormatter',
   module: BlotFormatter
 }
 const storyTitle = ref('')
-const selectedPersons = ref([])
+const selectedPersons = ref()
 const storyDate = ref(null)
 const storyYear = ref('')
 const dateType = ref('exact')
 const isDateApprox = ref(false)
+const personId = ref()
 
 const familyStore = useFamilyMembersStore()
 onMounted(() => {
   familyStore.fetchFamilyMembers()
-})
 
+  const route = useRoute()
+  personId.value = route.query.person
+  if (personId.value) {
+    selectedPersons.value = Array.isArray(personId.value) ? personId.value : [personId.value as string]
+  } else {
+    router.push('/')
+  }
+})
 const personsItems = computed(() =>
   familyStore.familyMembers.map(person => ({
     text: `${person.firstName} ${person.lastName} (nar. ${person.dateOfBirth ? person.dateOfBirth : '-'})`,
