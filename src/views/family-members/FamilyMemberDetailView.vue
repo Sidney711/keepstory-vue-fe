@@ -68,7 +68,261 @@
         <v-tab-item value="info">
           <v-card flat v-if="activeTab === 'info'">
             <v-card-text>
-              Zde patří základní informace
+              <v-container fluid>
+                <v-row class="mb-4">
+                  <v-col cols="12">
+                    <h3 class="font-bold">Osobní údaje</h3>
+                    <v-divider class="mb-2"></v-divider>
+                  </v-col>
+                  <v-col xs="12" sm="6">
+                    <div><strong>Jméno:</strong> Jan</div>
+                  </v-col>
+                  <v-col xs="12" sm="6">
+                    <div><strong>Příjmení:</strong> Novák</div>
+                  </v-col>
+                  <v-col xs="12" sm="6">
+                    <div><strong>Rodné příjmení:</strong> Horák</div>
+                  </v-col>
+                  <v-col xs="12" sm="6">
+                    <div><strong>Datum narození:</strong> 01.01.1990</div>
+                  </v-col>
+                  <v-col xs="12" sm="6">
+                    <div><strong>Místo narození:</strong> Praha</div>
+                  </v-col>
+                  <v-col xs="12" sm="6">
+                    <div><strong>Čas narození:</strong> 08:30</div>
+                  </v-col>
+                  <v-col xs="12" sm="6">
+                    <div><strong>Pohlaví:</strong> Muž</div>
+                  </v-col>
+                  <v-col xs="12" sm="6">
+                    <div><strong>Náboženství:</strong> Křesťanství</div>
+                  </v-col>
+                </v-row>
+
+                <v-row class="mb-4">
+                  <v-col cols="12">
+                    <h3 class="font-bold">Informace o úmrtí</h3>
+                    <v-divider class="mb-2"></v-divider>
+                  </v-col>
+                  <v-col xs="12" sm="6">
+                    <div><strong>Datum úmrtí:</strong> 15.05.2050</div>
+                  </v-col>
+                  <v-col xs="12" sm="6">
+                    <div><strong>Čas úmrtí:</strong> 23:45</div>
+                  </v-col>
+                  <v-col xs="12" sm="6">
+                    <div><strong>Místo úmrtí:</strong> Brno</div>
+                  </v-col>
+                  <v-col xs="12" sm="6">
+                    <div><strong>Příčina smrti:</strong> Přírodní příčiny</div>
+                  </v-col>
+                  <v-col xs="12" sm="6">
+                    <div><strong>Datum pohřbu:</strong> 17.05.2050</div>
+                  </v-col>
+                  <v-col xs="12" sm="6">
+                    <div><strong>Místo pohřbu:</strong> Krematorium Praha</div>
+                  </v-col>
+                  <v-col xs="12" sm="6">
+                    <div><strong>Místo pochování:</strong> Hřbitov Olšany</div>
+                  </v-col>
+                </v-row>
+
+                <v-row class="mb-4">
+                  <v-col cols="12">
+                    <h3 class="font-bold">Příbuzní</h3>
+                    <v-divider class="mb-2"></v-divider>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-list dense>
+                      <v-list-item>
+                        <v-list-item-content>
+                          <a href="https://example.com/petr-novak" target="_blank">Petra Nováková (rodič)</a>
+                        </v-list-item-content>
+                      </v-list-item>
+                      <v-list-item>
+                        <v-list-item-content>
+                          <a href="https://example.com/petr-novak" target="_blank">Petr Novák (rodič)</a>
+                        </v-list-item-content>
+                      </v-list-item>
+                      <v-list-item>
+                        <v-list-item-content>
+                          <a href="https://example.com/petr-novak" target="_blank">Petr Novák (potomek)</a>
+                        </v-list-item-content>
+                      </v-list-item>
+                      <v-list-item>
+                        <v-list-item-content>
+                          <a href="https://example.com/klara-novakova" target="_blank">Klára Nováková (potomek)</a>
+                        </v-list-item-content>
+                      </v-list-item>
+                      <v-list-item>
+                        <v-list-item-content>
+                          <a href="https://example.com/adam-novak" target="_blank">Adam Novák (sourozenec)</a>
+                        </v-list-item-content>
+                      </v-list-item>
+                      <v-list-item>
+                        <v-list-item-content>
+                          <a href="https://example.com/lucie-novakova" target="_blank">Lucie Nováková (sourozenec)</a>
+                        </v-list-item-content>
+                      </v-list-item>
+                      <v-list-item>
+                        <v-list-item-content>
+                          <a href="https://example.com/martin-novak" target="_blank">Martin Novák (prarodič)</a>
+                        </v-list-item-content>
+                      </v-list-item>
+                      <v-list-item>
+                        <v-list-item-content>
+                          <a href="https://example.com/jana-novakova" target="_blank">Jana Nováková (prarodič)</a>
+                        </v-list-item-content>
+                      </v-list-item>
+                    </v-list>
+                  </v-col>
+                </v-row>
+
+                <v-row class="mb-4">
+                  <v-col cols="12">
+                    <h3 class="font-bold">Adresy pobytu</h3>
+                    <v-divider class="mb-2"></v-divider>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-list dense>
+                      <v-list-item>
+                        <v-list-item-content>Praha, Česká republika</v-list-item-content>
+                      </v-list-item>
+                      <v-list-item>
+                        <v-list-item-content>Brno, Česká republika</v-list-item-content>
+                      </v-list-item>
+                    </v-list>
+                  </v-col>
+                </v-row>
+
+                <v-row class="mb-4">
+                  <v-col cols="12">
+                    <h3 class="font-bold">Manželství</h3>
+                    <v-divider class="mb-2"></v-divider>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-list dense>
+                      <v-list-item>
+                        <v-list-item-content>
+                          <div><strong>Partner:</strong> Eva Nováková</div>
+                          <div><strong>Datum sňatku:</strong> 12.06.2010</div>
+                          <div><strong>Rozvod:</strong> 2018</div>
+                        </v-list-item-content>
+                      </v-list-item>
+                    </v-list>
+                  </v-col>
+                </v-row>
+
+                <v-row class="mb-4">
+                  <v-col cols="12">
+                    <h3 class="font-bold">Školy</h3>
+                    <v-divider class="mb-2"></v-divider>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-list dense>
+                      <v-list-item>
+                        <v-list-item-content>
+                          <div><strong>Název:</strong> Základní škola Květen</div>
+                          <div><strong>Adresa:</strong> Ulice 1, Praha</div>
+                          <div><strong>Období:</strong> 1996 – 2002</div>
+                        </v-list-item-content>
+                      </v-list-item>
+                      <v-list-item>
+                        <v-list-item-content>
+                          <div><strong>Název:</strong> Gymnázium Slunce</div>
+                          <div><strong>Adresa:</strong> Ulice 2, Brno</div>
+                          <div><strong>Období:</strong> 2002 – 2006</div>
+                        </v-list-item-content>
+                      </v-list-item>
+                    </v-list>
+                  </v-col>
+                </v-row>
+
+                <v-row class="mb-4">
+                  <v-col cols="12">
+                    <h3 class="font-bold">Práce a profese</h3>
+                    <v-divider class="mb-2"></v-divider>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-list dense>
+                      <v-list-item>
+                        <v-list-item-content>
+                          <div><strong>Název firmy:</strong> IT Solutions</div>
+                          <div><strong>Adresa:</strong> Tech Park, Praha</div>
+                          <div><strong>Období:</strong> 2008 – 2015</div>
+                        </v-list-item-content>
+                      </v-list-item>
+                      <v-list-item>
+                        <v-list-item-content>
+                          <div><strong>Název firmy:</strong> Web Innovators</div>
+                          <div><strong>Adresa:</strong> Centrum, Brno</div>
+                          <div><strong>Období:</strong> 2015 – současnost</div>
+                        </v-list-item-content>
+                      </v-list-item>
+                      <v-list-item>
+                        <v-list-item-content>
+                          <div><strong>Profese:</strong> Programátor, IT konzultant</div>
+                        </v-list-item-content>
+                      </v-list-item>
+                    </v-list>
+                  </v-col>
+                </v-row>
+
+                <v-row class="mb-4">
+                  <v-col cols="12">
+                    <h3 class="font-bold">Koníčky a zájmy</h3>
+                    <v-divider class="mb-2"></v-divider>
+                  </v-col>
+                  <v-col cols="12">
+                    <p>Čtení, sport, hudba, cestování</p>
+                  </v-col>
+                </v-row>
+
+                <v-row class="mb-4">
+                  <v-col cols="12">
+                    <h3 class="font-bold">Krátký popis osoby</h3>
+                    <v-divider class="mb-2"></v-divider>
+                  </v-col>
+                  <v-col cols="12">
+                    <p>
+                      Jan je charismatická osobnost s bohatou historií, která zanechala stopu ve všech oblastech svého života.
+                    </p>
+                  </v-col>
+                </v-row>
+
+                <v-row class="mb-4">
+                  <v-col cols="12">
+                    <h3 class="font-bold">Krátký vzkaz</h3>
+                    <v-divider class="mb-2"></v-divider>
+                  </v-col>
+                  <v-col cols="12">
+                    <p>Tady je krátký vzkaz, který vyjadřuje životní filozofii.</p>
+                  </v-col>
+                </v-row>
+
+                <v-row class="mb-4">
+                  <v-col cols="12">
+                    <h3 class="font-bold">Podpis</h3>
+                    <v-divider class="mb-2"></v-divider>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-img src="https://example.com/signature.png" max-width="200" />
+                  </v-col>
+                </v-row>
+
+                <v-row class="mb-4">
+                  <v-col cols="12">
+                    <h3 class="font-bold">Další údaje</h3>
+                    <v-divider class="mb-2"></v-divider>
+                  </v-col>
+                  <v-col cols="12">
+                    <p>
+                      Zde mohou být libovolné údaje, které si uživatel sám vytvořil při vytváření osoby.
+                    </p>
+                  </v-col>
+                </v-row>
+              </v-container>
             </v-card-text>
           </v-card>
         </v-tab-item>
@@ -99,7 +353,6 @@
                 </v-btn>
               </div>
 
-              <!-- Zobrazení načtených příběhů -->
               <template v-if="storiesLoading">
                 <v-progress-circular indeterminate color="primary" class="mx-auto" />
               </template>
