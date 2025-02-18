@@ -39,7 +39,6 @@
           </v-col>
         </v-row>
 
-        <!-- Informace o úmrtí -->
         <v-row>
           <v-col cols="12">
             <v-card class="mb-4" outlined>
@@ -130,15 +129,43 @@
         <v-row>
           <v-col cols="12">
             <v-card class="mb-4" outlined>
-              <v-card-title class="text-h5 font-bold">Manželství</v-card-title>
+              <v-card-title class="text-h5 font-bold">
+                <div class="flex items-center w-full">
+                  <span>Manželství</span>
+                  <v-btn icon class="ml-4" @click="onAddMarriage" size="35">
+                    <v-icon size="23">mdi-plus</v-icon>
+                  </v-btn>
+                </div>
+              </v-card-title>
               <v-divider></v-divider>
               <v-card-text>
                 <v-list dense>
-                  <v-list-item>
+                  <v-list-item class="d-flex align-center">
                     <v-list-item-content>
-                      <div><strong>Partner:</strong> Eva Nováková</div>
-                      <div><strong>Datum sňatku:</strong> 12.06.2010</div>
-                      <div><strong>Rozvod:</strong> 2018</div>
+                      <div class="flex items-center justify-between w-full pr-2">
+                        <div>
+                          <div><strong>Partner:</strong> Eva Nováková</div>
+                          <div><strong>Datum sňatku:</strong> 12.06.2010</div>
+                          <div><strong>Rozvod:</strong> 2018</div>
+                        </div>
+                        <v-btn icon class="ml-4" @click="onEditMarriage" size="35">
+                          <v-icon size="18">mdi-pencil</v-icon>
+                        </v-btn>
+                      </div>
+                    </v-list-item-content>
+                  </v-list-item>
+                  <v-list-item class="d-flex align-center">
+                    <v-list-item-content>
+                      <div class="flex items-center justify-between w-full pr-2">
+                        <div>
+                          <div><strong>Partner:</strong> Eva Nováková</div>
+                          <div><strong>Datum sňatku:</strong> 12.06.2010</div>
+                          <div><strong>Rozvod:</strong> 2018</div>
+                        </div>
+                        <v-btn icon class="ml-4" @click="onEditMarriage" size="35">
+                          <v-icon size="18">mdi-pencil</v-icon>
+                        </v-btn>
+                      </div>
                     </v-list-item-content>
                   </v-list-item>
                 </v-list>
@@ -150,22 +177,43 @@
         <v-row>
           <v-col cols="12">
             <v-card class="mb-4" outlined>
-              <v-card-title class="text-h5 font-bold">Vzdělání</v-card-title>
+              <v-card-title class="text-h5 font-bold">
+                <div class="flex items-center w-full">
+                  <span>Vzdělání</span>
+                  <v-btn icon class="ml-4" @click="onAddEducation" size="35">
+                    <v-icon size="23">mdi-plus</v-icon>
+                  </v-btn>
+                </div>
+              </v-card-title>
               <v-divider></v-divider>
               <v-card-text>
                 <v-list dense>
-                  <v-list-item>
+                  <v-list-item class="d-flex align-center">
                     <v-list-item-content>
-                      <div><strong>Název:</strong> Základní škola Květen</div>
-                      <div><strong>Adresa:</strong> Ulice 1, Praha</div>
-                      <div><strong>Období:</strong> 1996 – 2002</div>
+                      <div class="flex items-center justify-between w-full pr-2">
+                        <div>
+                          <div><strong>Název:</strong> Základní škola Květen</div>
+                          <div><strong>Adresa:</strong> Ulice 1, Praha</div>
+                          <div><strong>Období:</strong> 1996 – 2002</div>
+                        </div>
+                        <v-btn icon class="ml-4" @click="onEditEducation" size="35">
+                          <v-icon size="18">mdi-pencil</v-icon>
+                        </v-btn>
+                      </div>
                     </v-list-item-content>
                   </v-list-item>
-                  <v-list-item>
+                  <v-list-item class="d-flex align-center">
                     <v-list-item-content>
-                      <div><strong>Název:</strong> Gymnázium Slunce</div>
-                      <div><strong>Adresa:</strong> Ulice 2, Brno</div>
-                      <div><strong>Období:</strong> 2002 – 2006</div>
+                      <div class="flex items-center justify-between w-full pr-2">
+                        <div>
+                          <div><strong>Název:</strong> Gymnázium Slunce</div>
+                          <div><strong>Adresa:</strong> Ulice 2, Brno</div>
+                          <div><strong>Období:</strong> 2002 – 2006</div>
+                        </div>
+                        <v-btn icon class="ml-4" @click="onEditEducation" size="35">
+                          <v-icon size="18">mdi-pencil</v-icon>
+                        </v-btn>
+                      </div>
                     </v-list-item-content>
                   </v-list-item>
                 </v-list>
@@ -177,27 +225,52 @@
         <v-row>
           <v-col cols="12">
             <v-card class="mb-4" outlined>
-              <v-card-title class="text-h5 font-bold">Zaměstnání a profese</v-card-title>
+              <v-card-title class="text-h5 font-bold">
+                <div class="flex items-center w-full">
+                  <span>Zaměstnání a profese</span>
+                  <v-btn icon class="ml-4" @click="onAddEmployment" size="35">
+                    <v-icon size="23">mdi-plus</v-icon>
+                  </v-btn>
+                </div>
+              </v-card-title>
               <v-divider></v-divider>
               <v-card-text>
                 <v-list dense>
-                  <v-list-item>
+                  <v-list-item class="d-flex align-center">
                     <v-list-item-content>
-                      <div><strong>Název společnosti:</strong> IT Solutions</div>
-                      <div><strong>Adresa:</strong> Tech Park, Praha</div>
-                      <div><strong>Období:</strong> 2008 – 2015</div>
+                      <div class="flex items-center justify-between w-full pr-2">
+                        <div>
+                          <div><strong>Název společnosti:</strong> IT Solutions</div>
+                          <div><strong>Adresa:</strong> Tech Park, Praha</div>
+                          <div><strong>Období:</strong> 2008 – 2015</div>
+                        </div>
+                        <v-btn icon class="ml-4" @click="onEditEmployment" size="35">
+                          <v-icon size="18">mdi-pencil</v-icon>
+                        </v-btn>
+                      </div>
                     </v-list-item-content>
                   </v-list-item>
-                  <v-list-item>
+                  <v-list-item class="d-flex align-center">
                     <v-list-item-content>
-                      <div><strong>Název společnosti:</strong> Web Innovators</div>
-                      <div><strong>Adresa:</strong> Centrum, Brno</div>
-                      <div><strong>Období:</strong> 2015 – současnost</div>
+                      <div class="flex items-center justify-between w-full pr-2">
+                        <div>
+                          <div><strong>Název společnosti:</strong> Web Innovators</div>
+                          <div><strong>Adresa:</strong> Centrum, Brno</div>
+                          <div><strong>Období:</strong> 2015 – současnost</div>
+                        </div>
+                        <v-btn icon class="ml-4" @click="onEditEmployment" size="35">
+                          <v-icon size="18">mdi-pencil</v-icon>
+                        </v-btn>
+                      </div>
                     </v-list-item-content>
                   </v-list-item>
-                  <v-list-item>
+                  <v-list-item class="d-flex align-center">
                     <v-list-item-content>
-                      <div><strong>Profese:</strong> Programátor, IT konzultant</div>
+                      <div class="flex items-center justify-between w-full pr-2">
+                        <div>
+                          <div><strong>Profese:</strong> Programátor, IT konzultant</div>
+                        </div>
+                      </div>
                     </v-list-item-content>
                   </v-list-item>
                 </v-list>
@@ -209,15 +282,36 @@
         <v-row>
           <v-col cols="12">
             <v-card class="mb-4" outlined>
-              <v-card-title class="text-h5 font-bold">Adresy pobytu</v-card-title>
+              <v-card-title class="text-h5 font-bold">
+                <div class="flex items-center w-full">
+                  <span>Adresy pobytu</span>
+                  <v-btn icon class="ml-4" @click="onAddAddress" size="35">
+                    <v-icon size="23">mdi-plus</v-icon>
+                  </v-btn>
+                </div>
+              </v-card-title>
               <v-divider></v-divider>
               <v-card-text>
                 <v-list dense>
-                  <v-list-item>
-                    <v-list-item-content>Praha, Česká republika</v-list-item-content>
+                  <v-list-item class="d-flex align-center">
+                    <v-list-item-content>
+                      <div class="flex items-center justify-between w-full pr-2 py-2">
+                        <div>Praha, Česká republika</div>
+                        <v-btn icon class="ml-4" @click="onEditAddress" size="35">
+                          <v-icon size="18">mdi-pencil</v-icon>
+                        </v-btn>
+                      </div>
+                    </v-list-item-content>
                   </v-list-item>
-                  <v-list-item>
-                    <v-list-item-content>Brno, Česká republika</v-list-item-content>
+                  <v-list-item class="d-flex align-center">
+                    <v-list-item-content>
+                      <div class="flex items-center justify-between w-full pr-2 py-2">
+                        <div>Brno, Česká republika</div>
+                        <v-btn icon class="ml-4" @click="onEditAddress" size="35">
+                          <v-icon size="18">mdi-pencil</v-icon>
+                        </v-btn>
+                      </div>
+                    </v-list-item-content>
                   </v-list-item>
                 </v-list>
               </v-card-text>
@@ -295,6 +389,41 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
+
+const onAddMarriage = () => {
+  console.log('Add marriage');
+};
+
+const onEditMarriage = () => {
+  console.log('Edit marriage');
+};
+
+const onAddEducation = () => {
+  console.log('Add education');
+};
+
+const onEditEducation = () => {
+  console.log('Edit education');
+};
+
+const onAddEmployment = () => {
+  console.log('Add employment');
+};
+
+const onEditEmployment = () => {
+  console.log('Edit employment');
+};
+
+const onAddAddress = () => {
+  console.log('Add address');
+};
+
+const onEditAddress = () => {
+  console.log('Edit address');
+};
+
+
 </script>
 
 <style scoped>
