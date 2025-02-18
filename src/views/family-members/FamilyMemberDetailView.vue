@@ -10,45 +10,19 @@
           <template v-if="familyStore.loading">
             <v-progress-circular indeterminate color="primary" class="mx-auto" />
           </template>
-
           <template v-else-if="familyStore.error">
             <v-alert type="error" dismissible>
               {{ familyStore.error }}
             </v-alert>
           </template>
-
           <template v-else-if="member">
-            <v-card>
-              <v-img src="/avatar-blank.png" height="300px" alt="Profilový obrázek" />
-
-              <v-card-title>
-                <div class="flex gap-2 pb-2">
-                  <v-btn icon @click="editMember">
-                    <v-icon>mdi-pencil</v-icon>
-                  </v-btn>
-                  <v-btn icon @click="deleteMember">
-                    <v-icon>mdi-delete</v-icon>
-                  </v-btn>
-                  <v-btn icon @click="exportMember">
-                    <v-icon>mdi-file-pdf-box</v-icon>
-                  </v-btn>
-                </div>
-                <div class="text-h4">{{ member.firstName }} {{ member.lastName }}</div>
-              </v-card-title>
-
-              <v-card-subtitle>
-                {{ t('family.label.dateOfBirth') }}: {{ member.dateOfBirth }}
-                <template v-if="member.dateOfDeath">
-                  <br />
-                  {{ t('family.label.dateOfDeath') }}: {{ member.dateOfDeath }}
-                </template>
-              </v-card-subtitle>
-              <v-card-text>
-                <p>Doplňující informace o členu rodiny.</p>
-              </v-card-text>
-            </v-card>
+            <FamilyMemberHeader
+              :member="member"
+              @edit="editMember"
+              @delete="deleteMember"
+              @export="exportMember"
+            />
           </template>
-
           <template v-else>
             <v-alert type="warning">
               Člen rodiny nebyl nalezen.
@@ -57,366 +31,16 @@
         </v-col>
       </v-row>
 
-      <v-tabs v-model="activeTab" background-color="grey lighten-4" class="mt-4" grow>
-        <v-tab value="info">Základní informace</v-tab>
-        <v-tab value="docs">Dokumenty</v-tab>
-        <v-tab value="gallery">Galerie</v-tab>
-        <v-tab value="stories">Příběhy</v-tab>
-      </v-tabs>
-
-      <v-tabs-items v-model="activeTab">
-        <v-tab-item value="info">
-          <v-card flat v-if="activeTab === 'info'">
-            <v-card-text>
-              <v-container fluid>
-                <v-row>
-                  <v-col cols="12">
-                    <v-card class="mb-4" outlined>
-                      <v-card-title class="text-h5 font-bold">Osobní údaje</v-card-title>
-                      <v-divider></v-divider>
-                      <v-card-text>
-                        <v-row>
-                          <v-col cols="12" md="6">
-                            <div><strong>Jméno:</strong> Jan</div>
-                          </v-col>
-                          <v-col cols="12" md="6">
-                            <div><strong>Příjmení:</strong> Novák</div>
-                          </v-col>
-                          <v-col cols="12" md="6">
-                            <div><strong>Rodné příjmení:</strong> Horák</div>
-                          </v-col>
-                          <v-col cols="12" md="6">
-                            <div><strong>Datum narození:</strong> 01.01.1990</div>
-                          </v-col>
-                          <v-col cols="12" md="6">
-                            <div><strong>Místo narození:</strong> Praha</div>
-                          </v-col>
-                          <v-col cols="12" md="6">
-                            <div><strong>Čas narození:</strong> 08:30</div>
-                          </v-col>
-                          <v-col cols="12" md="6">
-                            <div><strong>Pohlaví:</strong> Muž</div>
-                          </v-col>
-                          <v-col cols="12" md="6">
-                            <div><strong>Náboženství:</strong> Křesťanství</div>
-                          </v-col>
-                        </v-row>
-                      </v-card-text>
-                    </v-card>
-                  </v-col>
-                </v-row>
-
-                <v-row>
-                  <v-col cols="12">
-                    <v-card class="mb-4" outlined>
-                      <v-card-title class="text-h5 font-bold">Informace o úmrtí</v-card-title>
-                      <v-divider></v-divider>
-                      <v-card-text>
-                        <v-row>
-                          <v-col cols="12" md="6">
-                            <div><strong>Datum úmrtí:</strong> 15.05.2050</div>
-                          </v-col>
-                          <v-col cols="12" md="6">
-                            <div><strong>Čas úmrtí:</strong> 23:45</div>
-                          </v-col>
-                          <v-col cols="12" md="6">
-                            <div><strong>Místo úmrtí:</strong> Brno</div>
-                          </v-col>
-                          <v-col cols="12" md="6">
-                            <div><strong>Příčina smrti:</strong> Přírodní příčiny</div>
-                          </v-col>
-                          <v-col cols="12" md="6">
-                            <div><strong>Datum pohřbu:</strong> 17.05.2050</div>
-                          </v-col>
-                          <v-col cols="12" md="6">
-                            <div><strong>Místo pohřbu:</strong> Krematorium Praha</div>
-                          </v-col>
-                          <v-col cols="12" md="6">
-                            <div><strong>Místo pochování:</strong> Hřbitov Olšany</div>
-                          </v-col>
-                        </v-row>
-                      </v-card-text>
-                    </v-card>
-                  </v-col>
-                </v-row>
-
-                <v-row>
-                  <v-col cols="12">
-                    <v-card class="mb-4" outlined>
-                      <v-card-title class="text-h5 font-bold">Příbuzní</v-card-title>
-                      <v-divider></v-divider>
-                      <v-card-text>
-                        <v-list dense>
-                          <v-list-item>
-                            <v-list-item-content>
-                              <a href="https://example.com/petr-novak" target="_blank">Petra Nováková (matka)</a>
-                            </v-list-item-content>
-                          </v-list-item>
-                          <v-list-item>
-                            <v-list-item-content>
-                              <a href="https://example.com/petr-novak" target="_blank">Petr Novák (otec)</a>
-                            </v-list-item-content>
-                          </v-list-item>
-                          <v-list-item>
-                            <v-list-item-content>
-                              <a href="https://example.com/petr-novak" target="_blank">Petr Novák (potomek)</a>
-                            </v-list-item-content>
-                          </v-list-item>
-                          <v-list-item>
-                            <v-list-item-content>
-                              <a href="https://example.com/klara-novakova" target="_blank">Klára Nováková (potomek)</a>
-                            </v-list-item-content>
-                          </v-list-item>
-                          <v-list-item>
-                            <v-list-item-content>
-                              <a href="https://example.com/adam-novak" target="_blank">Adam Novák (sourozenec)</a>
-                            </v-list-item-content>
-                          </v-list-item>
-                          <v-list-item>
-                            <v-list-item-content>
-                              <a href="https://example.com/lucie-novakova" target="_blank">Lucie Nováková (sourozenec)</a>
-                            </v-list-item-content>
-                          </v-list-item>
-                          <v-list-item>
-                            <v-list-item-content>
-                              <a href="https://example.com/martin-novak" target="_blank">Martin Novák (prarodič)</a>
-                            </v-list-item-content>
-                          </v-list-item>
-                          <v-list-item>
-                            <v-list-item-content>
-                              <a href="https://example.com/jana-novakova" target="_blank">Jana Nováková (prarodič)</a>
-                            </v-list-item-content>
-                          </v-list-item>
-                        </v-list>
-                      </v-card-text>
-                    </v-card>
-                  </v-col>
-                </v-row>
-
-                <v-row>
-                  <v-col cols="12">
-                    <v-card class="mb-4" outlined>
-                      <v-card-title class="text-h5 font-bold">Manželství</v-card-title>
-                      <v-divider></v-divider>
-                      <v-card-text>
-                        <v-list dense>
-                          <v-list-item>
-                            <v-list-item-content>
-                              <div><strong>Partner:</strong> Eva Nováková</div>
-                              <div><strong>Datum sňatku:</strong> 12.06.2010</div>
-                              <div><strong>Rozvod:</strong> 2018</div>
-                            </v-list-item-content>
-                          </v-list-item>
-                        </v-list>
-                      </v-card-text>
-                    </v-card>
-                  </v-col>
-                </v-row>
-
-                <v-row>
-                  <v-col cols="12">
-                    <v-card class="mb-4" outlined>
-                      <v-card-title class="text-h5 font-bold">Vzdělání</v-card-title>
-                      <v-divider></v-divider>
-                      <v-card-text>
-                        <v-list dense>
-                          <v-list-item>
-                            <v-list-item-content>
-                              <div><strong>Název:</strong> Základní škola Květen</div>
-                              <div><strong>Adresa:</strong> Ulice 1, Praha</div>
-                              <div><strong>Období:</strong> 1996 – 2002</div>
-                            </v-list-item-content>
-                          </v-list-item>
-                          <v-list-item>
-                            <v-list-item-content>
-                              <div><strong>Název:</strong> Gymnázium Slunce</div>
-                              <div><strong>Adresa:</strong> Ulice 2, Brno</div>
-                              <div><strong>Období:</strong> 2002 – 2006</div>
-                            </v-list-item-content>
-                          </v-list-item>
-                        </v-list>
-                      </v-card-text>
-                    </v-card>
-                  </v-col>
-                </v-row>
-
-                <v-row>
-                  <v-col cols="12">
-                    <v-card class="mb-4" outlined>
-                      <v-card-title class="text-h5 font-bold">Zaměstnání a profese</v-card-title>
-                      <v-divider></v-divider>
-                      <v-card-text>
-                        <v-list dense>
-                          <v-list-item>
-                            <v-list-item-content>
-                              <div><strong>Název společnosti:</strong> IT Solutions</div>
-                              <div><strong>Adresa:</strong> Tech Park, Praha</div>
-                              <div><strong>Období:</strong> 2008 – 2015</div>
-                            </v-list-item-content>
-                          </v-list-item>
-                          <v-list-item>
-                            <v-list-item-content>
-                              <div><strong>Název společnosti:</strong> Web Innovators</div>
-                              <div><strong>Adresa:</strong> Centrum, Brno</div>
-                              <div><strong>Období:</strong> 2015 – současnost</div>
-                            </v-list-item-content>
-                          </v-list-item>
-                          <v-list-item>
-                            <v-list-item-content>
-                              <div><strong>Profese:</strong> Programátor, IT konzultant</div>
-                            </v-list-item-content>
-                          </v-list-item>
-                        </v-list>
-                      </v-card-text>
-                    </v-card>
-                  </v-col>
-                </v-row>
-
-                <v-row>
-                  <v-col cols="12">
-                    <v-card class="mb-4" outlined>
-                      <v-card-title class="text-h5 font-bold">Adresy pobytu</v-card-title>
-                      <v-divider></v-divider>
-                      <v-card-text>
-                        <v-list dense>
-                          <v-list-item>
-                            <v-list-item-content>Praha, Česká republika</v-list-item-content>
-                          </v-list-item>
-                          <v-list-item>
-                            <v-list-item-content>Brno, Česká republika</v-list-item-content>
-                          </v-list-item>
-                        </v-list>
-                      </v-card-text>
-                    </v-card>
-                  </v-col>
-                </v-row>
-
-                <v-row>
-                  <v-col cols="12">
-                    <v-card class="mb-4" outlined>
-                      <v-card-title class="text-h5 font-bold">Koníčky a zájmy</v-card-title>
-                      <v-divider></v-divider>
-                      <v-card-text>
-                        <p>Čtení, sport, hudba, cestování</p>
-                      </v-card-text>
-                    </v-card>
-                  </v-col>
-                </v-row>
-
-                <v-row>
-                  <v-col cols="12">
-                    <v-card class="mb-4" outlined>
-                      <v-card-title class="text-h5 font-bold">Krátký popis osoby</v-card-title>
-                      <v-divider></v-divider>
-                      <v-card-text>
-                        <p>
-                          Jan je charismatická osobnost s bohatou historií, která zanechala stopu ve všech oblastech svého života.
-                        </p>
-                      </v-card-text>
-                    </v-card>
-                  </v-col>
-                </v-row>
-
-                <v-row>
-                  <v-col cols="12">
-                    <v-card class="mb-4" outlined>
-                      <v-card-title class="text-h5 font-bold">Krátký vzkaz</v-card-title>
-                      <v-divider></v-divider>
-                      <v-card-text>
-                        <p>Tady je krátký vzkaz, který vyjadřuje životní filozofii.</p>
-                      </v-card-text>
-                    </v-card>
-                  </v-col>
-                </v-row>
-
-                <v-row>
-                  <v-col cols="12">
-                    <v-card class="mb-4" outlined>
-                      <v-card-title class="text-h5 font-bold">Podpis</v-card-title>
-                      <v-divider></v-divider>
-                      <v-card-text class="flex justify-center">
-                        <v-img src="https://example.com/signature.png" max-width="200" />
-                      </v-card-text>
-                    </v-card>
-                  </v-col>
-                </v-row>
-
-                <v-row>
-                  <v-col cols="12">
-                    <v-card class="mb-4" outlined>
-                      <v-card-title class="text-h5 font-bold">Další údaje</v-card-title>
-                      <v-divider></v-divider>
-                      <v-card-text>
-                        <p>
-                          Zde mohou být libovolné údaje, které si uživatel sám vytvořil při vytváření osoby.
-                        </p>
-                      </v-card-text>
-                    </v-card>
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-card-text>
-          </v-card>
-        </v-tab-item>
-
-        <v-tab-item value="docs">
-          <v-card flat v-if="activeTab === 'docs'">
-            <v-card-text>
-              Zde patří dokumenty
-            </v-card-text>
-          </v-card>
-        </v-tab-item>
-
-        <v-tab-item value="gallery">
-          <v-card flat v-if="activeTab === 'gallery'">
-            <v-card-text>
-              Zde patří galerie
-            </v-card-text>
-          </v-card>
-        </v-tab-item>
-
-        <v-tab-item value="stories">
-          <v-card flat v-if="activeTab === 'stories'">
-            <v-card-text>
-              <div class="flex justify-end mb-4">
-                <v-btn color="primary" @click="addStory">
-                  <v-icon left>mdi-plus</v-icon>
-                  Nový příběh
-                </v-btn>
-              </div>
-
-              <template v-if="storiesLoading">
-                <v-progress-circular indeterminate color="primary" class="mx-auto" />
-              </template>
-              <template v-else-if="storiesError">
-                <v-alert type="error">
-                  {{ storiesError }}
-                </v-alert>
-              </template>
-              <div v-else>
-                <v-card
-                  v-for="story in stories"
-                  :key="story.id"
-                  outlined
-                  class="mb-3 rounded-lg hover:shadow-lg cursor-pointer"
-                  @click="goToStoryDetail(story.id)"
-                >
-                  <v-card-text class="flex items-center justify-between">
-                    <div>
-                      <div class="text-h6 font-medium">{{ story.title }}</div>
-                      <div class="text-body-2 text-gray-600">
-                        <span>Vytvořeno: {{ formatDate(story.createdAt) }}</span>
-                        <span v-if="story.date"> | Datum: {{ story.date }}</span>
-                      </div>
-                    </div>
-                    <v-icon>mdi-chevron-right</v-icon>
-                  </v-card-text>
-                </v-card>
-              </div>
-            </v-card-text>
-          </v-card>
-        </v-tab-item>
-      </v-tabs-items>
+      <FamilyMemberTabs
+        :activeTab="activeTab"
+        @update:activeTab="activeTab = $event"
+        :stories="stories"
+        :storiesLoading="storiesLoading"
+        :storiesError="storiesError"
+        :formatDate="formatDate"
+        @add-story="addStory"
+        @go-to-story="goToStoryDetail"
+      />
     </v-container>
   </AppLayout>
 </template>
@@ -424,21 +48,18 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useI18n } from 'vue-i18n';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { useFamilyMembersStore } from '@/stores/familyMemberStore';
 import { StoriesService } from '@/services/storiesService';
+import FamilyMemberHeader from '@/components/family-member/FamilyMemberHeader.vue'
+import FamilyMemberTabs from '@/components/family-member-tabs/FamilyMemberTabs.vue'
 
-const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
 const familyStore = useFamilyMembersStore();
 
 const memberId = route.params.id as string;
-
-const member = computed(() => {
-  return familyStore.familyMembers.find((m) => m.id === memberId);
-});
+const member = computed(() => familyStore.familyMembers.find(m => m.id === memberId));
 
 onMounted(() => {
   if (!member.value) {
@@ -463,7 +84,7 @@ const fetchStories = async (familyMemberId: string) => {
   storiesError.value = null;
   try {
     const response = await StoriesService.fetchStoriesForFamilyMember(familyMemberId);
-    stories.value = response.data.data.map((item) => {
+    stories.value = response.data.data.map((item: any) => {
       const attrs = item.attributes;
       let dateStr = attrs["date-type"] === 'exact' ? attrs["story-date"] : attrs["story-year"];
       if (attrs["is-date-approx"]) {
@@ -482,7 +103,6 @@ const fetchStories = async (familyMemberId: string) => {
     storiesLoading.value = false;
   }
 };
-
 
 const activeTab = ref('info');
 
@@ -513,7 +133,6 @@ const goToStoryDetail = (id: string) => {
     router.push({ name: 'story-detail', params: { id } });
   }
 };
-
 
 const formatDate = (dateStr: string): string => {
   const dateObj = new Date(dateStr);

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
-import GlobalSnackbar from '@/components/GlobalSnackbar.vue'
-import GlobalConfirm from '@/components/GlobalConfirm.vue'
+import GlobalSnackbar from '@/components/global/GlobalSnackbar.vue'
+import GlobalConfirm from '@/components/global/GlobalConfirm.vue'
 </script>
 
 <template>

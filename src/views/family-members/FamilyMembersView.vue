@@ -55,7 +55,7 @@ import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppLayout from '@/layouts/AppLayout.vue'
 import { useFamilyMembersStore } from '@/stores/familyMemberStore'
-import FamilyMemberCreateModal from '@/components/FamilyMemberCreateModal.vue'
+import FamilyMemberCreateModal from '@/components/family-member/FamilyMemberCreateModal.vue'
 
 const { t } = useI18n()
 const familyStore = useFamilyMembersStore()
