@@ -10,7 +10,7 @@
     <v-tab-item value="info">
       <v-card flat v-if="currentTab === 'info'">
         <v-card-text>
-          <BasicInfoTab />
+          <BasicInfoTab :member="member" />
         </v-card-text>
       </v-card>
     </v-tab-item>
@@ -54,6 +54,7 @@ import BasicInfoTab from './BasicInfoTab.vue';
 import DocsTab from './DocsTab.vue';
 import GalleryTab from './GalleryTab.vue';
 import StoriesTab from './StoriesTab.vue';
+import type { FamilyMember } from '@/interfaces/familyMembers.ts'
 
 const props = defineProps<{
   activeTab: string;
@@ -61,6 +62,7 @@ const props = defineProps<{
   storiesLoading: boolean;
   storiesError: string | null;
   formatDate: (dateStr: string) => string;
+  member: FamilyMember;
 }>();
 
 const emit = defineEmits<{

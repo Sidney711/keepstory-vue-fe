@@ -18,31 +18,33 @@
     </v-card-title>
 
     <v-card-subtitle>
-      {{ member.dateOfBirth }}
+      Datum narození: {{ formatDate(member.dateOfBirth) }}
       <template v-if="member.dateOfDeath">
         <br />
-        {{ member.dateOfDeath }}
+        Datum úmrtí: {{ formatDate(member.dateOfDeath) }}
       </template>
     </v-card-subtitle>
 
     <v-card-text>
-      <p>Doplňující informace o členu rodiny.</p>
+      <p>{{member.shortDescription}}</p>
     </v-card-text>
   </v-card>
 </template>
 
 <script setup lang="ts">
-interface Member {
-  id: string;
-  firstName: string;
-  lastName: string;
-  dateOfBirth: string;
-  dateOfDeath?: string;
-}
+import { useI18n } from 'vue-i18n';
+import type { FamilyMember } from '@/interfaces/familyMembers.ts'
 
 const props = defineProps<{
-  member: Member;
+  member: FamilyMember;
 }>();
+
+const { locale } = useI18n();
+
+function formatDate(date: string): string {
+  const d = new Date(date);
+  return d.toLocaleDateString(locale.value);
+}
 </script>
 
 <style scoped>

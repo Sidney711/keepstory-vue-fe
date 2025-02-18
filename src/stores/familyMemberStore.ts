@@ -26,6 +26,20 @@ export const useFamilyMembersStore = defineStore('familyMembers', {
           lastName: item.attributes['last-name'],
           dateOfBirth: item.attributes['date-of-birth'],
           dateOfDeath: item.attributes['date-of-death'],
+          shortMessage: item.attributes['short-message'],
+          birthLastName: item.attributes['birth-last-name'],
+          birthPlace: item.attributes['birth-place'],
+          birthTime: item.attributes['birth-time'],
+          gender: item.attributes['gender'],
+          religion: item.attributes['religion'],
+          deceased: item.attributes.deceased,
+          shortDescription: item.attributes['short-description'],
+          deathTime: item.attributes['death-time'],
+          deathPlace: item.attributes['death-place'],
+          causeOfDeath: item.attributes['cause-of-death'],
+          burialPlace: item.attributes['burial-place'],
+          burialDate: item.attributes['burial-date'],
+          intermentPlace: item.attributes['internment-place']
         }));
       } catch (err: any) {
         this.error = err.message;

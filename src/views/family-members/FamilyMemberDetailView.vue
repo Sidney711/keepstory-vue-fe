@@ -40,6 +40,8 @@
         :formatDate="formatDate"
         @add-story="addStory"
         @go-to-story="goToStoryDetail"
+        :member="member"
+        v-if="member"
       />
     </v-container>
   </AppLayout>

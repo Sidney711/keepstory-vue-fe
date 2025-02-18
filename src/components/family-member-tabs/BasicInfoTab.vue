@@ -10,28 +10,28 @@
               <v-card-text>
                 <v-row>
                   <v-col cols="12" md="6">
-                    <div><strong>Jméno:</strong> Jan</div>
+                    <div><strong>Jméno:</strong> {{member.firstName}}</div>
                   </v-col>
                   <v-col cols="12" md="6">
-                    <div><strong>Příjmení:</strong> Novák</div>
+                    <div><strong>Příjmení:</strong> {{member.lastName}}</div>
                   </v-col>
                   <v-col cols="12" md="6">
-                    <div><strong>Rodné příjmení:</strong> Horák</div>
+                    <div><strong>Rodné příjmení:</strong> {{member.birthLastName}}</div>
                   </v-col>
                   <v-col cols="12" md="6">
-                    <div><strong>Datum narození:</strong> 01.01.1990</div>
+                    <div><strong>Datum narození:</strong> {{formatDate(member.dateOfBirth)}}</div>
                   </v-col>
                   <v-col cols="12" md="6">
-                    <div><strong>Místo narození:</strong> Praha</div>
+                    <div><strong>Místo narození:</strong> {{member.birthPlace}}</div>
                   </v-col>
                   <v-col cols="12" md="6">
-                    <div><strong>Čas narození:</strong> 08:30</div>
+                    <div><strong>Čas narození:</strong> {{ formatTime(member.birthTime) }}</div>
                   </v-col>
                   <v-col cols="12" md="6">
-                    <div><strong>Pohlaví:</strong> Muž</div>
+                    <div><strong>Pohlaví:</strong> {{member.gender}}</div>
                   </v-col>
                   <v-col cols="12" md="6">
-                    <div><strong>Náboženství:</strong> Křesťanství</div>
+                    <div><strong>Náboženství:</strong> {{member.religion}}</div>
                   </v-col>
                 </v-row>
               </v-card-text>
@@ -39,7 +39,7 @@
           </v-col>
         </v-row>
 
-        <v-row>
+        <v-row v-if="member.deceased">
           <v-col cols="12">
             <v-card class="mb-4" outlined>
               <v-card-title class="text-h5 font-bold">Informace o úmrtí</v-card-title>
@@ -47,25 +47,25 @@
               <v-card-text>
                 <v-row>
                   <v-col cols="12" md="6">
-                    <div><strong>Datum úmrtí:</strong> 15.05.2050</div>
+                    <div><strong>Datum úmrtí:</strong> {{formatDate(member.dateOfDeath)}}</div>
                   </v-col>
                   <v-col cols="12" md="6">
-                    <div><strong>Čas úmrtí:</strong> 23:45</div>
+                    <div><strong>Čas úmrtí:</strong> {{formatTime(member.deathTime)}}</div>
                   </v-col>
                   <v-col cols="12" md="6">
-                    <div><strong>Místo úmrtí:</strong> Brno</div>
+                    <div><strong>Místo úmrtí:</strong> {{member.deathPlace}}</div>
                   </v-col>
                   <v-col cols="12" md="6">
-                    <div><strong>Příčina smrti:</strong> Přírodní příčiny</div>
+                    <div><strong>Příčina smrti:</strong> {{member.causeOfDeath}}</div>
                   </v-col>
                   <v-col cols="12" md="6">
-                    <div><strong>Datum pohřbu:</strong> 17.05.2050</div>
+                    <div><strong>Datum pohřbu:</strong> {{formatDate(member.burialDate)}}</div>
                   </v-col>
                   <v-col cols="12" md="6">
-                    <div><strong>Místo pohřbu:</strong> Krematorium Praha</div>
+                    <div><strong>Místo pohřbu:</strong> {{member.burialPlace}}</div>
                   </v-col>
                   <v-col cols="12" md="6">
-                    <div><strong>Místo pochování:</strong> Hřbitov Olšany</div>
+                    <div><strong>Místo pochování:</strong> {{member.intermentPlace}}</div>
                   </v-col>
                 </v-row>
               </v-card-text>
@@ -76,7 +76,7 @@
         <v-row>
           <v-col cols="12">
             <v-card class="mb-4" outlined>
-              <v-card-title class="text-h5 font-bold">Příbuzní</v-card-title>
+              <v-card-title class="text-h5 font-bold bg-red-300">Příbuzní</v-card-title>
               <v-divider></v-divider>
               <v-card-text>
                 <v-list dense>
@@ -390,6 +390,12 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import type { FamilyMember } from '@/interfaces/familyMembers.ts'
+import { useI18n } from 'vue-i18n'
+
+const props = defineProps<{
+  member: FamilyMember;
+}>();
 
 const onAddMarriage = () => {
   console.log('Add marriage');
@@ -423,7 +429,24 @@ const onEditAddress = () => {
   console.log('Edit address');
 };
 
+const { locale } = useI18n();
 
+function formatDate(date: string): string {
+  if (!date) return '';
+  const d = new Date(date);
+  return d.toLocaleDateString(locale.value);
+}
+
+function formatTime(time: string): string {
+  if (!time) return '';
+  const d = new Date(time);
+  if (isNaN(d.getTime())) return time;
+  return d.toLocaleTimeString(locale.value, {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  });
+}
 </script>
 
 <style scoped>
