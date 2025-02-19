@@ -53,6 +53,12 @@ export const useFamilyMembersStore = defineStore('familyMembers', {
             lastName: marriage['last-name'],
             period: marriage.period,
           })),
+          educationDetails: item.attributes['education-details'].map((education) => ({
+            id: education.id,
+            schoolName: education['school-name'],
+            address: education.address,
+            period: education.period,
+          })),
         }));
       } catch (err: any) {
         this.error = err.message;

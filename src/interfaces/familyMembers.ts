@@ -20,6 +20,7 @@ export interface FamilyMember {
   intermentPlace: string;
   relationShipTree: FamilyRelationship[];
   marriageDetails: MarriageDetails[];
+  educationDetails: EducationDetails[];
 }
 
 export interface FamilyRelationship {
@@ -37,6 +38,13 @@ export interface MarriageDetails {
   period: string;
 }
 
+export interface EducationDetails {
+  id: string;
+  schoolName: string;
+  address: string;
+  period: string;
+}
+
 export interface FamilyRelationshipResponse {
   id: string;
   'first-name': string;
@@ -50,6 +58,13 @@ export interface MarriageDetailsResponse {
   'first-name': string;
   'last-name': string;
   period: string;
+}
+
+export interface EducationDetailsResponse {
+  id: string;
+  'school-name': string;
+  'address': string;
+  'period': string;
 }
 
 export interface FamilyMemberResponse {
@@ -81,6 +96,7 @@ export interface FamilyMemberResponse {
     'internment-place': string;
     'relationship-tree': FamilyRelationshipResponse[];
     'marriage-details': MarriageDetailsResponse[];
+    'education-details': EducationDetailsResponse[];
   };
 }
 

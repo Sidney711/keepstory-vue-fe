@@ -154,27 +154,23 @@
               <v-divider></v-divider>
               <v-card-text>
                 <v-list dense>
-                  <v-list-item class="d-flex align-center">
+                  <v-list-item
+                    v-for="education in member.educationDetails"
+                    :key="education.id"
+                    class="d-flex align-center"
+                  >
                     <v-list-item-content>
                       <div class="flex items-center justify-between w-full pr-2">
                         <div>
-                          <div><strong>Název:</strong> Základní škola Květen</div>
-                          <div><strong>Adresa:</strong> Ulice 1, Praha</div>
-                          <div><strong>Období:</strong> 1996 – 2002</div>
-                        </div>
-                        <v-btn icon class="ml-4" @click="onEditEducation" size="35">
-                          <v-icon size="18">mdi-pencil</v-icon>
-                        </v-btn>
-                      </div>
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-list-item class="d-flex align-center">
-                    <v-list-item-content>
-                      <div class="flex items-center justify-between w-full pr-2">
-                        <div>
-                          <div><strong>Název:</strong> Gymnázium Slunce</div>
-                          <div><strong>Adresa:</strong> Ulice 2, Brno</div>
-                          <div><strong>Období:</strong> 2002 – 2006</div>
+                          <div>
+                            <strong>Název:</strong> {{ education.schoolName }}
+                          </div>
+                          <div>
+                            <strong>Adresa:</strong> {{ education.address }}
+                          </div>
+                          <div>
+                            <strong>Období:</strong> {{ education.period }}
+                          </div>
                         </div>
                         <v-btn icon class="ml-4" @click="onEditEducation" size="35">
                           <v-icon size="18">mdi-pencil</v-icon>
