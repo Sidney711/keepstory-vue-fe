@@ -136,18 +136,19 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <v-select
                 v-model="state.motherId"
-                :items="familyMembersSelect"
+                :items="personsItems"
                 label="Matka"
-                item-text="name"
-                item-value="id"
+                item-title="text"
+                item-value="value"
+                :return-object="false"
                 outlined
               />
               <v-select
                 v-model="state.fatherId"
-                :items="familyMembersSelect"
+                :items="personsItems"
                 label="Otec"
-                item-text="name"
-                item-value="id"
+                item-title="text"
+                item-value="value"
                 outlined
               />
             </div>
@@ -193,6 +194,7 @@ import { defineProps, defineEmits, defineExpose } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import { useFamilyMembersStore } from '@/stores/familyMemberStore'
+import type { FamilyMember } from '@/interfaces/familyMembers'
 
 function isoToDateLocal(iso: string): string {
   if (!iso) return ''
@@ -219,36 +221,13 @@ function combineLocalDateAndTimeToUTC(date: string, time: string): string {
   return localDate.toISOString()
 }
 
-interface FamilyMember {
-  id: string;
-  firstName: string;
-  lastName: string;
-  dateOfBirth: string;
-  dateOfDeath?: string;
-  shortDescription: string;
-  birthLastName: string;
-  birthPlace: string;
-  birthTime: string;
-  gender: string;
-  religion: string;
-  deceased: boolean;
-  deathTime: string;
-  deathPlace: string;
-  causeOfDeath: string;
-  burialPlace: string;
-  burialDate: string;
-  internmentPlace: string;
-  'hobbiesAndInterests'?: string;
-  shortMessage: string;
-}
-
 const props = defineProps<{ memberId: string }>()
 const emit = defineEmits(['memberUpdated'])
 const familyStore = useFamilyMembersStore()
 
-const familyMember = computed<FamilyMember | null>(() => {
-  return familyStore.familyMembers.find(m => m.id === props.memberId) || null
-})
+const familyMember = computed<FamilyMember | null>(() =>
+  familyStore.familyMembers.find(m => m.id === props.memberId) || null
+)
 
 const dialog = ref(false)
 
@@ -271,8 +250,8 @@ const state = reactive({
   burialDate: '',
   burialPlace: '',
   internmentPlace: '',
-  motherId: '',
-  fatherId: '',
+  motherId: '' as string,
+  fatherId: '' as string,
   hobbies: '',
   shortMessage: '',
   signature: null as File | null
@@ -284,8 +263,20 @@ const rules = {
 }
 const v$ = useVuelidate(rules, state)
 
+const personsItems = computed(() =>
+  familyStore.familyMembers
+    .filter(member => member.id !== props.memberId)
+    .map(member => ({
+      text: `${member.firstName} ${member.lastName} (nar. ${member.dateOfBirth ? isoToDateLocal(member.dateOfBirth) : '-'})`,
+      value: member.id
+    }))
+)
+
+const genderItems = ['female', 'male', 'other']
+
 function resetForm() {
   if (!familyMember.value) return
+
   state.firstName = familyMember.value.firstName
   state.lastName = familyMember.value.lastName
   state.shortDescription = familyMember.value.shortDescription
@@ -295,6 +286,7 @@ function resetForm() {
   state.birthTime = isoToTimeLocal(familyMember.value.birthTime)
   state.gender = familyMember.value.gender
   state.religion = familyMember.value.religion
+
   if (familyMember.value.dateOfDeath) {
     state.isAlive = false
     state.dateOfDeath = isoToDateLocal(familyMember.value.dateOfDeath)
@@ -304,15 +296,24 @@ function resetForm() {
     state.dateOfDeath = ''
     state.deathTime = ''
   }
+
   state.deathPlace = familyMember.value.deathPlace
   state.causeOfDeath = familyMember.value.causeOfDeath
   state.burialDate = isoToDateLocal(familyMember.value.burialDate)
   state.burialPlace = familyMember.value.burialPlace
   state.internmentPlace = familyMember.value.internmentPlace
-  state.motherId = ''
-  state.fatherId = ''
-  state.hobbies = familyMember.value['hobbiesAndInterests'] || ''
+
+  const motherRel = familyMember.value.relationShipTree.find(r => r.relationship === 'mother')
+
+  state.motherId = personsItems.value.find(p => p.value == motherRel?.id)
+
+  const fatherRel = familyMember.value.relationShipTree.find(r => r.relationship === 'father')
+
+  state.fatherId = personsItems.value.find(p => p.value == fatherRel?.id)
+
+  state.hobbies = familyMember.value.hobbiesAndInterests || ''
   state.shortMessage = familyMember.value.shortMessage
+
   v$.value.$reset()
 }
 
@@ -328,14 +329,6 @@ onMounted(async () => {
 watch(familyMember, (newMember) => {
   if (newMember) resetForm()
 }, { immediate: true })
-
-const genderItems = ['female', 'male', 'other']
-const familyMembersSelect = computed(() => {
-  return familyStore.familyMembers.map(member => ({
-    id: member.id,
-    name: `${member.firstName} ${member.lastName}`
-  }))
-})
 
 function onAliveChange() {
   if (state.isAlive) {
