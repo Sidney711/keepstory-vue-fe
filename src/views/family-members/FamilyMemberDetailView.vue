@@ -44,7 +44,12 @@
         v-if="member"
       />
 
-      <FamilyMemberGeneralUpdateModal :memberId="member ? member.id : ''"  ref="updateModal" />
+      <FamilyMemberGeneralUpdateModal
+        :memberId="member ? member.id : ''"
+        ref="updateModal"
+        @memberUpdated="onMemberUpdated"
+      />
+
     </v-container>
   </AppLayout>
 </template>
@@ -65,6 +70,10 @@ const familyStore = useFamilyMembersStore();
 
 const memberId = computed(() => route.params.id as string);
 const member = computed(() => familyStore.familyMembers.find(m => m.id === memberId.value));
+
+const onMemberUpdated = async () => {
+  await familyStore.fetchFamilyMembers();
+}
 
 watch(
   () => memberId.value,

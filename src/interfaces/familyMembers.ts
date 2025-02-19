@@ -135,3 +135,43 @@ export interface NewFamilyMemberPayload {
     };
   };
 }
+
+export interface UpdateFamilyMemberPayload {
+  data: {
+    type: 'family-members';
+    id: string;
+    attributes: {
+      'first-name': string;
+      'last-name': string;
+      'date-of-birth': string;
+      deceased: boolean;
+      'date-of-death'?: string | null;
+      'death-date'?: string;
+      'birth-last-name': string;
+      'birth-place': string;
+      'birth-time': string;
+      gender: string;
+      religion: string;
+      'death-time'?: string;
+      'death-place'?: string;
+      'cause-of-death'?: string;
+      'burial-date'?: string;
+      'burial-place'?: string;
+      'internment-place'?: string;
+      profession?: string;
+      'hobbies-and-interests': string;
+      'short-description': string;
+      'short-message': string;
+      'mother-id': string;
+      'father-id': string;
+    },
+    relationships: {
+      mother: {
+        data: { type: "family-members", id: number }
+      },
+      father: {
+        data: { type: "family-members", id: number }
+      }
+    }
+  }
+}

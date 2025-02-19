@@ -194,7 +194,8 @@ import { defineProps, defineEmits, defineExpose } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import { useFamilyMembersStore } from '@/stores/familyMemberStore'
-import type { FamilyMember } from '@/interfaces/familyMembers'
+import type { FamilyMember, UpdateFamilyMemberPayload } from '@/interfaces/familyMembers'
+import { FamilyMembersService } from '@/services/FamilyMemberService.ts'
 
 function isoToDateLocal(iso: string): string {
   if (!iso) return ''
@@ -351,46 +352,81 @@ function closeDialog() {
   resetForm()
 }
 
+function convertLocalTimeToUTCString(date: string, time: string): string {
+  if (!date || !time) return ''
+  const [year, month, day] = date.split('-').map(Number)
+  const [hours, minutes] = time.split(':').map(Number)
+  const localDate = new Date(year, month - 1, day, hours, minutes)
+  const isoString = localDate.toISOString()
+  return isoString.split('T')[1].split('.')[0]
+}
+
+
 async function submitForm() {
   const valid = await v$.value.$validate()
   if (!valid) return
 
-  const payload = {
-    profile_photo: state.profilePhoto,
-    first_name: state.firstName,
-    last_name: state.lastName,
-    short_description: state.shortDescription,
-    birth_last_name: state.birthLastName,
-    date_of_birth: (state.dateOfBirth && state.birthTime)
-      ? combineLocalDateAndTimeToUTC(state.dateOfBirth, state.birthTime)
-      : state.dateOfBirth,
-    birth_place: state.birthPlace,
-    gender: state.gender,
-    religion: state.religion,
-    is_alive: state.isAlive,
-    date_of_death: (!state.isAlive && state.dateOfDeath && state.deathTime)
-      ? combineLocalDateAndTimeToUTC(state.dateOfDeath, state.deathTime)
-      : (!state.isAlive ? state.dateOfDeath : null),
-    death_place: state.isAlive ? null : state.deathPlace,
-    cause_of_death: state.isAlive ? null : state.causeOfDeath,
-    burial_date: state.isAlive ? null : state.burialDate,
-    burial_place: state.isAlive ? null : state.burialPlace,
-    internment_place: state.isAlive ? null : state.internmentPlace,
-    mother_id: state.motherId,
-    father_id: state.fatherId,
-    hobbies: state.hobbies,
-    short_message: state.shortMessage,
-    signature: state.signature
+  const utcBirthTime = state.birthTime ? convertLocalTimeToUTCString(state.dateOfBirth, state.birthTime) : ''
+  const utcDeathTime = state.deathTime ? convertLocalTimeToUTCString(state.dateOfDeath, state.deathTime) : ''
+
+  if (state.motherId) {
+    if (state.motherId.value) {
+      state.motherId = state.motherId.value
+    }
+  }
+
+  if (state.fatherId) {
+    if (state.fatherId.value) {
+      state.fatherId = state.fatherId.value
+    }
+  }
+
+  const payload: UpdateFamilyMemberPayload = {
+    data: {
+      type: 'family-members',
+      id: props.memberId,
+      attributes: {
+        'first-name': state.firstName,
+        'last-name': state.lastName,
+        'short-description': state.shortDescription,
+        'birth-last-name': state.birthLastName,
+        'birth-place': state.birthPlace,
+        'birth-time': utcBirthTime,
+        'date-of-birth': state.dateOfBirth,
+        'gender': state.gender,
+        'religion': state.religion,
+        'deceased': !state.isAlive,
+        'date-of-death': state.dateOfDeath,
+        'death-time': utcDeathTime,
+        'death-place': state.deathPlace,
+        'cause-of-death': state.causeOfDeath,
+        'burial-date': state.burialDate,
+        'burial-place': state.burialPlace,
+        'internment-place': state.internmentPlace,
+        'hobbies-and-interests': state.hobbies,
+        'short-message': state.shortMessage
+      },
+      relationships: {
+        mother: {
+          data: { type: "family-members", id: +state.motherId }
+        },
+        father: {
+          data: { type: "family-members", id: +state.fatherId }
+        }
+      }
+    }
   }
 
   try {
     console.log('Payload pro update:', payload)
+    await FamilyMembersService.updateFamilyMember(payload)
     closeDialog()
     emit('memberUpdated')
   } catch (error) {
     console.error('Chyba při aktualizaci člena:', error)
   }
 }
+
 
 defineExpose({ openDialog, closeDialog, submitForm })
 </script>
