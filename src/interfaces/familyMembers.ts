@@ -18,9 +18,11 @@ export interface FamilyMember {
   burialPlace: string;
   burialDate: string;
   intermentPlace: string;
+  profession: string;
   relationShipTree: FamilyRelationship[];
   marriageDetails: MarriageDetails[];
   educationDetails: EducationDetails[];
+  employmentDetails: EmploymentDetails[];
 }
 
 export interface FamilyRelationship {
@@ -41,6 +43,13 @@ export interface MarriageDetails {
 export interface EducationDetails {
   id: string;
   schoolName: string;
+  address: string;
+  period: string;
+}
+
+export interface EmploymentDetails {
+  id: string;
+  employer: string;
   address: string;
   period: string;
 }
@@ -94,9 +103,11 @@ export interface FamilyMemberResponse {
     'burial-place': string;
     'burial-date': string;
     'internment-place': string;
+    profession: string;
     'relationship-tree': FamilyRelationshipResponse[];
     'marriage-details': MarriageDetailsResponse[];
     'education-details': EducationDetailsResponse[];
+    'employment-details': EmploymentDetails[];
   };
 }
 

@@ -198,15 +198,25 @@
               <v-divider></v-divider>
               <v-card-text>
                 <v-list dense>
-                  <v-list-item class="d-flex align-center">
+                  <v-list-item
+                    v-for="employment in member.employmentDetails"
+                    :key="employment.id"
+                    class="d-flex align-center"
+                  >
                     <v-list-item-content>
                       <div class="flex items-center justify-between w-full pr-2">
                         <div>
-                          <div><strong>Název společnosti:</strong> IT Solutions</div>
-                          <div><strong>Adresa:</strong> Tech Park, Praha</div>
-                          <div><strong>Období:</strong> 2008 – 2015</div>
+                          <div>
+                            <strong>Zaměstnavatel:</strong> {{ employment.employer }}
+                          </div>
+                          <div>
+                            <strong>Adresa:</strong> {{ employment.address }}
+                          </div>
+                          <div>
+                            <strong>Období:</strong> {{ employment.period }}
+                          </div>
                         </div>
-                        <v-btn icon class="ml-4" @click="onEditEmployment" size="35">
+                        <v-btn icon class="ml-4" @click="onEditEmployment(employment)" size="35">
                           <v-icon size="18">mdi-pencil</v-icon>
                         </v-btn>
                       </div>
@@ -216,21 +226,9 @@
                     <v-list-item-content>
                       <div class="flex items-center justify-between w-full pr-2">
                         <div>
-                          <div><strong>Název společnosti:</strong> Web Innovators</div>
-                          <div><strong>Adresa:</strong> Centrum, Brno</div>
-                          <div><strong>Období:</strong> 2015 – současnost</div>
-                        </div>
-                        <v-btn icon class="ml-4" @click="onEditEmployment" size="35">
-                          <v-icon size="18">mdi-pencil</v-icon>
-                        </v-btn>
-                      </div>
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-list-item class="d-flex align-center">
-                    <v-list-item-content>
-                      <div class="flex items-center justify-between w-full pr-2">
-                        <div>
-                          <div><strong>Profese:</strong> Programátor, IT konzultant</div>
+                          <div>
+                            <strong>Profese:</strong> {{ member.profession }}
+                          </div>
                         </div>
                       </div>
                     </v-list-item-content>
