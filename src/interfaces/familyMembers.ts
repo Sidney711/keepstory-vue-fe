@@ -19,6 +19,7 @@ export interface FamilyMember {
   burialDate: string;
   intermentPlace: string;
   relationShipTree: FamilyRelationship[];
+  marriageDetails: MarriageDetails[];
 }
 
 export interface FamilyRelationship {
@@ -28,11 +29,27 @@ export interface FamilyRelationship {
   relationship: 'mother' | 'father' | 'grandparent' | 'descendant' | 'sibling';
 }
 
+export interface MarriageDetails {
+  id: string;
+  partnerId: string;
+  firstName: string;
+  lastName: string;
+  period: string;
+}
+
 export interface FamilyRelationshipResponse {
   id: string;
   'first-name': string;
   'last-name': string;
   relationship: 'mother' | 'father' | 'grandparent' | 'descendant' | 'sibling';
+}
+
+export interface MarriageDetailsResponse {
+  id: string;
+  'partner-id': string;
+  'first-name': string;
+  'last-name': string;
+  period: string;
 }
 
 export interface FamilyMemberResponse {
@@ -63,6 +80,7 @@ export interface FamilyMemberResponse {
     'burial-date': string;
     'internment-place': string;
     'relationship-tree': FamilyRelationshipResponse[];
+    'marriage-details': MarriageDetailsResponse[];
   };
 }
 

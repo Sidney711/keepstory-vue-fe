@@ -46,6 +46,13 @@ export const useFamilyMembersStore = defineStore('familyMembers', {
             lastName: relation['last-name'],
             relationship: relation.relationship,
           })),
+          marriageDetails: item.attributes['marriage-details'].map((marriage) => ({
+            id: marriage.id,
+            partnerId: marriage['partner-id'],
+            firstName: marriage['first-name'],
+            lastName: marriage['last-name'],
+            period: marriage.period,
+          })),
         }));
       } catch (err: any) {
         this.error = err.message;

@@ -110,27 +110,23 @@
               <v-divider></v-divider>
               <v-card-text>
                 <v-list dense>
-                  <v-list-item class="d-flex align-center">
+                  <v-list-item
+                    v-for="marriage in member.marriageDetails"
+                    :key="marriage.id"
+                    class="d-flex align-center"
+                  >
                     <v-list-item-content>
                       <div class="flex items-center justify-between w-full pr-2">
                         <div>
-                          <div><strong>Partner:</strong> Eva Nováková</div>
-                          <div><strong>Datum sňatku:</strong> 12.06.2010</div>
-                          <div><strong>Rozvod:</strong> 2018</div>
-                        </div>
-                        <v-btn icon class="ml-4" @click="onEditMarriage" size="35">
-                          <v-icon size="18">mdi-pencil</v-icon>
-                        </v-btn>
-                      </div>
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-list-item class="d-flex align-center">
-                    <v-list-item-content>
-                      <div class="flex items-center justify-between w-full pr-2">
-                        <div>
-                          <div><strong>Partner:</strong> Eva Nováková</div>
-                          <div><strong>Datum sňatku:</strong> 12.06.2010</div>
-                          <div><strong>Rozvod:</strong> 2018</div>
+                          <div>
+                            <strong>Partner: </strong>
+                            <router-link :to="`/family-member-detail/${marriage.partnerId}`" class="hover:text-red-500">
+                              {{ marriage.firstName }} {{ marriage.lastName }}
+                            </router-link>
+                          </div>
+                          <div>
+                            <strong>Období:</strong> {{ marriage.period }}
+                          </div>
                         </div>
                         <v-btn icon class="ml-4" @click="onEditMarriage" size="35">
                           <v-icon size="18">mdi-pencil</v-icon>
