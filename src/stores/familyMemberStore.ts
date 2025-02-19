@@ -39,7 +39,7 @@ export const useFamilyMembersStore = defineStore('familyMembers', {
           causeOfDeath: item.attributes['cause-of-death'],
           burialPlace: item.attributes['burial-place'],
           burialDate: item.attributes['burial-date'],
-          intermentPlace: item.attributes['internment-place'],
+          internmentPlace: item.attributes['internment-place'],
           profession: item.attributes.profession,
           hobbiesAndInterests: item.attributes['hobbies-and-interests'],
           relationShipTree: item.attributes['relationship-tree'].map((relation) => ({

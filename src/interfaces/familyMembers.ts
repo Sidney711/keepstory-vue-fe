@@ -17,7 +17,7 @@ export interface FamilyMember {
   causeOfDeath: string;
   burialPlace: string;
   burialDate: string;
-  intermentPlace: string;
+  internmentPlace: string;
   profession: string;
   hobbiesAndInterests: string;
   relationShipTree: FamilyRelationship[];

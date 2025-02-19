@@ -65,7 +65,7 @@
                     <div><strong>Místo pohřbu:</strong> {{member.burialPlace}}</div>
                   </v-col>
                   <v-col cols="12" md="6">
-                    <div><strong>Místo pochování:</strong> {{member.intermentPlace}}</div>
+                    <div><strong>Místo pochování:</strong> {{member.internmentPlace}}</div>
                   </v-col>
                 </v-row>
               </v-card-text>

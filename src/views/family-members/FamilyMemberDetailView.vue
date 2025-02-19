@@ -44,7 +44,7 @@
         v-if="member"
       />
 
-      <FamilyMemberGeneralUpdateModal ref="updateModal" />
+      <FamilyMemberGeneralUpdateModal :memberId="member ? member.id : ''"  ref="updateModal" />
     </v-container>
   </AppLayout>
 </template>

@@ -4,9 +4,8 @@
       <v-card-title class="headline">Editace člena rodiny</v-card-title>
       <v-card-text>
         <v-form ref="form" @submit.prevent="submitForm">
-          <div class="mb-6">
-            <div class="mb-2 text-lg font-bold border-b pb-1">Základní informace</div>
-
+          <section class="mb-6">
+            <h2 class="mb-2 text-lg font-bold border-b pb-1">Základní informace</h2>
             <v-file-input
               v-model="state.profilePhoto"
               label="Profilová fotka"
@@ -14,8 +13,7 @@
               prepend-icon="mdi-image"
               outlined
               class="mb-4"
-            ></v-file-input>
-
+            />
             <v-text-field
               v-model="state.firstName"
               label="Jméno"
@@ -24,8 +22,7 @@
               required
               outlined
               class="mb-4"
-            ></v-text-field>
-
+            />
             <v-text-field
               v-model="state.lastName"
               label="Příjmení"
@@ -34,111 +31,108 @@
               required
               outlined
               class="mb-4"
-            ></v-text-field>
-
+            />
             <v-textarea
               v-model="state.shortDescription"
               label="Krátký popis osoby"
               rows="2"
               outlined
               class="mb-4"
-            ></v-textarea>
-
+            />
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <v-text-field
                 v-model="state.birthLastName"
                 label="Rodné příjmení"
                 outlined
-              ></v-text-field>
+              />
               <v-text-field
                 v-model="state.dateOfBirth"
                 label="Datum narození"
                 type="date"
                 outlined
-              ></v-text-field>
+              />
               <v-text-field
                 v-model="state.birthPlace"
                 label="Místo narození"
                 outlined
-              ></v-text-field>
+              />
               <v-text-field
                 v-model="state.birthTime"
                 label="Čas narození"
                 type="time"
                 outlined
-              ></v-text-field>
+              />
             </div>
-
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
               <v-select
                 v-model="state.gender"
                 :items="genderItems"
                 label="Pohlaví"
                 outlined
-              ></v-select>
+              />
               <v-text-field
                 v-model="state.religion"
                 label="Náboženství"
                 outlined
-              ></v-text-field>
+              />
             </div>
-          </div>
+          </section>
 
           <v-checkbox
             v-model="state.isAlive"
             label="Žije osoba"
             @change="onAliveChange"
             class="mt-4"
-          ></v-checkbox>
+          />
 
           <template v-if="!state.isAlive">
-            <div class="mb-6">
-              <div class="mb-2 text-lg font-bold border-b pb-1">Informace o úmrtí</div>
+            <section class="mb-6">
+              <h2 class="mb-2 text-lg font-bold border-b pb-1">Informace o úmrtí</h2>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <v-text-field
                   v-model="state.dateOfDeath"
                   label="Datum úmrtí"
                   type="date"
                   outlined
-                ></v-text-field>
+                />
                 <v-text-field
                   v-model="state.deathTime"
                   label="Čas úmrtí"
                   type="time"
                   outlined
-                ></v-text-field>
+                />
                 <v-text-field
                   v-model="state.deathPlace"
                   label="Místo úmrtí"
                   outlined
-                ></v-text-field>
+                />
                 <v-text-field
                   v-model="state.causeOfDeath"
                   label="Příčina smrti"
                   outlined
-                ></v-text-field>
+                />
                 <v-text-field
                   v-model="state.burialDate"
                   label="Datum pohřbu"
                   type="date"
                   outlined
-                ></v-text-field>
+                />
                 <v-text-field
                   v-model="state.burialPlace"
                   label="Místo pohřbu"
                   outlined
-                ></v-text-field>
+                />
                 <v-text-field
                   v-model="state.internmentPlace"
                   label="Místo pochování"
                   outlined
-                ></v-text-field>
+                />
               </div>
-            </div>
+            </section>
           </template>
 
-          <div class="mb-6">
-            <div class="mb-2 text-lg font-bold border-b pb-1">Rodinné vazby a další informace</div>
+          <section class="mb-6">
+            <h2 class="mb-2 text-lg font-bold border-b pb-1">Rodinné vazby a další informace</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <v-select
                 v-model="state.motherId"
@@ -147,7 +141,7 @@
                 item-text="name"
                 item-value="id"
                 outlined
-              ></v-select>
+              />
               <v-select
                 v-model="state.fatherId"
                 :items="familyMembersSelect"
@@ -155,37 +149,37 @@
                 item-text="name"
                 item-value="id"
                 outlined
-              ></v-select>
+              />
             </div>
             <v-text-field
               v-model="state.hobbies"
               label="Koníčky a zájmy"
               outlined
               class="mt-4"
-            ></v-text-field>
+            />
             <v-textarea
               v-model="state.shortMessage"
               label="Krátký vzkaz"
               rows="2"
               outlined
               class="mt-4"
-            ></v-textarea>
-          </div>
+            />
+          </section>
 
-          <div class="mb-6">
-            <div class="mb-2 text-lg font-bold border-b pb-1">Dokumenty</div>
+          <section class="mb-6">
+            <h2 class="mb-2 text-lg font-bold border-b pb-1">Dokumenty</h2>
             <v-file-input
               v-model="state.signature"
               label="Podpis"
               accept="image/*"
               prepend-icon="mdi-pencil"
               outlined
-            ></v-file-input>
-          </div>
+            />
+          </section>
         </v-form>
       </v-card-text>
       <v-card-actions>
-        <v-spacer></v-spacer>
+        <v-spacer />
         <v-btn color="primary" @click="submitForm">Uložit</v-btn>
         <v-btn text @click="closeDialog">Zrušit</v-btn>
       </v-card-actions>
@@ -194,12 +188,67 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, watch, onMounted } from 'vue'
+import { defineProps, defineEmits, defineExpose } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
-import { defineEmits } from 'vue'
+import { useFamilyMembersStore } from '@/stores/familyMemberStore'
 
+function isoToDateLocal(iso: string): string {
+  if (!iso) return ''
+  const d = new Date(iso)
+  const year = d.getFullYear()
+  const month = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
+function isoToTimeLocal(iso: string): string {
+  if (!iso) return ''
+  const d = new Date(iso)
+  const hours = String(d.getHours()).padStart(2, '0')
+  const minutes = String(d.getMinutes()).padStart(2, '0')
+  return `${hours}:${minutes}`
+}
+
+function combineLocalDateAndTimeToUTC(date: string, time: string): string {
+  if (!date) return ''
+  const [year, month, day] = date.split('-').map(Number)
+  const [hours, minutes] = time.split(':').map(Number)
+  const localDate = new Date(year, month - 1, day, hours || 0, minutes || 0)
+  return localDate.toISOString()
+}
+
+interface FamilyMember {
+  id: string;
+  firstName: string;
+  lastName: string;
+  dateOfBirth: string;
+  dateOfDeath?: string;
+  shortDescription: string;
+  birthLastName: string;
+  birthPlace: string;
+  birthTime: string;
+  gender: string;
+  religion: string;
+  deceased: boolean;
+  deathTime: string;
+  deathPlace: string;
+  causeOfDeath: string;
+  burialPlace: string;
+  burialDate: string;
+  internmentPlace: string;
+  'hobbiesAndInterests'?: string;
+  shortMessage: string;
+}
+
+const props = defineProps<{ memberId: string }>()
 const emit = defineEmits(['memberUpdated'])
+const familyStore = useFamilyMembersStore()
+
+const familyMember = computed<FamilyMember | null>(() => {
+  return familyStore.familyMembers.find(m => m.id === props.memberId) || null
+})
 
 const dialog = ref(false)
 
@@ -233,53 +282,62 @@ const rules = {
   firstName: { required },
   lastName: { required }
 }
-
 const v$ = useVuelidate(rules, state)
 
-const genderItems = ['female', 'male', 'other']
-
-const familyMembersSelect = computed(() => {
-  return [
-    { id: '1', name: 'Eva Nováková' },
-    { id: '2', name: 'Petr Novák' }
-    // ...
-  ]
-})
-
-const openDialog = () => {
-  dialog.value = true
-}
-
-const closeDialog = () => {
-  dialog.value = false
-  // Reset stavu
-  state.profilePhoto = null
-  state.firstName = ''
-  state.lastName = ''
-  state.shortDescription = ''
-  state.birthLastName = ''
-  state.dateOfBirth = ''
-  state.birthPlace = ''
-  state.birthTime = ''
-  state.gender = ''
-  state.religion = ''
-  state.isAlive = true
-  state.dateOfDeath = ''
-  state.deathTime = ''
-  state.deathPlace = ''
-  state.causeOfDeath = ''
-  state.burialDate = ''
-  state.burialPlace = ''
-  state.internmentPlace = ''
+function resetForm() {
+  if (!familyMember.value) return
+  state.firstName = familyMember.value.firstName
+  state.lastName = familyMember.value.lastName
+  state.shortDescription = familyMember.value.shortDescription
+  state.birthLastName = familyMember.value.birthLastName
+  state.dateOfBirth = isoToDateLocal(familyMember.value.dateOfBirth)
+  state.birthPlace = familyMember.value.birthPlace
+  state.birthTime = isoToTimeLocal(familyMember.value.birthTime)
+  state.gender = familyMember.value.gender
+  state.religion = familyMember.value.religion
+  if (familyMember.value.dateOfDeath) {
+    state.isAlive = false
+    state.dateOfDeath = isoToDateLocal(familyMember.value.dateOfDeath)
+    state.deathTime = isoToTimeLocal(familyMember.value.deathTime)
+  } else {
+    state.isAlive = true
+    state.dateOfDeath = ''
+    state.deathTime = ''
+  }
+  state.deathPlace = familyMember.value.deathPlace
+  state.causeOfDeath = familyMember.value.causeOfDeath
+  state.burialDate = isoToDateLocal(familyMember.value.burialDate)
+  state.burialPlace = familyMember.value.burialPlace
+  state.internmentPlace = familyMember.value.internmentPlace
   state.motherId = ''
   state.fatherId = ''
-  state.hobbies = ''
-  state.shortMessage = ''
-  state.signature = null
+  state.hobbies = familyMember.value['hobbiesAndInterests'] || ''
+  state.shortMessage = familyMember.value.shortMessage
   v$.value.$reset()
 }
 
-const onAliveChange = () => {
+onMounted(async () => {
+  if (!familyMember.value) {
+    await familyStore.fetchFamilyMembers()
+  }
+  if (familyMember.value) {
+    resetForm()
+  }
+})
+
+watch(familyMember, (newMember) => {
+  if (newMember) resetForm()
+}, { immediate: true })
+
+const genderItems = ['female', 'male', 'other']
+const familyMembersSelect = computed(() => {
+  return familyStore.familyMembers.map(member => ({
+    id: member.id,
+    name: `${member.firstName} ${member.lastName}`
+  }))
+})
+
+function onAliveChange() {
   if (state.isAlive) {
     state.dateOfDeath = ''
     state.deathTime = ''
@@ -291,7 +349,16 @@ const onAliveChange = () => {
   }
 }
 
-const submitForm = async () => {
+function openDialog() {
+  dialog.value = true
+}
+
+function closeDialog() {
+  dialog.value = false
+  resetForm()
+}
+
+async function submitForm() {
   const valid = await v$.value.$validate()
   if (!valid) return
 
@@ -301,14 +368,16 @@ const submitForm = async () => {
     last_name: state.lastName,
     short_description: state.shortDescription,
     birth_last_name: state.birthLastName,
-    date_of_birth: state.dateOfBirth,
+    date_of_birth: (state.dateOfBirth && state.birthTime)
+      ? combineLocalDateAndTimeToUTC(state.dateOfBirth, state.birthTime)
+      : state.dateOfBirth,
     birth_place: state.birthPlace,
-    birth_time: state.birthTime,
     gender: state.gender,
     religion: state.religion,
     is_alive: state.isAlive,
-    date_of_death: state.isAlive ? null : state.dateOfDeath,
-    death_time: state.isAlive ? null : state.deathTime,
+    date_of_death: (!state.isAlive && state.dateOfDeath && state.deathTime)
+      ? combineLocalDateAndTimeToUTC(state.dateOfDeath, state.deathTime)
+      : (!state.isAlive ? state.dateOfDeath : null),
     death_place: state.isAlive ? null : state.deathPlace,
     cause_of_death: state.isAlive ? null : state.causeOfDeath,
     burial_date: state.isAlive ? null : state.burialDate,
