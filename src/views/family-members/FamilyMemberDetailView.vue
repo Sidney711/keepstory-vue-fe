@@ -43,10 +43,11 @@
         :member="member"
         v-if="member"
       />
+
+      <FamilyMemberGeneralUpdateModal ref="updateModal" />
     </v-container>
   </AppLayout>
 </template>
-
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -55,18 +56,19 @@ import { useFamilyMembersStore } from '@/stores/familyMemberStore';
 import { StoriesService } from '@/services/storiesService';
 import FamilyMemberHeader from '@/components/family-member/FamilyMemberHeader.vue';
 import FamilyMemberTabs from '@/components/family-member-tabs/FamilyMemberTabs.vue';
+import FamilyMemberGeneralUpdateModal
+  from '@/components/family-member/FamilyMemberGeneralUpdateModal.vue'
 
 const route = useRoute();
 const router = useRouter();
 const familyStore = useFamilyMembersStore();
 
 const memberId = computed(() => route.params.id as string);
-
 const member = computed(() => familyStore.familyMembers.find(m => m.id === memberId.value));
 
 watch(
   () => memberId.value,
-  (newId, oldId) => {
+  (newId) => {
     if (!member.value) {
       familyStore.fetchFamilyMembers();
     }
@@ -120,8 +122,11 @@ const fetchStories = async (familyMemberId: string) => {
 
 const activeTab = ref('info');
 
+const updateModal = ref(null); // reference pro modál
+
 const editMember = () => {
   console.log("Edit member:", member.value);
+  updateModal.value.openDialog();
 };
 
 const deleteMember = () => {
@@ -154,6 +159,3 @@ const formatDate = (dateStr: string): string => {
   return dateObj.toLocaleDateString();
 };
 </script>
-
-<style scoped>
-</style>
