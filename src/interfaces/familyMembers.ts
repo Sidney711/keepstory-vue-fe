@@ -19,10 +19,12 @@ export interface FamilyMember {
   burialDate: string;
   intermentPlace: string;
   profession: string;
+  hobbiesAndInterests: string;
   relationShipTree: FamilyRelationship[];
   marriageDetails: MarriageDetails[];
   educationDetails: EducationDetails[];
   employmentDetails: EmploymentDetails[];
+  residenceAddressDetails: ResidenceAddressDetails[];
 }
 
 export interface FamilyRelationship {
@@ -76,6 +78,12 @@ export interface EducationDetailsResponse {
   'period': string;
 }
 
+export interface ResidenceAddressDetails {
+  id: string;
+  address: string;
+  period: string;
+}
+
 export interface FamilyMemberResponse {
   id: string;
   type: string;
@@ -104,10 +112,12 @@ export interface FamilyMemberResponse {
     'burial-date': string;
     'internment-place': string;
     profession: string;
+    'hobbies-and-interests': string;
     'relationship-tree': FamilyRelationshipResponse[];
     'marriage-details': MarriageDetailsResponse[];
     'education-details': EducationDetailsResponse[];
     'employment-details': EmploymentDetails[];
+    'residence-address-details': ResidenceAddressDetails[];
   };
 }
 

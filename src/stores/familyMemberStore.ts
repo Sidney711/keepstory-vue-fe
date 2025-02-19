@@ -41,6 +41,7 @@ export const useFamilyMembersStore = defineStore('familyMembers', {
           burialDate: item.attributes['burial-date'],
           intermentPlace: item.attributes['internment-place'],
           profession: item.attributes.profession,
+          hobbiesAndInterests: item.attributes['hobbies-and-interests'],
           relationShipTree: item.attributes['relationship-tree'].map((relation) => ({
             id: relation.id,
             firstName: relation['first-name'],
@@ -65,6 +66,11 @@ export const useFamilyMembersStore = defineStore('familyMembers', {
             employer: employment.employer,
             address: employment.address,
             period: employment.period,
+          })),
+          residenceAddressDetails: item.attributes['residence-address-details'].map((address) => ({
+            id: address.id,
+            address: address.address,
+            period: address.period,
           })),
         }));
       } catch (err: any) {
