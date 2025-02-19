@@ -42,6 +42,7 @@ const props = defineProps<{
 const { locale } = useI18n();
 
 function formatDate(date: string): string {
+  if (!date) return '';
   const d = new Date(date);
   return d.toLocaleDateString(locale.value);
 }
