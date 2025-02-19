@@ -48,26 +48,38 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { useFamilyMembersStore } from '@/stores/familyMemberStore';
 import { StoriesService } from '@/services/storiesService';
-import FamilyMemberHeader from '@/components/family-member/FamilyMemberHeader.vue'
-import FamilyMemberTabs from '@/components/family-member-tabs/FamilyMemberTabs.vue'
+import FamilyMemberHeader from '@/components/family-member/FamilyMemberHeader.vue';
+import FamilyMemberTabs from '@/components/family-member-tabs/FamilyMemberTabs.vue';
 
 const route = useRoute();
 const router = useRouter();
 const familyStore = useFamilyMembersStore();
 
-const memberId = route.params.id as string;
-const member = computed(() => familyStore.familyMembers.find(m => m.id === memberId));
+const memberId = computed(() => route.params.id as string);
+
+const member = computed(() => familyStore.familyMembers.find(m => m.id === memberId.value));
+
+watch(
+  () => memberId.value,
+  (newId, oldId) => {
+    if (!member.value) {
+      familyStore.fetchFamilyMembers();
+    }
+    fetchStories(newId);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+);
 
 onMounted(() => {
   if (!member.value) {
     familyStore.fetchFamilyMembers();
   }
-  fetchStories(memberId);
+  fetchStories(memberId.value);
 });
 
 interface Story {

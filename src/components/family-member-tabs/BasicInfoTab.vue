@@ -76,48 +76,18 @@
         <v-row>
           <v-col cols="12">
             <v-card class="mb-4" outlined>
-              <v-card-title class="text-h5 font-bold bg-red-300">Příbuzní</v-card-title>
+              <v-card-title class="text-h5 font-bold">Příbuzní</v-card-title>
               <v-divider></v-divider>
               <v-card-text>
                 <v-list dense>
-                  <v-list-item>
+                  <v-list-item
+                    v-for="relationship in member.relationShipTree"
+                    :key="relationship.id"
+                  >
                     <v-list-item-content>
-                      <a href="https://example.com/petr-novak" target="_blank">Petra Nováková (matka)</a>
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-list-item>
-                    <v-list-item-content>
-                      <a href="https://example.com/petr-novak" target="_blank">Petr Novák (otec)</a>
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-list-item>
-                    <v-list-item-content>
-                      <a href="https://example.com/petr-novak" target="_blank">Petr Novák (potomek)</a>
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-list-item>
-                    <v-list-item-content>
-                      <a href="https://example.com/klara-novakova" target="_blank">Klára Nováková (potomek)</a>
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-list-item>
-                    <v-list-item-content>
-                      <a href="https://example.com/adam-novak" target="_blank">Adam Novák (sourozenec)</a>
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-list-item>
-                    <v-list-item-content>
-                      <a href="https://example.com/lucie-novakova" target="_blank">Lucie Nováková (sourozenec)</a>
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-list-item>
-                    <v-list-item-content>
-                      <a href="https://example.com/martin-novak" target="_blank">Martin Novák (prarodič)</a>
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-list-item>
-                    <v-list-item-content>
-                      <a href="https://example.com/jana-novakova" target="_blank">Jana Nováková (prarodič)</a>
+                      <router-link :to="`/family-member-detail/${relationship.id}`" class="hover:text-red-500">
+                        {{ relationship.firstName }} {{ relationship.lastName }} ({{ relationship.relationship }})
+                      </router-link>
                     </v-list-item-content>
                   </v-list-item>
                 </v-list>

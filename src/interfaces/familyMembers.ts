@@ -18,6 +18,21 @@ export interface FamilyMember {
   burialPlace: string;
   burialDate: string;
   intermentPlace: string;
+  relationShipTree: FamilyRelationship[];
+}
+
+export interface FamilyRelationship {
+  id: string;
+  firstName: string;
+  lastName: string;
+  relationship: 'mother' | 'father' | 'grandparent' | 'descendant' | 'sibling';
+}
+
+export interface FamilyRelationshipResponse {
+  id: string;
+  'first-name': string;
+  'last-name': string;
+  relationship: 'mother' | 'father' | 'grandparent' | 'descendant' | 'sibling';
 }
 
 export interface FamilyMemberResponse {
@@ -46,7 +61,8 @@ export interface FamilyMemberResponse {
     'cause-of-death': string;
     'burial-place': string;
     'burial-date': string;
-    'interment-place': string;
+    'internment-place': string;
+    'relationship-tree': FamilyRelationshipResponse[];
   };
 }
 
