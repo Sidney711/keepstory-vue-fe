@@ -23,4 +23,12 @@ export class FamilyMembersService {
   static async deleteProfilePicture(memberId: string) {
     return axios.delete(`${BACKEND_URL_WITH_API}/family-members/${memberId}/delete_profile_picture`);
   }
+
+  static async updateSignature(memberId: string, formData: FormData) {
+    return axios.patch(`${BACKEND_URL_WITH_API}/family-members/${memberId}/update_signature`, formData);
+  }
+
+  static async deleteSignature(memberId: string) {
+    return axios.delete(`${BACKEND_URL_WITH_API}/family-members/${memberId}/delete_signature`);
+  }
 }

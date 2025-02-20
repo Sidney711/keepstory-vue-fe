@@ -26,6 +26,7 @@ export interface FamilyMember {
   employmentDetails: EmploymentDetails[];
   residenceAddressDetails: ResidenceAddressDetails[];
   profilePictureUrl?: string;
+  signatureUrl?: string;
 }
 
 export interface FamilyRelationship {
@@ -120,6 +121,7 @@ export interface FamilyMemberResponse {
     'employment-details': EmploymentDetails[];
     'residence-address-details': ResidenceAddressDetails[];
     'profile_picture_url'?: string;
+    'signature_url'?: string;
   };
 }
 

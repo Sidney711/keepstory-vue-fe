@@ -337,8 +337,8 @@
             <v-card class="mb-4" outlined>
               <v-card-title class="text-h5 font-bold bg-red-200">Podpis</v-card-title>
               <v-divider></v-divider>
-              <v-card-text class="flex justify-center">
-                <v-img src="https://example.com/signature.png" max-width="200" />
+              <v-card-text class="flex">
+                <v-img v-if="member.signatureUrl" :src="BACKEND_URL + member.signatureUrl" max-width="200" alt="Podpis" />
               </v-card-text>
             </v-card>
           </v-col>
@@ -372,6 +372,7 @@ import { useFamilyMembersStore } from '@/stores/familyMemberStore.ts'
 import EducationModal from '@/components/educations/EducationModal.vue'
 import EmploymentModal from '@/components/employments/EmploymentModal.vue'
 import ResidenceAddressModal from '@/components/residence-addresses/ResidenceAddressModal.vue'
+import { BACKEND_URL } from '@/env-constants.ts'
 
 const marriageModal = ref<any>(null);
 const educationModal = ref<any>(null);

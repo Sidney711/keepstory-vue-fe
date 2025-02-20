@@ -73,6 +73,7 @@ export const useFamilyMembersStore = defineStore('familyMembers', {
             period: address.period,
           })),
           profilePictureUrl: item.attributes['profile-picture-url'],
+          signatureUrl: item.attributes['signature-url'],
         }));
       } catch (err: any) {
         this.error = err.message;
