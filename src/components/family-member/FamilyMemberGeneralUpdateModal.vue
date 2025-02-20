@@ -8,12 +8,18 @@
             <h2 class="mb-2 text-lg font-bold border-b pb-1">Základní informace</h2>
             <v-file-input
               v-model="state.profilePhoto"
+              @change="uploadProfilePicture"
               label="Profilová fotka"
               accept="image/*"
               prepend-icon="mdi-image"
               outlined
               class="mb-4"
             />
+            <div v-if="currentProfilePicture" class="mb-4">
+              <v-img :src="BACKEND_URL + currentProfilePicture" height="200px"></v-img>
+              <v-btn color="error" @click="deleteProfilePicture">Smazat fotku</v-btn>
+            </div>
+
             <v-text-field
               v-model="state.firstName"
               label="Jméno"
@@ -196,6 +202,7 @@ import { required } from '@vuelidate/validators'
 import { useFamilyMembersStore } from '@/stores/familyMemberStore'
 import type { FamilyMember, UpdateFamilyMemberPayload } from '@/interfaces/familyMembers'
 import { FamilyMembersService } from '@/services/FamilyMemberService.ts'
+import { BACKEND_URL } from '@/env-constants.ts'
 
 function isoToDateLocal(iso: string): string {
   if (!iso) return ''
@@ -314,6 +321,7 @@ function resetForm() {
 
   state.hobbies = familyMember.value.hobbiesAndInterests || ''
   state.shortMessage = familyMember.value.shortMessage
+  state.profilePhoto = null
 
   v$.value.$reset()
 }
@@ -342,6 +350,10 @@ function onAliveChange() {
     state.internmentPlace = ''
   }
 }
+
+const currentProfilePicture = computed(() => {
+  return familyMember.value.profilePictureUrl;
+})
 
 function openDialog() {
   dialog.value = true
@@ -419,7 +431,7 @@ async function submitForm() {
 
   try {
     console.log('Payload pro update:', payload)
-    await FamilyMembersService.updateFamilyMember(payload)
+    await FamilyMembersService.updateFamilyMember(props.memberId, payload)
     closeDialog()
     emit('memberUpdated')
   } catch (error) {
@@ -427,8 +439,34 @@ async function submitForm() {
   }
 }
 
+async function deleteProfilePicture() {
+  try {
+    await FamilyMembersService.deleteProfilePicture(props.memberId)
+    closeDialog()
+    emit('memberUpdated')
+  } catch (error) {
+    console.error('Chyba při mazání profilové fotky:', error)
+  }
+}
 
-defineExpose({ openDialog, closeDialog, submitForm })
+async function uploadProfilePicture() {
+  if (!state.profilePhoto) return;
+
+  try {
+    const formData = new FormData();
+    formData.append('data[type]', 'family-members');
+    formData.append('data[id]', props.memberId);
+    formData.append('data[attributes][profile_picture]', state.profilePhoto);
+
+    await FamilyMembersService.updateProfilePicture(props.memberId, formData);
+    closeDialog();
+    emit('memberUpdated');
+  } catch (error) {
+    console.error('Chyba při aktualizaci profilové fotky:', error);
+  }
+}
+
+defineExpose({ openDialog, closeDialog, submitForm, deleteProfilePicture })
 </script>
 
 <style scoped>

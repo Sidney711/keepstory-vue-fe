@@ -1,6 +1,7 @@
 <template>
   <v-card>
-    <v-img src="/avatar-blank.png" height="300px" alt="Profilový obrázek" />
+    <v-img v-if="member.profilePictureUrl" :src="BACKEND_URL + member.profilePictureUrl" height="300px" alt="Profilový obrázek" />
+    <v-img v-else src="/avatar-blank.png" height="300px" alt="Profilový obrázek" />
 
     <v-card-title>
       <div class="flex gap-2 pb-2">
@@ -34,6 +35,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import type { FamilyMember } from '@/interfaces/familyMembers.ts'
+import { BACKEND_URL } from '@/env-constants.ts'
 
 const props = defineProps<{
   member: FamilyMember;

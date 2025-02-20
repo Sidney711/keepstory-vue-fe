@@ -25,6 +25,7 @@ export interface FamilyMember {
   educationDetails: EducationDetails[];
   employmentDetails: EmploymentDetails[];
   residenceAddressDetails: ResidenceAddressDetails[];
+  profilePictureUrl?: string;
 }
 
 export interface FamilyRelationship {
@@ -118,6 +119,7 @@ export interface FamilyMemberResponse {
     'education-details': EducationDetailsResponse[];
     'employment-details': EmploymentDetails[];
     'residence-address-details': ResidenceAddressDetails[];
+    'profile_picture_url'?: string;
   };
 }
 
