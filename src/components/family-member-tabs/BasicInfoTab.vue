@@ -236,22 +236,18 @@
                       </div>
                     </v-list-item-content>
                   </v-list-item>
-                  <v-list-item class="d-flex align-center">
-                    <v-list-item-content>
-                      <div class="flex items-center justify-between w-full pr-2">
-                        <div>
-                          <div>
-                            <strong>Profese:</strong> {{ member.profession }}
-                          </div>
-                        </div>
-                      </div>
-                    </v-list-item-content>
-                  </v-list-item>
                 </v-list>
               </v-card-text>
             </v-card>
           </v-col>
         </v-row>
+
+        <EmploymentModal
+          ref="employmentModal"
+          :familyMemberId="member.id"
+          :employmentData="selectedEmployment"
+          @employmentUpdated="onEmploymentUpdated"
+        />
 
         <v-row>
           <v-col cols="12">
@@ -356,13 +352,31 @@ import { useI18n } from 'vue-i18n'
 import MarriageModal from '@/components/marriages/MarriageModal.vue'
 import { useFamilyMembersStore } from '@/stores/familyMemberStore.ts'
 import EducationModal from '@/components/educations/EducationModal.vue'
+import EmploymentModal from '@/components/employments/EmploymentModal.vue'
 
 const marriageModal = ref<any>(null);
 const educationModal = ref<any>(null);
 const familyStore = useFamilyMembersStore();
+const employmentModal = ref<any>(null);
 
 const selectedMarriage = ref<null | { id: string; period: string; partnerId: string }>(null);
 const selectedEducation = ref<null | { id: string; schoolName: string; address: string; period: string }>(null);
+const selectedEmployment = ref<null | { id: string; employer: string; address: string; period: string }>(null);
+
+const onAddEmployment = () => {
+  selectedEmployment.value = null;
+  employmentModal.value.openDialog();
+};
+
+const onEditEmployment = (employment: any) => {
+  selectedEmployment.value = employment;
+  employmentModal.value.openDialog();
+};
+
+const onEmploymentUpdated = async () => {
+  await familyStore.fetchFamilyMembers();
+  console.log("Zaměstnání aktualizováno.");
+};
 
 const onAddEducation = () => {
   selectedEducation.value = null;
@@ -398,14 +412,6 @@ const onMarriageUpdated = async () => {
 const props = defineProps<{
   member: FamilyMember;
 }>();
-
-const onAddEmployment = () => {
-  console.log('Add employment');
-};
-
-const onEditEmployment = () => {
-  console.log('Edit employment');
-};
 
 const onAddAddress = () => {
   console.log('Add address');
