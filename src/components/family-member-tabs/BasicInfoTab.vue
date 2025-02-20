@@ -128,7 +128,7 @@
                             <strong>Období:</strong> {{ marriage.period }}
                           </div>
                         </div>
-                        <v-btn icon class="ml-4" @click="onEditMarriage" size="35">
+                        <v-btn icon class="ml-4" @click="onEditMarriage(marriage)" size="35">
                           <v-icon size="18">mdi-pencil</v-icon>
                         </v-btn>
                       </div>
@@ -139,6 +139,13 @@
             </v-card>
           </v-col>
         </v-row>
+
+        <MarriageModal
+          ref="marriageModal"
+          :firstPartnerId="member.id"
+          :marriageData="selectedMarriage"
+          @marriageUpdated="onMarriageUpdated"
+        />
 
         <v-row>
           <v-col cols="12">
@@ -339,18 +346,33 @@
 import { ref } from 'vue';
 import type { FamilyMember } from '@/interfaces/familyMembers.ts'
 import { useI18n } from 'vue-i18n'
+import MarriageModal from '@/components/marriages/MarriageModal.vue'
+import { useFamilyMembersStore } from '@/stores/familyMemberStore.ts'
+
+const marriageModal = ref<any>(null);
+const familyStore = useFamilyMembersStore();
+
+const selectedMarriage = ref<null | { id: string; period: string; partnerId: string }>(null);
+
+const onAddMarriage = () => {
+  selectedMarriage.value = null;
+  marriageModal.value.openDialog();
+};
+
+const onEditMarriage = (marriage: any) => {
+  selectedMarriage.value = marriage;
+  marriageModal.value.openDialog();
+};
+
+
+const onMarriageUpdated = async () => {
+  await familyStore.fetchFamilyMembers();
+  console.log("Manželství bylo aktualizováno a data znovu načtena.");
+};
 
 const props = defineProps<{
   member: FamilyMember;
 }>();
-
-const onAddMarriage = () => {
-  console.log('Add marriage');
-};
-
-const onEditMarriage = () => {
-  console.log('Edit marriage');
-};
 
 const onAddEducation = () => {
   console.log('Add education');
