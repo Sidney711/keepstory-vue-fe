@@ -236,6 +236,17 @@
                       </div>
                     </v-list-item-content>
                   </v-list-item>
+                  <v-list-item class="d-flex align-center">
+                    <v-list-item-content>
+                      <div class="flex items-center justify-between w-full pr-2">
+                        <div>
+                          <div>
+                            <strong>Profese:</strong> {{ member.profession }}
+                          </div>
+                        </div>
+                      </div>
+                    </v-list-item-content>
+                  </v-list-item>
                 </v-list>
               </v-card-text>
             </v-card>
