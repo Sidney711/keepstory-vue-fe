@@ -25,6 +25,7 @@ export interface FamilyMember {
   educationDetails: EducationDetails[];
   employmentDetails: EmploymentDetails[];
   residenceAddressDetails: ResidenceAddressDetails[];
+  additionalAttributeDetails: AdditionalAttributeDetails[];
   profilePictureUrl?: string;
   signatureUrl?: string;
 }
@@ -80,10 +81,22 @@ export interface EducationDetailsResponse {
   'period': string;
 }
 
+export interface AdditionalAttributeResponse {
+  id: string;
+  'attribute-name': string;
+  'long-text': string;
+}
+
 export interface ResidenceAddressDetails {
   id: string;
   address: string;
   period: string;
+}
+
+export interface AdditionalAttributeDetails {
+  id: string;
+  attributeName: string;
+  longText: string;
 }
 
 export interface FamilyMemberResponse {
@@ -120,6 +133,7 @@ export interface FamilyMemberResponse {
     'education-details': EducationDetailsResponse[];
     'employment-details': EmploymentDetails[];
     'residence-address-details': ResidenceAddressDetails[];
+    'additional-attribute-details': AdditionalAttributeResponse[];
     'profile_picture_url'?: string;
     'signature_url'?: string;
   };

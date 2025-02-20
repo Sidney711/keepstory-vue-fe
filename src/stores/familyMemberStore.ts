@@ -72,6 +72,11 @@ export const useFamilyMembersStore = defineStore('familyMembers', {
             address: address.address,
             period: address.period,
           })),
+          additionalAttributeDetails: item.attributes['additional-attribute-details'].map((attribute) => ({
+            id: attribute.id,
+            attributeName: attribute['attribute-name'],
+            longText: attribute['long-text'],
+          })),
           profilePictureUrl: item.attributes['profile-picture-url'],
           signatureUrl: item.attributes['signature-url'],
         }));
