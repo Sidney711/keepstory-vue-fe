@@ -179,7 +179,7 @@
                             <strong>Období:</strong> {{ education.period }}
                           </div>
                         </div>
-                        <v-btn icon class="ml-4" @click="onEditEducation" size="35">
+                        <v-btn icon class="ml-4" @click="onEditEducation(education)" size="35">
                           <v-icon size="18">mdi-pencil</v-icon>
                         </v-btn>
                       </div>
@@ -190,6 +190,13 @@
             </v-card>
           </v-col>
         </v-row>
+
+        <EducationModal
+          ref="educationModal"
+          :familyMemberId="member.id"
+          :educationData="selectedEducation"
+          @educationUpdated="onEducationUpdated"
+        />
 
         <v-row>
           <v-col cols="12">
@@ -348,11 +355,29 @@ import type { FamilyMember } from '@/interfaces/familyMembers.ts'
 import { useI18n } from 'vue-i18n'
 import MarriageModal from '@/components/marriages/MarriageModal.vue'
 import { useFamilyMembersStore } from '@/stores/familyMemberStore.ts'
+import EducationModal from '@/components/educations/EducationModal.vue'
 
 const marriageModal = ref<any>(null);
+const educationModal = ref<any>(null);
 const familyStore = useFamilyMembersStore();
 
 const selectedMarriage = ref<null | { id: string; period: string; partnerId: string }>(null);
+const selectedEducation = ref<null | { id: string; schoolName: string; address: string; period: string }>(null);
+
+const onAddEducation = () => {
+  selectedEducation.value = null;
+  educationModal.value.openDialog();
+};
+
+const onEditEducation = (education: any) => {
+  selectedEducation.value = education;
+  educationModal.value.openDialog();
+};
+
+const onEducationUpdated = async () => {
+  await familyStore.fetchFamilyMembers();
+  console.log("Vzdělání aktualizováno.");
+};
 
 const onAddMarriage = () => {
   selectedMarriage.value = null;
@@ -373,14 +398,6 @@ const onMarriageUpdated = async () => {
 const props = defineProps<{
   member: FamilyMember;
 }>();
-
-const onAddEducation = () => {
-  console.log('Add education');
-};
-
-const onEditEducation = () => {
-  console.log('Edit education');
-};
 
 const onAddEmployment = () => {
   console.log('Add employment');
