@@ -255,7 +255,7 @@
               <v-card-title class="text-h5 font-bold bg-red-200">
                 <div class="flex items-center w-full">
                   <span>Adresy pobytu</span>
-                  <v-btn icon class="ml-4" @click="onAddAddress" size="35">
+                  <v-btn icon class="ml-4" @click="onAddResidenceAddress" size="35">
                     <v-icon size="23">mdi-plus</v-icon>
                   </v-btn>
                 </div>
@@ -264,21 +264,21 @@
               <v-card-text>
                 <v-list dense>
                   <v-list-item
-                    v-for="address in member.residenceAddressDetails"
-                    :key="address.id"
+                    v-for="residence in member.residenceAddressDetails"
+                    :key="residence.id"
                     class="d-flex align-center"
                   >
                     <v-list-item-content>
                       <div class="flex items-center justify-between w-full pr-2">
                         <div>
                           <div>
-                            <strong>Adresa:</strong> {{ address.address }}
+                            <strong>Adresa:</strong> {{ residence.address }}
                           </div>
                           <div>
-                            <strong>Období:</strong> {{ address.period }}
+                            <strong>Období:</strong> {{ residence.period }}
                           </div>
                         </div>
-                        <v-btn icon class="ml-4" @click="onEditAddress" size="35">
+                        <v-btn icon class="ml-4" @click="onEditResidenceAddress(residence)" size="35">
                           <v-icon size="18">mdi-pencil</v-icon>
                         </v-btn>
                       </div>
@@ -289,6 +289,13 @@
             </v-card>
           </v-col>
         </v-row>
+
+        <ResidenceAddressModal
+          ref="residenceAddressModal"
+          :familyMemberId="member.id"
+          :residenceAddressData="selectedResidenceAddress"
+          @residenceAddressUpdated="onResidenceAddressUpdated"
+        />
 
         <v-row>
           <v-col cols="12">
@@ -353,15 +360,33 @@ import MarriageModal from '@/components/marriages/MarriageModal.vue'
 import { useFamilyMembersStore } from '@/stores/familyMemberStore.ts'
 import EducationModal from '@/components/educations/EducationModal.vue'
 import EmploymentModal from '@/components/employments/EmploymentModal.vue'
+import ResidenceAddressModal from '@/components/residence-addresses/ResidenceAddressModal.vue'
 
 const marriageModal = ref<any>(null);
 const educationModal = ref<any>(null);
 const familyStore = useFamilyMembersStore();
 const employmentModal = ref<any>(null);
+const residenceAddressModal = ref<any>(null);
 
 const selectedMarriage = ref<null | { id: string; period: string; partnerId: string }>(null);
 const selectedEducation = ref<null | { id: string; schoolName: string; address: string; period: string }>(null);
 const selectedEmployment = ref<null | { id: string; employer: string; address: string; period: string }>(null);
+const selectedResidenceAddress = ref<null | { id: string; address: string; period: string }>(null);
+
+const onAddResidenceAddress = () => {
+  selectedResidenceAddress.value = null;
+  residenceAddressModal.value.openDialog();
+};
+
+const onEditResidenceAddress = (residence: any) => {
+  selectedResidenceAddress.value = residence;
+  residenceAddressModal.value.openDialog();
+};
+
+const onResidenceAddressUpdated = async () => {
+  await familyStore.fetchFamilyMembers();
+  console.log("Adresa pobytu aktualizována.");
+};
 
 const onAddEmployment = () => {
   selectedEmployment.value = null;
@@ -412,14 +437,6 @@ const onMarriageUpdated = async () => {
 const props = defineProps<{
   member: FamilyMember;
 }>();
-
-const onAddAddress = () => {
-  console.log('Add address');
-};
-
-const onEditAddress = () => {
-  console.log('Edit address');
-};
 
 const { locale } = useI18n();
 
