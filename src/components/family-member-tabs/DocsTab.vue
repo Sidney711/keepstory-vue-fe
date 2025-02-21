@@ -2,37 +2,37 @@
   <v-card flat>
     <v-card-title class="flex items-center justify-between">
       <div class="flex justify-between items-center">
-        <span class="text-lg font-medium">Seznam souborů</span>
-        <v-btn color="primary" @click="addFile" class="flex items-center">
-          <v-icon left>mdi-plus</v-icon>
-          Nový soubor
+        <span class="text-lg font-medium">Seznam dokumentů</span>
+        <v-btn color="primary" @click="openUploadModal" class="flex items-center">
+          <v-icon left>mdi-upload</v-icon>
+          Nahrát dokumenty
         </v-btn>
       </div>
     </v-card-title>
-    <v-divider></v-divider>
+    <v-divider />
     <v-list>
       <v-list-item
-        v-for="(file, index) in files"
-        :key="index"
+        v-for="(doc, index) in documents"
+        :key="doc.id"
         class="border-b border-gray-300"
       >
         <div class="flex items-center gap-4 py-2 w-full justify-between">
           <div class="flex flex-col">
-            <span class="font-medium">{{ file.name }}</span>
-            <span class="text-sm text-gray-500">{{ file.date }}</span>
+            <span class="font-medium">{{ doc.filename }}</span>
+            <span class="text-sm text-gray-500">{{ formatDate(doc.created_at) }}</span>
           </div>
           <div class="flex gap-2 items-center">
             <v-icon
               class="cursor-pointer hover:opacity-75"
               size="26"
-              @click="downloadFile(file)"
+              @click="downloadDocument(doc)"
             >
               mdi-download
             </v-icon>
             <v-icon
               class="cursor-pointer hover:opacity-75 text-red-500"
               size="26"
-              @click="deleteFile(index)"
+              @click="deleteDocument(doc, index)"
             >
               mdi-delete
             </v-icon>
@@ -41,31 +41,93 @@
       </v-list-item>
     </v-list>
   </v-card>
+
+  <!-- Případně modální okno pro nahrání dokumentů -->
+  <DocUploadModal
+    v-model="uploadDialog"
+    :memberId="memberId"
+    @files-uploaded="handleFilesUploaded"
+  />
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue';
+import { FamilyMembersService } from '@/services/FamilyMemberService.ts';
+import { BACKEND_URL } from '@/env-constants';
+import DocUploadModal from '@/components/uploaders/DocUploadModal.vue';
 
-interface FileItem {
-  name: string;
-  date: string;
+interface DocumentItem {
+  id: string;
   url: string;
+  filename: string;
+  created_at: string;
 }
 
-const files = ref<FileItem[]>([
-  { name: 'dokument1.pdf', date: '2025-02-20', url: '/downloads/dokument1.pdf' },
-  { name: 'dokument2.docx', date: '2025-02-19', url: '/downloads/dokument2.docx' },
-])
+const props = defineProps<{
+  memberId: string;
+}>();
 
-const downloadFile = (file: FileItem) => {
-  window.open(file.url, '_blank')
-}
+const memberId = props.memberId;
+const documents = ref<DocumentItem[]>([]);
+const uploadDialog = ref(false);
 
-const deleteFile = (index: number) => {
-  files.value.splice(index, 1)
-}
+const fetchDocuments = async () => {
+  try {
+    const response = await FamilyMembersService.fetchDocuments(memberId);
+    const docs: DocumentItem[] = response.data.documents || [];
+    documents.value = docs.map(doc => ({
+      id: doc.id.toString(),
+      url: `${BACKEND_URL}${doc.url}`,
+      filename: doc.filename,
+      created_at: doc.created_at
+    }));
+  } catch (error) {
+    console.error('Chyba při načítání dokumentů:', error);
+  }
+};
 
-const addFile = () => {
-  alert('Přidat nový soubor')
-}
+const deleteDocument = async (doc: DocumentItem, index: number) => {
+  try {
+    await FamilyMembersService.deleteDocument(memberId, doc.id);
+    documents.value.splice(index, 1);
+  } catch (error) {
+    console.error('Chyba při mazání dokumentu:', error);
+    alert('Nepodařilo se smazat dokument.');
+  }
+};
+
+const downloadDocument = async (doc: DocumentItem) => {
+  try {
+    const response = await fetch(doc.url);
+    if (!response.ok) {
+      throw new Error('Chyba při načítání souboru.');
+    }
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = doc.filename; // použijte originální název souboru
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error('Nepodařilo se stáhnout dokument:', error);
+    alert('Nepodařilo se stáhnout dokument.');
+  }
+};
+
+const openUploadModal = () => {
+  uploadDialog.value = true;
+};
+
+const handleFilesUploaded = async () => {
+  await fetchDocuments();
+};
+
+const formatDate = (dateStr: string) => {
+  return new Date(dateStr).toLocaleDateString();
+};
+
+onMounted(fetchDocuments);
 </script>

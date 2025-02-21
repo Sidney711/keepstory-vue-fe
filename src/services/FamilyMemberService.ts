@@ -51,4 +51,23 @@ export class FamilyMembersService {
       `${BACKEND_URL_WITH_API}/family-members/${memberId}/images/${imageId}`
     );
   }
+  static async fetchDocuments(memberId: string) {
+    return axios.get(`${BACKEND_URL_WITH_API}/family-members/${memberId}/show_documents`);
+  }
+
+  static async uploadDocuments(memberId: string, formData: FormData) {
+    return axios.patch(
+      `${BACKEND_URL_WITH_API}/family-members/${memberId}/upload_documents`,
+      formData,
+      {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      }
+    );
+  }
+
+  static async deleteDocument(memberId: string, documentId: string) {
+    return axios.delete(
+      `${BACKEND_URL_WITH_API}/family-members/${memberId}/documents/${documentId}`
+    );
+  }
 }

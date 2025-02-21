@@ -18,7 +18,7 @@
     <v-tab-item value="docs">
       <v-card flat v-if="currentTab === 'docs'">
         <v-card-text>
-          <DocsTab />
+          <DocsTab :member-id="member.id" />
         </v-card-text>
       </v-card>
     </v-tab-item>
