@@ -27,7 +27,8 @@
                 outlined
                 :to="{ name: 'family-member-detail', params: { id: member.id } }"
               >
-                <v-img src="/avatar-blank.png" height="200px"></v-img>
+                <v-img v-if="member.profilePictureUrl" :src="BACKEND_URL + member.profilePictureUrl" height="200px" alt="Profilový obrázek" />
+                <v-img v-else src="/avatar-blank.png" height="200px" alt="Profilový obrázek" />
                 <v-card-title class="text-h6">
                   {{ member.firstName }} {{ member.lastName }}
                 </v-card-title>
@@ -55,7 +56,8 @@ import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppLayout from '@/layouts/AppLayout.vue'
 import { useFamilyMembersStore } from '@/stores/familyMemberStore'
-import FamilyMemberCreateModal from '@/components/FamilyMemberCreateModal.vue'
+import FamilyMemberCreateModal from '@/components/family-member/FamilyMemberCreateModal.vue'
+import { BACKEND_URL } from '@/env-constants.ts'
 
 const { t } = useI18n()
 const familyStore = useFamilyMembersStore()
