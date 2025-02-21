@@ -27,32 +27,51 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
+import { FamilyMembersService } from '@/services/FamilyMemberService.ts'
 
 interface Props {
   modelValue: boolean;
+  memberId: string;
 }
 const props = defineProps<Props>()
 const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void;
-  (e: 'files-uploaded', files: File[]): void;
+  (e: 'files-uploaded'): void;
 }>()
 
 const dialog = ref(props.modelValue)
 const files = ref<File[]>([])
 
 const close = () => {
+  files.value = []
   dialog.value = false
   emit('update:modelValue', false)
 }
 
-const uploadFiles = () => {
+watch(dialog, (newVal) => {
+  emit('update:modelValue', newVal);
+});
+
+
+const uploadFiles = async () => {
   const validFiles = files.value.filter(file => file.type.startsWith('image/'));
   if (validFiles.length !== files.value.length) {
     alert('Nahrávat můžete pouze obrázky!');
     return;
   }
-  console.log('Uploading files:', validFiles);
-  emit('files-uploaded', validFiles);
+
+  const formData = new FormData();
+  validFiles.forEach(file => {
+    formData.append('data[attributes][images][]', file);
+  });
+
+  try {
+    await FamilyMembersService.uploadGalleryImages(props.memberId, formData);
+    emit('files-uploaded');
+  } catch (error) {
+    console.error(error);
+    alert('Nepodařilo se nahrát obrázky.');
+  }
   close();
 }
 

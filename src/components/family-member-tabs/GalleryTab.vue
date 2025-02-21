@@ -14,7 +14,7 @@
       <div class="columns-1 sm:columns-2 lg:columns-3 gap-4">
         <div
           v-for="(item, index) in galleryItems"
-          :key="index"
+          :key="item.id"
           class="mb-4 break-inside-avoid"
         >
           <v-img :src="item.src" :alt="item.alt" class="rounded-lg relative">
@@ -22,15 +22,15 @@
               class="cursor-pointer hover:opacity-75 absolute top-2 left-2 bg-white rounded-full p-1"
               color="error"
               size="26"
-              @click.stop="deleteGalleryItem(index)"
+              @click.stop="deleteGalleryItem(item)"
             >
               mdi-delete
             </v-icon>
             <v-icon
-              class="cursor-pointer hover:opacity-75 absolute top-2 left-8 bg-white rounded-full p-1"
+              class="cursor-pointer hover:opacity-75 absolute top-2 left-4 bg-white rounded-full p-1"
               color="black"
               size="26"
-              @click.stop="downloadGalleryItem(index)"
+              @click.stop="downloadGalleryItem(item)"
             >
               mdi-download
             </v-icon>
@@ -42,26 +42,30 @@
 
   <GalleryUploadModal
     v-model="uppyDialog"
+    :memberId="currentMemberId"
     @files-uploaded="handleFilesUploaded"
   />
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import GalleryUploadModal from '@/components/uploaders/GalleryUploadModal.vue'
+import { FamilyMembersService } from '@/services/FamilyMemberService.ts'
+import { BACKEND_URL } from '@/env-constants'
 
 interface GalleryItem {
-  src: string
-  alt: string
+  id: string;
+  src: string;
+  alt: string;
 }
 
-const galleryItems = ref<GalleryItem[]>([
-  { src: 'https://picsum.photos/300/200?random=1', alt: 'Obrázek 1' },
-  { src: 'https://picsum.photos/300/250?random=2', alt: 'Obrázek 2' },
-  { src: 'https://picsum.photos/300/300?random=3', alt: 'Obrázek 3' },
-  { src: 'https://picsum.photos/300/350?random=4', alt: 'Obrázek 4' },
-  { src: 'https://picsum.photos/300/400?random=5', alt: 'Obrázek 5' },
-])
+const props = defineProps<{
+  memberId: string;
+}>()
+
+const currentMemberId = props.memberId
+
+const galleryItems = ref<GalleryItem[]>([])
 
 const uppyDialog = ref(false)
 
@@ -69,22 +73,71 @@ const openUploadModal = () => {
   uppyDialog.value = true
 }
 
-const deleteGalleryItem = (index: number) => {
-  galleryItems.value.splice(index, 1)
+const deleteGalleryItem = async (item: GalleryItem) => {
+  try {
+    console.log('Mazání obrázku:', item);
+    await FamilyMembersService.deleteGalleryImage(currentMemberId, item.id);
+    const response = await FamilyMembersService.fetchGalleryImages(currentMemberId);
+    const images: { id: string, url: string }[] = response.data.images || [];
+    galleryItems.value = images.map((img) => ({
+      id: img.id.toString(),
+      src: `${BACKEND_URL}${img.url}`,
+      alt: 'Obrázek'
+    }));
+  } catch (error) {
+    console.error(error);
+    alert('Nepodařilo se smazat obrázek.');
+  }
 }
 
-const downloadGalleryItem = (index: number) => {
-  alert(`Stažení fotky: ${galleryItems.value[index].alt}`)
-}
-
-const handleFilesUploaded = (files: any[]) => {
-  console.log('Nahrané soubory:', files)
-  files.forEach((f) => {
-    const newItem: GalleryItem = {
-      src: f.uploadURL || '',
-      alt: f.name || 'Nový obrázek'
+const downloadGalleryItem = async (item: GalleryItem) => {
+  try {
+    const response = await fetch(item.src);
+    if (!response.ok) {
+      throw new Error('Chyba při načítání obrázku.');
     }
-    galleryItems.value.push(newItem)
-  })
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = (item.alt ? item.alt : 'download') + '.jpg';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error(error);
+    alert('Nepodařilo se stáhnout obrázek.');
+  }
 }
+
+const handleFilesUploaded = async () => {
+  try {
+    const response = await FamilyMembersService.fetchGalleryImages(currentMemberId);
+    const images: { id: string, url: string }[] = response.data.images || [];
+    galleryItems.value = images.map((img) => ({
+      id: img.id.toString(),
+      src: `${BACKEND_URL}${img.url}`,
+      alt: 'Obrázek'
+    }));
+  } catch (error) {
+    console.error('Chyba při načítání galerie:', error);
+  }
+}
+
+
+onMounted(async () => {
+  try {
+    const response = await FamilyMembersService.fetchGalleryImages(currentMemberId);
+    const images: { id: string, url: string }[] = response.data.images || [];
+    galleryItems.value = images.map((img) => ({
+      id: img.id.toString(),
+      src: `${BACKEND_URL}${img.url}`,
+      alt: 'Obrázek'
+    }));
+  } catch (error) {
+    console.error('Chyba při načítání galerie:', error);
+  }
+});
+
 </script>

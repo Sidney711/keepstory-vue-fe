@@ -26,7 +26,7 @@
     <v-tab-item value="gallery">
       <v-card flat v-if="currentTab === 'gallery'">
         <v-card-text>
-          <GalleryTab />
+          <GalleryTab :member-id="member.id" />
         </v-card-text>
       </v-card>
     </v-tab-item>
