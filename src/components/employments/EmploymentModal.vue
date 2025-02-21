@@ -1,0 +1,181 @@
+<template>
+  <v-dialog v-model="dialog" max-width="500">
+    <v-card>
+      <v-card-title class="headline d-flex justify-space-between align-center">
+        <span>{{ isUpdate ? 'Upravit zaměstnání' : 'Přidat zaměstnání' }}</span>
+        <v-btn v-if="isUpdate" color="error" @click="deleteEmployment" icon>
+          <v-icon>mdi-delete</v-icon>
+        </v-btn>
+      </v-card-title>
+      <v-card-text>
+        <v-form ref="form" @submit.prevent="submitForm">
+          <v-text-field
+            v-model="localState.employer"
+            label="Zaměstnavatel"
+            :error-messages="v$.employer.$errors.map(e => e.$message)"
+            @blur="v$.employer.$touch"
+            required
+          />
+          <v-text-field
+            v-model="localState.address"
+            label="Adresa zaměstnavatele"
+            :error-messages="v$.address.$errors.map(e => e.$message)"
+            @blur="v$.address.$touch"
+            required
+          />
+          <v-text-field
+            v-model="localState.period"
+            label="Období"
+            :error-messages="v$.period.$errors.map(e => e.$message)"
+            @blur="v$.period.$touch"
+          />
+        </v-form>
+      </v-card-text>
+      <v-card-actions>
+        <v-btn color="primary" @click="submitForm">
+          {{ isUpdate ? 'Upravit' : 'Vytvořit' }}
+        </v-btn>
+        <v-btn text @click="closeDialog">Zrušit</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+</template>
+
+<script setup lang="ts">
+import { ref, reactive, computed, watch } from 'vue';
+import useVuelidate from '@vuelidate/core';
+import { required } from '@vuelidate/validators';
+import { useSnackbar } from '@/composables/useSnackbar';
+import { useI18n } from 'vue-i18n';
+import { EmploymentService } from '@/services/EmploymentService';
+
+const props = defineProps<{
+  familyMemberId: string;
+  employmentData?: { id: string; employer: string; address: string; period: string } | null;
+}>();
+
+const emit = defineEmits(['employmentUpdated']);
+
+const dialog = ref(false);
+
+const localState = reactive({
+  employer: '',
+  address: '',
+  period: '',
+  employmentId: ''
+});
+
+const isUpdate = computed(() => !!props.employmentData);
+
+watch(
+  () => props.employmentData,
+  (newData) => {
+    if (newData) {
+      localState.employer = newData.employer;
+      localState.address = newData.address;
+      localState.period = newData.period;
+      localState.employmentId = newData.id;
+    } else {
+      localState.employer = '';
+      localState.address = '';
+      localState.period = '';
+      localState.employmentId = '';
+    }
+  },
+  { immediate: true }
+);
+
+const rules = {
+  employer: { required },
+  address: { required },
+  period: {}
+};
+const v$ = useVuelidate(rules, localState);
+const { showSnackbar } = useSnackbar();
+const { t } = useI18n();
+
+const openDialog = () => {
+  if (!props.employmentData) {
+    localState.employer = '';
+    localState.address = '';
+    localState.period = '';
+    localState.employmentId = '';
+  }
+  dialog.value = true;
+};
+
+const closeDialog = () => {
+  dialog.value = false;
+  if (!isUpdate.value) {
+    localState.employer = '';
+    localState.address = '';
+    localState.period = '';
+    localState.employmentId = '';
+  }
+  v$.value.$reset();
+};
+
+const submitForm = async () => {
+  const valid = await v$.value.$validate();
+  if (!valid) return;
+
+  const relationships =
+    isUpdate.value && localState.employmentId
+      ? {
+        'family-member': {
+          data: { type: 'family_members', id: props.familyMemberId }
+        }
+      }
+      : {
+        family_member: {
+          data: { type: 'family_members', id: props.familyMemberId }
+        }
+      };
+
+  const dataPayload: any = {
+    type: 'employments',
+    attributes: {
+      employer: localState.employer,
+      address: localState.address,
+      period: localState.period
+    },
+    relationships
+  };
+
+  if (isUpdate.value && localState.employmentId) {
+    dataPayload.id = localState.employmentId;
+  }
+  const payload = { data: dataPayload };
+
+  try {
+    if (isUpdate.value && localState.employmentId) {
+      await EmploymentService.updateEmployment(localState.employmentId, payload);
+      showSnackbar(t('employment.alert.successUpdate'), 'success');
+    } else {
+      await EmploymentService.createEmployment(payload);
+      showSnackbar(t('employment.alert.successCreate'), 'success');
+    }
+    emit('employmentUpdated');
+    closeDialog();
+  } catch (err: any) {
+    showSnackbar(t('employment.alert.error'), 'error');
+  }
+};
+
+const deleteEmployment = async () => {
+  if (!localState.employmentId) return;
+  try {
+    await EmploymentService.deleteEmployment(localState.employmentId);
+    showSnackbar(t('employment.alert.successDelete'), 'success');
+    emit('employmentUpdated');
+    closeDialog();
+  } catch (err: any) {
+    showSnackbar(t('employment.alert.errorDelete'), 'error');
+  }
+};
+
+defineExpose({ openDialog, closeDialog });
+</script>
+
+<style scoped>
+</style>

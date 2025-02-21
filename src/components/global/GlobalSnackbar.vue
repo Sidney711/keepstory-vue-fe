@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { useSnackbar } from '@/composables/useSnackbar'
+import { useSnackbar } from '@/composables/useSnackbar.ts'
 
 const { snackbarVisible, snackbarMessage, snackbarColor } = useSnackbar()
 </script>

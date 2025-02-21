@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
-import MenuSidebar from '@/components/MenuSidebar.vue';
+import MenuSidebar from '@/components/global/MenuSidebar.vue';
 
 const router = useRouter();
 

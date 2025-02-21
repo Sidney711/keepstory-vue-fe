@@ -54,7 +54,7 @@
 import { ref, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 import useVuelidate from '@vuelidate/core'
-import { required } from '@/utils/i18n-validators'
+import { required } from '@/utils/i18n-validators.ts'
 import { FamilyMembersService } from '@/services/FamilyMemberService.ts'
 import { createI18nMessage } from '@vuelidate/validators'
 import { useSnackbar } from '@/composables/useSnackbar.ts'

@@ -58,7 +58,7 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useAuthorizationStore } from '@/stores/authorizationStore';
+import { useAuthorizationStore } from '@/stores/authorizationStore.ts';
 
 const { t, locale } = useI18n();
 const authorizationStore = useAuthorizationStore();
