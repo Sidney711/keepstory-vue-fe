@@ -50,6 +50,8 @@
         @memberUpdated="onMemberUpdated"
       />
 
+      <ExportPdfModal v-if="member" :memberId="member.id" ref="exportModal" />
+
     </v-container>
   </AppLayout>
 </template>
@@ -63,6 +65,7 @@ import FamilyMemberHeader from '@/components/family-member/FamilyMemberHeader.vu
 import FamilyMemberTabs from '@/components/family-member-tabs/FamilyMemberTabs.vue';
 import FamilyMemberGeneralUpdateModal
   from '@/components/family-member/FamilyMemberGeneralUpdateModal.vue'
+import ExportPdfModal from '@/components/family-member/ExportPdfModal.vue'
 
 const route = useRoute();
 const router = useRouter();
@@ -131,7 +134,8 @@ const fetchStories = async (familyMemberId: string) => {
 
 const activeTab = ref('info');
 
-const updateModal = ref(null); // reference pro modál
+const updateModal = ref(null);
+const exportModal = ref(null);
 
 const editMember = () => {
   console.log("Edit member:", member.value);
@@ -143,7 +147,7 @@ const deleteMember = () => {
 };
 
 const exportMember = () => {
-  console.log("Export member:", member.value);
+  exportModal.value.openDialog();
 };
 
 const addStory = () => {
