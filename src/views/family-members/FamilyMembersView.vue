@@ -1,15 +1,16 @@
 <template>
   <AppLayout>
-    <div class="container mx-auto px-4">
-      <div v-if="familyStore.error" class="text-red-500 mb-4">
-        {{ familyStore.error }}
-      </div>
-      <div v-if="familyStore.loading" class="mb-4">
-        {{ t('family.loading') }}
-      </div>
+    <v-container class="py-4" fluid>
       <v-btn color="primary" class="mb-4" @click="openCreateModal">
         {{ t('family.button.create') }}
       </v-btn>
+      <div v-if="familyStore.loading" class="mb-4">
+        {{ t('family.loading') }}
+      </div>
+      <div v-if="familyStore.error" class="text-red-500 mb-4">
+        {{ familyStore.error }}
+      </div>
+    <div class="container mx-auto">
       <v-container fluid>
         <v-row>
           <v-col
@@ -23,16 +24,28 @@
             <v-hover v-slot="{ hover }">
               <v-card
                 :elevation="hover ? 12 : 2"
-                class="mx-auto cursor-pointer"
+                class="mx-auto cursor-pointer flex flex-col h-full"
                 outlined
                 :to="{ name: 'family-member-detail', params: { id: member.id } }"
               >
-                <v-img v-if="member.profilePictureUrl" :src="BACKEND_URL + member.profilePictureUrl" height="200px" alt="Profilový obrázek" />
-                <v-img v-else src="/avatar-blank.png" height="200px" alt="Profilový obrázek" />
-                <v-card-title class="text-h6">
+                <div class="flex justify-center mt-4">
+                  <img
+                    v-if="member.profilePictureUrl"
+                    :src="BACKEND_URL + member.profilePictureUrl"
+                    alt="Profilový obrázek"
+                    class="h-48 w-48 rounded-full object-cover"
+                  />
+                  <img
+                    v-else
+                    src="/avatar-blank.png"
+                    alt="Profilový obrázek"
+                    class="h-48 w-48 rounded-full object-cover"
+                  />
+                </div>
+                <v-card-title class="text-h6 justify-center">
                   {{ member.firstName }} {{ member.lastName }}
                 </v-card-title>
-                <v-card-text>
+                <v-card-text class="flex-grow">
                   <p>
                     {{ t('family.label.dateOfBirth') }}: {{ member.dateOfBirth }}
                   </p>
@@ -48,6 +61,7 @@
       </v-container>
       <FamilyMemberCreateModal @memberCreated="onMemberCreated" ref="createModal" />
     </div>
+    </v-container>
   </AppLayout>
 </template>
 
