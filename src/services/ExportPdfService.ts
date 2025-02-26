@@ -19,4 +19,13 @@ export class ExportPdfService {
       throw error;
     }
   }
+
+  static async exportFamilyTree(familyMemberId: string): Promise<any> {
+    try {
+      const response = await axios.post(`${BACKEND_URL_WITH_API}/export_to_pdf/family_tree/${familyMemberId}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
