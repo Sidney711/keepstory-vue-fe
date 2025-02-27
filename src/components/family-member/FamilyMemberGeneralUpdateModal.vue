@@ -81,6 +81,11 @@
                 label="Náboženství"
                 outlined
               />
+              <v-text-field
+                v-model="state.profession"
+                label="Profese"
+                outlined
+              />
             </div>
           </section>
 
@@ -256,6 +261,7 @@ const state = reactive({
   birthTime: '',
   gender: '',
   religion: '',
+  profession: '',
   isAlive: true,
   dateOfDeath: '',
   deathTime: '',
@@ -300,6 +306,7 @@ function resetForm() {
   state.birthTime = isoToTimeLocal(familyMember.value.birthTime)
   state.gender = familyMember.value.gender
   state.religion = familyMember.value.religion
+  state.profession = familyMember.value.profession
 
   if (familyMember.value.dateOfDeath) {
     state.isAlive = false
@@ -418,6 +425,7 @@ async function submitForm() {
         'date-of-birth': state.dateOfBirth,
         'gender': state.gender,
         'religion': state.religion,
+        'profession': state.profession,
         'deceased': !state.isAlive,
         'date-of-death': state.dateOfDeath,
         'death-time': utcDeathTime,
