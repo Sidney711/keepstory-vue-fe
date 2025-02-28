@@ -21,6 +21,7 @@
               @edit="editMember"
               @delete="deleteMember"
               @export="exportMember"
+              @editProfilePicture="openProfilePictureModal"
             />
           </template>
           <template v-else>
@@ -49,12 +50,20 @@
         ref="updateModal"
         @memberUpdated="onMemberUpdated"
       />
+      <FamilyMemberProfilePictureUpdateModal
+        v-if="member"
+        :memberId="member.id"
+        :currentProfilePictureUrl="member.profilePictureUrl ? BACKEND_URL + member.profilePictureUrl : '/avatar-blank.png'"
+        ref="profilePictureModal"
+        @profilePictureUpdated="onMemberUpdated"
+      />
 
       <ExportPdfModal v-if="member" :memberId="member.id" ref="exportModal" />
 
     </v-container>
   </AppLayout>
 </template>
+
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -63,20 +72,24 @@ import { useFamilyMembersStore } from '@/stores/familyMemberStore';
 import { StoriesService } from '@/services/storiesService';
 import FamilyMemberHeader from '@/components/family-member/FamilyMemberHeader.vue';
 import FamilyMemberTabs from '@/components/family-member-tabs/FamilyMemberTabs.vue';
+import FamilyMemberProfilePictureUpdateModal from '@/components/family-member/FamilyMemberProfilePictureUpdateModal.vue';
+import ExportPdfModal from '@/components/family-member/ExportPdfModal.vue';
+import { BACKEND_URL } from '@/env-constants.ts';
 import FamilyMemberGeneralUpdateModal
   from '@/components/family-member/FamilyMemberGeneralUpdateModal.vue'
-import ExportPdfModal from '@/components/family-member/ExportPdfModal.vue'
 
 const route = useRoute();
 const router = useRouter();
 const familyStore = useFamilyMembersStore();
 
 const memberId = computed(() => route.params.id as string);
-const member = computed(() => familyStore.familyMembers.find(m => m.id === memberId.value));
+const member = computed(() =>
+  familyStore.familyMembers.find(m => m.id === memberId.value)
+);
 
 const onMemberUpdated = async () => {
   await familyStore.fetchFamilyMembers();
-}
+};
 
 watch(
   () => memberId.value,
@@ -136,9 +149,9 @@ const activeTab = ref('info');
 
 const updateModal = ref(null);
 const exportModal = ref(null);
+const profilePictureModal = ref(null);
 
 const editMember = () => {
-  console.log("Edit member:", member.value);
   updateModal.value.openDialog();
 };
 
@@ -148,6 +161,10 @@ const deleteMember = () => {
 
 const exportMember = () => {
   exportModal.value.openDialog();
+};
+
+const openProfilePictureModal = () => {
+  profilePictureModal.value.openDialog();
 };
 
 const addStory = () => {
