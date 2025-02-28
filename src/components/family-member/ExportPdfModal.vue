@@ -5,8 +5,9 @@
       <v-card-text>
         <p>Vyberte, co chcete exportovat:</p>
         <v-radio-group v-model="exportType">
-          <v-radio label="Exportovat pouze tohoto člena" value="member" />
-          <v-radio label="Exportovat celou rodinu" value="family" />
+          <v-radio label="Exportovat rodokmen tohoto člena" value="family_tree" />
+          <v-radio label="Exportovat knihu pouze tohoto člena" value="member" />
+          <v-radio label="Exportovat knihu celé rodiny" value="family" />
         </v-radio-group>
         <p class="mt-4">
           Výsledný export bude uložen v dokumentech a budete informováni emailem, až bude export hotový.
@@ -26,7 +27,7 @@ import { ref, defineExpose } from 'vue';
 import { ExportPdfService } from '@/services/ExportPdfService';
 
 const dialog = ref(false);
-const exportType = ref<'member' | 'family'>('member');
+const exportType = ref<'member' | 'family' | 'family_tree'>('family_tree');
 const loading = ref(false);
 
 const props = defineProps<{
@@ -46,8 +47,10 @@ async function submitExport() {
   try {
     if (exportType.value === 'member') {
       await ExportPdfService.exportFamilyMember(props.memberId);
-    } else {
+    } else if (exportType.value === 'family') {
       await ExportPdfService.exportFamily();
+    } else {
+      await ExportPdfService.exportFamilyTree(props.memberId);
     }
     console.log('Export spuštěn.');
   } catch (error) {

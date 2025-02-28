@@ -1,7 +1,7 @@
 <template>
   <v-tabs v-model="currentTab" background-color="grey lighten-4" class="mt-4" grow>
     <v-tab value="info">Základní informace</v-tab>
-    <v-tab value="docs">Dokumenty</v-tab>
+    <v-tab value="docs">Dokumenty a exporty</v-tab>
     <v-tab value="gallery">Galerie</v-tab>
     <v-tab value="stories">Příběhy</v-tab>
   </v-tabs>

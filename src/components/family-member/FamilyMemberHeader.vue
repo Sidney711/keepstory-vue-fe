@@ -1,7 +1,27 @@
 <template>
   <v-card>
-    <v-img v-if="member.profilePictureUrl" :src="BACKEND_URL + member.profilePictureUrl" height="300px" alt="Profilový obrázek" />
-    <v-img v-else src="/avatar-blank.png" height="300px" alt="Profilový obrázek" />
+    <div class="image-wrapper">
+      <v-img
+        v-if="member.profilePictureUrl"
+        :src="BACKEND_URL + member.profilePictureUrl"
+        height="300px"
+        alt="Profilový obrázek"
+      />
+      <v-img
+        v-else
+        src="/avatar-blank.png"
+        height="300px"
+        alt="Profilový obrázek"
+      />
+      <v-btn
+        icon
+        small
+        @click="$emit('editProfilePicture')"
+        class="edit-icon"
+      >
+        <v-icon>mdi-image-edit</v-icon>
+      </v-btn>
+    </div>
 
     <v-card-title>
       <div class="flex gap-2 pb-2">
@@ -51,4 +71,15 @@ function formatDate(date: string): string {
 </script>
 
 <style scoped>
+.image-wrapper {
+  position: relative;
+}
+
+.edit-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+}
 </style>

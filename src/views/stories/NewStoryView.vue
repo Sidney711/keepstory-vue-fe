@@ -118,7 +118,10 @@ const personId = ref<string>('')
 
 const familyStore = useFamilyMembersStore()
 onMounted(() => {
-  familyStore.fetchFamilyMembers()
+  if (!familyStore.familyMembers.length) {
+    familyStore.fetchFamilyMembers()
+  }
+
   const route = useRoute()
   personId.value = route.query.person as string
   if (personId.value) {
