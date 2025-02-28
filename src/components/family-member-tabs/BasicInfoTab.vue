@@ -431,7 +431,7 @@ const openSignatureModal = () => {
 };
 
 const onSignatureUpdated = async () => {
-  await familyStore.fetchFamilyMembers();
+  await familyStore.fetchFamilyMember(props.member.id);
 };
 
 const marriageModal = ref<any>(null);
@@ -458,7 +458,7 @@ const onEditAdditionalAttribute = (residence: any) => {
 };
 
 const onAdditionalAttributeUpdated = async () => {
-  await familyStore.fetchFamilyMembers();
+  await familyStore.fetchFamilyMember(props.member.id);
 };
 
 const onAddResidenceAddress = () => {
@@ -472,7 +472,7 @@ const onEditResidenceAddress = (residence: any) => {
 };
 
 const onResidenceAddressUpdated = async () => {
-  await familyStore.fetchFamilyMembers();
+  await familyStore.fetchFamilyMember(props.member.id);
 };
 
 const onAddEmployment = () => {
@@ -486,7 +486,7 @@ const onEditEmployment = (employment: any) => {
 };
 
 const onEmploymentUpdated = async () => {
-  await familyStore.fetchFamilyMembers();
+  await familyStore.fetchFamilyMember(props.member.id);
 };
 
 const onAddEducation = () => {
@@ -500,7 +500,7 @@ const onEditEducation = (education: any) => {
 };
 
 const onEducationUpdated = async () => {
-  await familyStore.fetchFamilyMembers();
+  await familyStore.fetchFamilyMember(props.member.id);
 };
 
 const onAddMarriage = () => {
@@ -515,7 +515,7 @@ const onEditMarriage = (marriage: any) => {
 
 
 const onMarriageUpdated = async () => {
-  await familyStore.fetchFamilyMembers();
+  await familyStore.fetchFamilyMember(props.member.id);
 };
 
 const props = defineProps<{

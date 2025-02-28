@@ -214,9 +214,11 @@ const props = defineProps<{ memberId: string }>()
 const emit = defineEmits(['memberUpdated'])
 const familyStore = useFamilyMembersStore()
 
-const familyMember = computed<FamilyMember | null>(() =>
-  familyStore.familyMembers.find(m => m.id === props.memberId) || null
-)
+const familyMember = computed<FamilyMember | null>(() => {
+  if (familyStore.familyMemberDetail && familyStore.familyMemberDetail.id === props.memberId) {
+    return familyStore.familyMemberDetail
+  }
+})
 
 const dialog = ref(false)
 

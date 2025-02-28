@@ -77,25 +77,28 @@ import ExportPdfModal from '@/components/family-member/ExportPdfModal.vue';
 import { BACKEND_URL } from '@/env-constants.ts';
 import FamilyMemberGeneralUpdateModal
   from '@/components/family-member/FamilyMemberGeneralUpdateModal.vue'
+import type { FamilyMember } from '@/interfaces/familyMembers.ts'
 
 const route = useRoute();
 const router = useRouter();
 const familyStore = useFamilyMembersStore();
 
 const memberId = computed(() => route.params.id as string);
-const member = computed(() =>
-  familyStore.familyMembers.find(m => m.id === memberId.value)
-);
+const member = computed(() => {
+  if (familyStore.familyMemberDetail && familyStore.familyMemberDetail.id === memberId.value) {
+    return familyStore.familyMemberDetail
+  }
+})
 
 const onMemberUpdated = async () => {
-  await familyStore.fetchFamilyMembers();
+  await familyStore.fetchFamilyMember(memberId.value);
 };
 
 watch(
   () => memberId.value,
   (newId) => {
     if (!member.value) {
-      familyStore.fetchFamilyMembers();
+      familyStore.fetchFamilyMember(memberId.value);
     }
     fetchStories(newId);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -104,7 +107,7 @@ watch(
 
 onMounted(() => {
   if (!member.value) {
-    familyStore.fetchFamilyMembers();
+    familyStore.fetchFamilyMember(memberId.value);
   }
   fetchStories(memberId.value);
 });
