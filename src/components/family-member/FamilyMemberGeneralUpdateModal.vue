@@ -163,23 +163,6 @@
               class="mt-4"
             />
           </section>
-
-          <section class="mb-6">
-            <h2 class="mb-2 text-lg font-bold border-b pb-1">Dokumenty</h2>
-            <v-file-input
-              v-model="state.signature"
-              @change="uploadSignature"
-              label="Podpis"
-              accept="image/*"
-              prepend-icon="mdi-pencil"
-              outlined
-              class="mb-4"
-            />
-            <div v-if="currentSignature" class="mb-4">
-              <v-img :src="BACKEND_URL + currentSignature" height="200px"></v-img>
-              <v-btn color="error" @click="deleteSignature">Smazat podpis</v-btn>
-            </div>
-          </section>
         </v-form>
       </v-card-text>
       <v-card-actions>
@@ -260,8 +243,7 @@ const state = reactive({
   motherId: '' as string,
   fatherId: '' as string,
   hobbies: '',
-  shortMessage: '',
-  signature: null as File | null
+  shortMessage: ''
 })
 
 const rules = {
@@ -320,7 +302,6 @@ function resetForm() {
   state.hobbies = familyMember.value.hobbiesAndInterests || ''
   state.shortMessage = familyMember.value.shortMessage
   state.profilePhoto = null
-  state.signature = null
 
   v$.value.$reset()
 }
@@ -349,8 +330,6 @@ function onAliveChange() {
     state.internmentPlace = ''
   }
 }
-
-const currentSignature = computed(() => familyMember.value.signatureUrl)
 
 function openDialog() {
   dialog.value = true
@@ -425,34 +404,7 @@ async function submitForm() {
   }
 }
 
-async function deleteSignature() {
-  try {
-    await FamilyMembersService.deleteSignature(props.memberId)
-    closeDialog()
-    emit('memberUpdated')
-  } catch (error) {
-    console.error('Chyba při mazání podpisu:', error)
-  }
-}
-
-async function uploadSignature() {
-  if (!state.signature) return
-
-  try {
-    const formData = new FormData()
-    formData.append('data[type]', 'family-members')
-    formData.append('data[id]', props.memberId)
-    formData.append('data[attributes][signature]', state.signature)
-
-    await FamilyMembersService.updateSignature(props.memberId, formData)
-    closeDialog()
-    emit('memberUpdated')
-  } catch (error) {
-    console.error('Chyba při aktualizaci podpisu:', error)
-  }
-}
-
-defineExpose({ openDialog, closeDialog, submitForm, deleteSignature })
+defineExpose({ openDialog, closeDialog, submitForm })
 </script>
 
 <style scoped>
