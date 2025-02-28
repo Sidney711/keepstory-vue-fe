@@ -6,20 +6,6 @@
         <v-form ref="form" @submit.prevent="submitForm">
           <section class="mb-6">
             <h2 class="mb-2 text-lg font-bold border-b pb-1">Základní informace</h2>
-            <v-file-input
-              v-model="state.profilePhoto"
-              @change="uploadProfilePicture"
-              label="Profilová fotka"
-              accept="image/*"
-              prepend-icon="mdi-image"
-              outlined
-              class="mb-4"
-            />
-            <div v-if="currentProfilePicture" class="mb-4">
-              <v-img :src="BACKEND_URL + currentProfilePicture" height="200px"></v-img>
-              <v-btn color="error" @click="deleteProfilePicture">Smazat fotku</v-btn>
-            </div>
-
             <v-text-field
               v-model="state.firstName"
               label="Jméno"
@@ -79,6 +65,11 @@
               <v-text-field
                 v-model="state.religion"
                 label="Náboženství"
+                outlined
+              />
+              <v-text-field
+                v-model="state.profession"
+                label="Profese"
                 outlined
               />
             </div>
@@ -172,23 +163,6 @@
               class="mt-4"
             />
           </section>
-
-          <section class="mb-6">
-            <h2 class="mb-2 text-lg font-bold border-b pb-1">Dokumenty</h2>
-            <v-file-input
-              v-model="state.signature"
-              @change="uploadSignature"
-              label="Podpis"
-              accept="image/*"
-              prepend-icon="mdi-pencil"
-              outlined
-              class="mb-4"
-            />
-            <div v-if="currentSignature" class="mb-4">
-              <v-img :src="BACKEND_URL + currentSignature" height="200px"></v-img>
-              <v-btn color="error" @click="deleteSignature">Smazat podpis</v-btn>
-            </div>
-          </section>
         </v-form>
       </v-card-text>
       <v-card-actions>
@@ -227,21 +201,24 @@ function isoToTimeLocal(iso: string): string {
   return `${hours}:${minutes}`
 }
 
-function combineLocalDateAndTimeToUTC(date: string, time: string): string {
-  if (!date) return ''
-  const [year, month, day] = date.split('-').map(Number)
+function convertLocalTimeToUTCString(time: string): string {
+  if (!time || !/^\d{2}:\d{2}$/.test(time)) return ''
   const [hours, minutes] = time.split(':').map(Number)
-  const localDate = new Date(year, month - 1, day, hours || 0, minutes || 0)
-  return localDate.toISOString()
+  const localDate = new Date()
+  localDate.setHours(hours, minutes, 0, 0)
+  const isoString = localDate.toISOString()
+  return isoString.split('T')[1].split('.')[0]
 }
 
 const props = defineProps<{ memberId: string }>()
 const emit = defineEmits(['memberUpdated'])
 const familyStore = useFamilyMembersStore()
 
-const familyMember = computed<FamilyMember | null>(() =>
-  familyStore.familyMembers.find(m => m.id === props.memberId) || null
-)
+const familyMember = computed<FamilyMember | null>(() => {
+  if (familyStore.familyMemberDetail && familyStore.familyMemberDetail.id === props.memberId) {
+    return familyStore.familyMemberDetail
+  }
+})
 
 const dialog = ref(false)
 
@@ -256,6 +233,7 @@ const state = reactive({
   birthTime: '',
   gender: '',
   religion: '',
+  profession: '',
   isAlive: true,
   dateOfDeath: '',
   deathTime: '',
@@ -267,8 +245,7 @@ const state = reactive({
   motherId: '' as string,
   fatherId: '' as string,
   hobbies: '',
-  shortMessage: '',
-  signature: null as File | null
+  shortMessage: ''
 })
 
 const rules = {
@@ -300,6 +277,7 @@ function resetForm() {
   state.birthTime = isoToTimeLocal(familyMember.value.birthTime)
   state.gender = familyMember.value.gender
   state.religion = familyMember.value.religion
+  state.profession = familyMember.value.profession
 
   if (familyMember.value.dateOfDeath) {
     state.isAlive = false
@@ -318,17 +296,14 @@ function resetForm() {
   state.internmentPlace = familyMember.value.internmentPlace
 
   const motherRel = familyMember.value.relationShipTree.find(r => r.relationship === 'mother')
-
   state.motherId = personsItems.value.find(p => p.value == motherRel?.id)
 
   const fatherRel = familyMember.value.relationShipTree.find(r => r.relationship === 'father')
-
   state.fatherId = personsItems.value.find(p => p.value == fatherRel?.id)
 
   state.hobbies = familyMember.value.hobbiesAndInterests || ''
   state.shortMessage = familyMember.value.shortMessage
   state.profilePhoto = null
-  state.signature = null
 
   v$.value.$reset()
 }
@@ -358,14 +333,6 @@ function onAliveChange() {
   }
 }
 
-const currentProfilePicture = computed(() => {
-  return familyMember.value.profilePictureUrl;
-})
-
-const currentSignature = computed(() => {
-  return familyMember.value.signatureUrl;
-})
-
 function openDialog() {
   dialog.value = true
 }
@@ -375,33 +342,22 @@ function closeDialog() {
   resetForm()
 }
 
-function convertLocalTimeToUTCString(date: string, time: string): string {
-  if (!date || !time) return ''
-  const [year, month, day] = date.split('-').map(Number)
-  const [hours, minutes] = time.split(':').map(Number)
-  const localDate = new Date(year, month - 1, day, hours, minutes)
-  const isoString = localDate.toISOString()
-  return isoString.split('T')[1].split('.')[0]
-}
-
-
 async function submitForm() {
   const valid = await v$.value.$validate()
   if (!valid) return
 
-  const utcBirthTime = state.birthTime ? convertLocalTimeToUTCString(state.dateOfBirth, state.birthTime) : ''
-  const utcDeathTime = state.deathTime ? convertLocalTimeToUTCString(state.dateOfDeath, state.deathTime) : ''
+  const utcBirthTime = state.birthTime
+    ? convertLocalTimeToUTCString(state.birthTime)
+    : ''
+  const utcDeathTime = state.deathTime
+    ? convertLocalTimeToUTCString(state.deathTime)
+    : ''
 
-  if (state.motherId) {
-    if (state.motherId.value) {
-      state.motherId = state.motherId.value
-    }
+  if (state.motherId && typeof state.motherId === 'object' && state.motherId.value) {
+    state.motherId = state.motherId.value
   }
-
-  if (state.fatherId) {
-    if (state.fatherId.value) {
-      state.fatherId = state.fatherId.value
-    }
+  if (state.fatherId && typeof state.fatherId === 'object' && state.fatherId.value) {
+    state.fatherId = state.fatherId.value
   }
 
   const payload: UpdateFamilyMemberPayload = {
@@ -418,6 +374,7 @@ async function submitForm() {
         'date-of-birth': state.dateOfBirth,
         'gender': state.gender,
         'religion': state.religion,
+        'profession': state.profession,
         'deceased': !state.isAlive,
         'date-of-death': state.dateOfDeath,
         'death-time': utcDeathTime,
@@ -431,17 +388,16 @@ async function submitForm() {
       },
       relationships: {
         mother: {
-          data: { type: "family-members", id: +state.motherId }
+          data: { type: 'family-members', id: +state.motherId }
         },
         father: {
-          data: { type: "family-members", id: +state.fatherId }
+          data: { type: 'family-members', id: +state.fatherId }
         }
       }
     }
   }
 
   try {
-    console.log('Payload pro update:', payload)
     await FamilyMembersService.updateFamilyMember(props.memberId, payload)
     closeDialog()
     emit('memberUpdated')
@@ -450,61 +406,7 @@ async function submitForm() {
   }
 }
 
-async function deleteProfilePicture() {
-  try {
-    await FamilyMembersService.deleteProfilePicture(props.memberId)
-    closeDialog()
-    emit('memberUpdated')
-  } catch (error) {
-    console.error('Chyba při mazání profilové fotky:', error)
-  }
-}
-
-async function uploadProfilePicture() {
-  if (!state.profilePhoto) return;
-
-  try {
-    const formData = new FormData();
-    formData.append('data[type]', 'family-members');
-    formData.append('data[id]', props.memberId);
-    formData.append('data[attributes][profile_picture]', state.profilePhoto);
-
-    await FamilyMembersService.updateProfilePicture(props.memberId, formData);
-    closeDialog();
-    emit('memberUpdated');
-  } catch (error) {
-    console.error('Chyba při aktualizaci profilové fotky:', error);
-  }
-}
-
-async function deleteSignature() {
-  try {
-    await FamilyMembersService.deleteSignature(props.memberId)
-    closeDialog()
-    emit('memberUpdated')
-  } catch (error) {
-    console.error('Chyba při mazání podpisu:', error)
-  }
-}
-
-async function uploadSignature() {
-  if (!state.signature) return;
-
-  try {
-    const formData = new FormData();
-    formData.append('data[type]', 'family-members');
-    formData.append('data[id]', props.memberId);
-    formData.append('data[attributes][signature]', state.signature);
-
-    await FamilyMembersService.updateSignature(props.memberId, formData);
-    closeDialog();
-    emit('memberUpdated');
-  } catch (error) {
-    console.error('Chyba při aktualizaci podpisu:', error);
-  }
-}
-
-defineExpose({ openDialog, closeDialog, submitForm, deleteProfilePicture, deleteSignature })
+defineExpose({ openDialog, closeDialog, submitForm })
 </script>
 
 <style scoped>

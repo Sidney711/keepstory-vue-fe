@@ -335,7 +335,14 @@
         <v-row>
           <v-col cols="12">
             <v-card class="mb-4" outlined>
-              <v-card-title class="text-h5 font-bold bg-red-200">Podpis</v-card-title>
+              <v-card-title class="text-h5 font-bold bg-red-200">
+                <div class="flex items-center w-full">
+                  <span>Podpis</span>
+                  <v-btn icon class="ml-4" @click="openSignatureModal" size="35">
+                    <v-icon size="23">mdi-image-edit</v-icon>
+                  </v-btn>
+                </div>
+              </v-card-title>
               <v-divider></v-divider>
               <v-card-text class="flex">
                 <v-img v-if="member.signatureUrl" :src="BACKEND_URL + member.signatureUrl" max-width="200" alt="Podpis" />
@@ -392,6 +399,12 @@
           @additionalAttributeUpdated="onAdditionalAttributeUpdated"
         />
 
+        <FamilyMemberSignatureUpdateModal
+          ref="signatureModal"
+          :memberId="member.id"
+          :currentSignatureUrl="member.signatureUrl"
+          @signatureUpdated="onSignatureUpdated"
+        />
       </v-container>
     </v-card-text>
   </v-card>
@@ -408,6 +421,18 @@ import EmploymentModal from '@/components/employments/EmploymentModal.vue'
 import ResidenceAddressModal from '@/components/residence-addresses/ResidenceAddressModal.vue'
 import AdditionalAttributeModal from '@/components/additional-attributes/AdditionalAttributeModal.vue'
 import { BACKEND_URL } from '@/env-constants.ts'
+import FamilyMemberSignatureUpdateModal
+  from '@/components/family-member/FamilyMemberSignatureUpdateModal.vue'
+
+const signatureModal = ref<any>(null);
+
+const openSignatureModal = () => {
+  signatureModal.value.openDialog();
+};
+
+const onSignatureUpdated = async () => {
+  await familyStore.fetchFamilyMember(props.member.id);
+};
 
 const marriageModal = ref<any>(null);
 const educationModal = ref<any>(null);
@@ -433,8 +458,7 @@ const onEditAdditionalAttribute = (residence: any) => {
 };
 
 const onAdditionalAttributeUpdated = async () => {
-  await familyStore.fetchFamilyMembers();
-  console.log("Adresa pobytu aktualizována.");
+  await familyStore.fetchFamilyMember(props.member.id);
 };
 
 const onAddResidenceAddress = () => {
@@ -448,8 +472,7 @@ const onEditResidenceAddress = (residence: any) => {
 };
 
 const onResidenceAddressUpdated = async () => {
-  await familyStore.fetchFamilyMembers();
-  console.log("Adresa pobytu aktualizována.");
+  await familyStore.fetchFamilyMember(props.member.id);
 };
 
 const onAddEmployment = () => {
@@ -463,8 +486,7 @@ const onEditEmployment = (employment: any) => {
 };
 
 const onEmploymentUpdated = async () => {
-  await familyStore.fetchFamilyMembers();
-  console.log("Zaměstnání aktualizováno.");
+  await familyStore.fetchFamilyMember(props.member.id);
 };
 
 const onAddEducation = () => {
@@ -478,8 +500,7 @@ const onEditEducation = (education: any) => {
 };
 
 const onEducationUpdated = async () => {
-  await familyStore.fetchFamilyMembers();
-  console.log("Vzdělání aktualizováno.");
+  await familyStore.fetchFamilyMember(props.member.id);
 };
 
 const onAddMarriage = () => {
@@ -494,8 +515,7 @@ const onEditMarriage = (marriage: any) => {
 
 
 const onMarriageUpdated = async () => {
-  await familyStore.fetchFamilyMembers();
-  console.log("Manželství bylo aktualizováno a data znovu načtena.");
+  await familyStore.fetchFamilyMember(props.member.id);
 };
 
 const props = defineProps<{

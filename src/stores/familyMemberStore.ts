@@ -4,6 +4,9 @@ import type { FamilyMember } from '@/interfaces/familyMembers.ts'
 
 interface FamilyState {
   familyMembers: FamilyMember[];
+  familyMemberDetail: FamilyMember;
+  page: number;
+  search: string;
   loading: boolean;
   error: string | null;
 }
@@ -11,6 +14,9 @@ interface FamilyState {
 export const useFamilyMembersStore = defineStore('familyMembers', {
   state: (): FamilyState => ({
     familyMembers: [],
+    familyMemberDetail: {} as FamilyMember,
+    page: 1,
+    search: '',
     loading: false,
     error: null,
   }),
@@ -21,6 +27,26 @@ export const useFamilyMembersStore = defineStore('familyMembers', {
       try {
         const response = await FamilyMembersService.fetchFamilyMembers();
         this.familyMembers = response.data.data.map((item) => ({
+          id: item.id,
+          firstName: item.attributes['first-name'],
+          lastName: item.attributes['last-name'],
+          dateOfBirth: item.attributes['date-of-birth'],
+          dateOfDeath: item.attributes['date-of-death'],
+          profilePictureUrl: item.attributes['profile-picture-url'],
+        }));
+      } catch (err: any) {
+        this.error = err.message;
+      } finally {
+        this.loading = false;
+      }
+    },
+    async fetchFamilyMember(memberId: string) {
+      this.loading = true;
+      this.error = null;
+      try {
+        const response = await FamilyMembersService.fetchFamilyMember(memberId);
+        const item = response.data.data;
+        this.familyMemberDetail = {
           id: item.id,
           firstName: item.attributes['first-name'],
           lastName: item.attributes['last-name'],
@@ -42,44 +68,44 @@ export const useFamilyMembersStore = defineStore('familyMembers', {
           internmentPlace: item.attributes['internment-place'],
           profession: item.attributes.profession,
           hobbiesAndInterests: item.attributes['hobbies-and-interests'],
-          relationShipTree: item.attributes['relationship-tree'].map((relation) => ({
+          relationShipTree: item.attributes['relationship-tree'].map((relation: any) => ({
             id: relation.id,
             firstName: relation['first-name'],
             lastName: relation['last-name'],
             relationship: relation.relationship,
           })),
-          marriageDetails: item.attributes['marriage-details'].map((marriage) => ({
+          marriageDetails: item.attributes['marriage-details'].map((marriage: any) => ({
             id: marriage.id,
             partnerId: marriage['partner-id'],
             firstName: marriage['first-name'],
             lastName: marriage['last-name'],
             period: marriage.period,
           })),
-          educationDetails: item.attributes['education-details'].map((education) => ({
+          educationDetails: item.attributes['education-details'].map((education: any) => ({
             id: education.id,
             schoolName: education['school-name'],
             address: education.address,
             period: education.period,
           })),
-          employmentDetails: item.attributes['employment-details'].map((employment) => ({
+          employmentDetails: item.attributes['employment-details'].map((employment: any) => ({
             id: employment.id,
             employer: employment.employer,
             address: employment.address,
             period: employment.period,
           })),
-          residenceAddressDetails: item.attributes['residence-address-details'].map((address) => ({
+          residenceAddressDetails: item.attributes['residence-address-details'].map((address: any) => ({
             id: address.id,
             address: address.address,
             period: address.period,
           })),
-          additionalAttributeDetails: item.attributes['additional-attribute-details'].map((attribute) => ({
+          additionalAttributeDetails: item.attributes['additional-attribute-details'].map((attribute: any) => ({
             id: attribute.id,
             attributeName: attribute['attribute-name'],
             longText: attribute['long-text'],
           })),
           profilePictureUrl: item.attributes['profile-picture-url'],
           signatureUrl: item.attributes['signature-url'],
-        }));
+        };
       } catch (err: any) {
         this.error = err.message;
       } finally {
