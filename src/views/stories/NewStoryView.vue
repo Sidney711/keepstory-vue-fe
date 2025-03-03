@@ -6,14 +6,15 @@
       </v-btn>
       <v-row>
         <v-col cols="12" md="8">
-          <div>
+          <div @click="focusEditor" style="height: 80vh;">
             <QuillEditor
+              ref="quillRef"
               v-model:content="storyContent"
               :modules="modules"
               content-type="html"
               theme="snow"
               toolbar="full"
-              class="min-h-[calc(80vh)]"
+              style="height: 100%;"
             />
           </div>
         </v-col>
@@ -116,6 +117,8 @@ const dateType = ref('exact')
 const isDateApprox = ref(false)
 const personId = ref<string>('')
 
+const quillRef = ref<any>(null)
+
 const familyStore = useFamilyMembersStore()
 onMounted(() => {
   if (!familyStore.familyMembers.length) {
@@ -137,6 +140,15 @@ const personsItems = computed(() =>
     value: person.id
   }))
 )
+
+const focusEditor = () => {
+  const editor = quillRef.value?.editor;
+  if (editor) {
+    const length = editor.getLength();
+    editor.focus();
+    editor.setSelection(length, 0);
+  }
+};
 
 const publishStory = async () => {
   console.log(storyContent.value);
