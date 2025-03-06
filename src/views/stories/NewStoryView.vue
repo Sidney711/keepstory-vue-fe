@@ -176,8 +176,7 @@ const publishStory = async () => {
 
   try {
     const response = await StoriesService.createStory(payload)
-    console.log('Příběh publikován:', response.data)
-    await router.push('/')
+    await router.push('/story-detail/' + response.data.id + '?person=' + personId.value)
   } catch (error) {
     console.error('Chyba při publikaci příběhu:', error)
   }
