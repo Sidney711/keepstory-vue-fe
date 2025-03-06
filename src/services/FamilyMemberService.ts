@@ -76,4 +76,8 @@ export class FamilyMembersService {
       `${BACKEND_URL_WITH_API}/family-members/${memberId}/documents/${documentId}`
     );
   }
+
+  static async deleteFamilyMember(id: string) {
+    return axios.delete(`${BACKEND_URL_WITH_API}/family-members/${id}`);
+  }
 }
