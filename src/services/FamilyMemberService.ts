@@ -2,9 +2,9 @@ import axios from 'axios';
 import { BACKEND_URL_WITH_API } from '@/env-constants';
 
 export class FamilyMembersService {
-  static async fetchFamilyMembers() {
+  static async fetchFamilyMembers(page = 1, search = '') {
     return axios.get(
-      `${BACKEND_URL_WITH_API}/family-members?fields[family-members]=first-name,last-name,date-of-birth,date-of-death,profile-picture-url`
+      `${BACKEND_URL_WITH_API}/family-members?fields[family-members]=first-name,last-name,date-of-birth,date-of-death,profile-picture-url&page[number]=${page}&page[size]=12&filter[search]=${search}`
     );
   }
 
@@ -57,6 +57,7 @@ export class FamilyMembersService {
       `${BACKEND_URL_WITH_API}/family-members/${memberId}/images/${imageId}`
     );
   }
+
   static async fetchDocuments(memberId: string) {
     return axios.get(`${BACKEND_URL_WITH_API}/family-members/${memberId}/show_documents`);
   }

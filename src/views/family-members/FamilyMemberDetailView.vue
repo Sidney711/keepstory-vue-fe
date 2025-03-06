@@ -163,6 +163,7 @@ const deleteMember = async () => {
 
   if (response.status === 204) {
     alert('Člen rodiny byl úspěšně smazán.');
+    familyStore.page = 1;
     await router.push({ name: 'homepage' });
   }
 };

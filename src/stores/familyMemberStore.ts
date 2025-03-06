@@ -9,6 +9,7 @@ interface FamilyState {
   search: string;
   loading: boolean;
   error: string | null;
+  totalPages: number;
 }
 
 export const useFamilyMembersStore = defineStore('familyMembers', {
@@ -19,14 +20,17 @@ export const useFamilyMembersStore = defineStore('familyMembers', {
     search: '',
     loading: false,
     error: null,
+    totalPages: 1,
   }),
   actions: {
     async fetchFamilyMembers() {
       this.loading = true;
       this.error = null;
       try {
-        const response = await FamilyMembersService.fetchFamilyMembers();
-        this.familyMembers = response.data.data.map((item) => ({
+        const response = await FamilyMembersService.fetchFamilyMembers(this.page, this.search);
+        console.log("huhu")
+        console.log(response)
+        this.familyMembers = response.data.data.map((item: any) => ({
           id: item.id,
           firstName: item.attributes['first-name'],
           lastName: item.attributes['last-name'],
@@ -34,6 +38,14 @@ export const useFamilyMembersStore = defineStore('familyMembers', {
           dateOfDeath: item.attributes['date-of-death'],
           profilePictureUrl: item.attributes['profile-picture-url'],
         }));
+        const lastLink = response.data.links.last;
+        if (lastLink) {
+          const urlObj = new URL(lastLink);
+          const totalPagesStr = urlObj.searchParams.get('page[number]');
+          this.totalPages = totalPagesStr ? Number(totalPagesStr) : 1;
+        } else {
+          this.totalPages = 1;
+        }
       } catch (err: any) {
         this.error = err.message;
       } finally {
