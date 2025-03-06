@@ -7,6 +7,7 @@ interface FamilyState {
   familyMemberDetail: FamilyMember;
   page: number;
   search: string;
+  sortOrder: string;
   loading: boolean;
   error: string | null;
   totalPages: number;
@@ -18,6 +19,7 @@ export const useFamilyMembersStore = defineStore('familyMembers', {
     familyMemberDetail: {} as FamilyMember,
     page: 1,
     search: '',
+    sortOrder: 'asc',
     loading: false,
     error: null,
     totalPages: 1,
@@ -27,7 +29,7 @@ export const useFamilyMembersStore = defineStore('familyMembers', {
       this.loading = true;
       this.error = null;
       try {
-        const response = await FamilyMembersService.fetchFamilyMembers(this.page, this.search);
+        const response = await FamilyMembersService.fetchFamilyMembers(this.page, this.search, this.sortOrder);
         console.log("huhu")
         console.log(response)
         this.familyMembers = response.data.data.map((item: any) => ({

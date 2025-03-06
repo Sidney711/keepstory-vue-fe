@@ -13,8 +13,13 @@
       </div>
       <div class="container mx-auto">
         <v-container fluid>
-          <v-row justify="center" class="mb-4">
-            <v-col cols="12" sm="8" md="6">
+          <v-row
+            justify="center"
+            align="center"
+            class="mb-4"
+            style="gap: 16px;"
+          >
+            <v-col cols="12" sm="7" md="5">
               <v-text-field
                 v-model="searchInput"
                 label="Hledat..."
@@ -22,6 +27,17 @@
                 outlined
                 dense
               ></v-text-field>
+            </v-col>
+            <v-col cols="12" sm="4" md="3">
+              <v-select
+                v-model="sortOrder"
+                :items="sortOptions"
+                label="Seřadit podle data narození"
+                outlined
+                dense
+                item-title="text"
+                item-value="value"
+              />
             </v-col>
           </v-row>
           <v-row>
@@ -98,21 +114,32 @@ const familyStore = useFamilyMembersStore()
 const searchInput = ref('')
 let debounceTimeout: ReturnType<typeof setTimeout> | null = null
 
+const sortOrder = ref('asc')
+const sortOptions = [
+  { text: 'Od nejstaršího', value: 'asc' },
+  { text: 'Od nejmladšího', value: 'desc' }
+]
+
 onMounted(() => {
   familyStore.fetchFamilyMembers()
 })
 
-watch(searchInput, (newVal) => {
-  familyStore.search = newVal
+watch(searchInput, () => {
+  familyStore.search = searchInput.value
   familyStore.page = 1
 
   if (debounceTimeout) {
     clearTimeout(debounceTimeout)
   }
-
   debounceTimeout = setTimeout(() => {
     familyStore.fetchFamilyMembers()
   }, 500)
+})
+
+watch(sortOrder, (newVal) => {
+  familyStore.sortOrder = newVal
+  familyStore.page = 1
+  familyStore.fetchFamilyMembers()
 })
 
 watch(() => familyStore.page, () => {

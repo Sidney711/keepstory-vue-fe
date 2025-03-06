@@ -2,9 +2,10 @@ import axios from 'axios';
 import { BACKEND_URL_WITH_API } from '@/env-constants';
 
 export class FamilyMembersService {
-  static async fetchFamilyMembers(page = 1, search = '') {
+  static async fetchFamilyMembers(page = 1, search = '', sortOrder = 'asc') {
+    const sortParam = sortOrder === 'desc' ? '-date-of-birth' : 'date-of-birth';
     return axios.get(
-      `${BACKEND_URL_WITH_API}/family-members?fields[family-members]=first-name,last-name,date-of-birth,date-of-death,profile-picture-url&page[number]=${page}&page[size]=12&filter[search]=${search}`
+      `${BACKEND_URL_WITH_API}/family-members?fields[family-members]=first-name,last-name,date-of-birth,date-of-death,profile-picture-url&page[number]=${page}&page[size]=12&filter[search]=${search}&sort=${sortParam}`
     );
   }
 
