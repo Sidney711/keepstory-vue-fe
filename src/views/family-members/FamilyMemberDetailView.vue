@@ -77,7 +77,7 @@ import ExportPdfModal from '@/components/family-member/ExportPdfModal.vue';
 import { BACKEND_URL } from '@/env-constants.ts';
 import FamilyMemberGeneralUpdateModal
   from '@/components/family-member/FamilyMemberGeneralUpdateModal.vue'
-import type { FamilyMember } from '@/interfaces/familyMembers.ts'
+import { FamilyMembersService } from '@/services/FamilyMemberService.ts'
 
 const route = useRoute();
 const router = useRouter();
@@ -158,8 +158,13 @@ const editMember = () => {
   updateModal.value.openDialog();
 };
 
-const deleteMember = () => {
-  console.log("Delete member:", member.value);
+const deleteMember = async () => {
+  const response = await FamilyMembersService.deleteFamilyMember(memberId.value);
+
+  if (response.status === 204) {
+    alert('Člen rodiny byl úspěšně smazán.');
+    await router.push({ name: 'homepage' });
+  }
 };
 
 const exportMember = () => {
