@@ -113,8 +113,16 @@ const editStory = () => {
   console.log("Edit story:", story.value);
 };
 
-const deleteStory = () => {
-  console.log("Delete story:", story.value);
+const deleteStory = async () => {
+  const response = await StoriesService.deleteStory(storyId);
+
+  if (response.status === 204) {
+    alert('Příběh byl úspěšně smazán.');
+    goBack();
+  } else {
+    alert('Při mazání příběhu došlo k chybě.');
+    console.log(response);
+  }
 };
 </script>
 
