@@ -13,12 +13,7 @@
       </div>
       <div class="container mx-auto">
         <v-container fluid>
-          <v-row
-            justify="center"
-            align="center"
-            class="mb-4"
-            style="gap: 16px;"
-          >
+          <v-row justify="center" align="center" class="mb-4" style="gap: 16px;">
             <v-col cols="12" sm="7" md="5">
               <v-text-field
                 v-model="searchInput"
@@ -111,14 +106,10 @@ import { BACKEND_URL } from '@/env-constants.ts'
 const { t } = useI18n()
 const familyStore = useFamilyMembersStore()
 
-const searchInput = ref('')
-let debounceTimeout: ReturnType<typeof setTimeout> | null = null
+const searchInput = ref(familyStore.search)
+const sortOrder = ref(familyStore.sortOrder || 'asc')
 
-const sortOrder = ref('asc')
-const sortOptions = [
-  { text: 'Od nejstaršího', value: 'asc' },
-  { text: 'Od nejmladšího', value: 'desc' }
-]
+let debounceTimeout: ReturnType<typeof setTimeout> | null = null
 
 onMounted(() => {
   familyStore.fetchFamilyMembers()
@@ -145,6 +136,11 @@ watch(sortOrder, (newVal) => {
 watch(() => familyStore.page, () => {
   familyStore.fetchFamilyMembers()
 })
+
+const sortOptions = [
+  { text: 'Od nejstaršího', value: 'asc' },
+  { text: 'Od nejmladšího', value: 'desc' }
+]
 
 const createModal = ref(null)
 const openCreateModal = () => {
