@@ -69,6 +69,9 @@ onMounted(() => {
   const savedLocale = localStorage.getItem('locale');
   if (savedLocale) {
     locale.value = savedLocale;
+  } else {
+    localStorage.setItem('locale', 'cs');
+    locale.value = 'cs';
   }
 });
 
