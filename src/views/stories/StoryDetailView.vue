@@ -110,7 +110,7 @@ const goBack = () => {
 };
 
 const editStory = () => {
-  console.log("Edit story:", story.value);
+  router.push({ name: 'edit-story', params: { id: story.value?.id }, query: { person: familyMemberId } });
 };
 
 const deleteStory = async () => {

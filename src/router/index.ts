@@ -13,6 +13,7 @@ import FamilyMembersView from '@/views/family-members/FamilyMembersView.vue'
 import FamilyMemberDetailView from '@/views/family-members/FamilyMemberDetailView.vue'
 import NewStoryView from '@/views/stories/NewStoryView.vue'
 import StoryDetailView from '@/views/stories/StoryDetailView.vue'
+import EditStoryView from '@/views/stories/EditStoryView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -76,6 +77,11 @@ const router = createRouter({
       path: '/story-detail/:id',
       name: 'story-detail',
       component: StoryDetailView
+    },
+    {
+      path: '/edit-story/:id',
+      name: 'edit-story',
+      component: EditStoryView
     }
   ],
 });
