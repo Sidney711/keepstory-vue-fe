@@ -5,13 +5,6 @@
         {{ t('family.button.create') }}
       </v-btn>
 
-      <v-text-field
-        v-model="searchInput"
-        label="Hledat..."
-        append-icon="mdi-magnify"
-        class="mb-4"
-      ></v-text-field>
-
       <div v-if="familyStore.loading" class="mb-4">
         {{ t('family.loading') }}
       </div>
@@ -20,6 +13,17 @@
       </div>
       <div class="container mx-auto">
         <v-container fluid>
+          <v-row justify="center" class="mb-4">
+            <v-col cols="12" sm="8" md="6">
+              <v-text-field
+                v-model="searchInput"
+                label="Hledat..."
+                append-icon="mdi-magnify"
+                outlined
+                dense
+              ></v-text-field>
+            </v-col>
+          </v-row>
           <v-row>
             <v-col
               v-for="member in familyStore.familyMembers"
@@ -92,6 +96,7 @@ const { t } = useI18n()
 const familyStore = useFamilyMembersStore()
 
 const searchInput = ref('')
+let debounceTimeout: ReturnType<typeof setTimeout> | null = null
 
 onMounted(() => {
   familyStore.fetchFamilyMembers()
@@ -100,7 +105,14 @@ onMounted(() => {
 watch(searchInput, (newVal) => {
   familyStore.search = newVal
   familyStore.page = 1
-  familyStore.fetchFamilyMembers()
+
+  if (debounceTimeout) {
+    clearTimeout(debounceTimeout)
+  }
+
+  debounceTimeout = setTimeout(() => {
+    familyStore.fetchFamilyMembers()
+  }, 500)
 })
 
 watch(() => familyStore.page, () => {
@@ -113,6 +125,7 @@ const openCreateModal = () => {
     createModal.value.openDialog()
   }
 }
+
 const onMemberCreated = () => {
   familyStore.fetchFamilyMembers()
 }
