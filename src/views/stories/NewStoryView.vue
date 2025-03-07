@@ -151,7 +151,6 @@ const focusEditor = () => {
 };
 
 const publishStory = async () => {
-  console.log(storyContent.value);
   const payload: NewStoryPayload = {
     data: {
       type: 'stories',

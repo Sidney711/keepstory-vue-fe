@@ -32,6 +32,11 @@ import { ref, computed } from 'vue';
 import { defineProps, defineEmits, defineExpose } from 'vue';
 import { FamilyMembersService } from '@/services/FamilyMemberService';
 import { BACKEND_URL } from '@/env-constants';
+import { useConfirm } from '@/composables/useConfirm'
+import { useI18n } from 'vue-i18n';
+
+const { showConfirm } = useConfirm()
+const { t } = useI18n();
 
 const props = defineProps<{ memberId: string; currentSignatureUrl: string }>();
 const emit = defineEmits(['signatureUpdated']);
@@ -77,6 +82,17 @@ async function submitForm() {
 }
 
 async function deleteSignature() {
+  const confirmed = await showConfirm({
+    message: 'Opravdu chcete smazat podpis?',
+    title: 'Smazání podpisu',
+    confirmText: t('general.delete'),
+    cancelText: t('general.cancel')
+  })
+
+  if (!confirmed) {
+    return
+  }
+
   try {
     await FamilyMembersService.deleteSignature(props.memberId);
     closeDialog();

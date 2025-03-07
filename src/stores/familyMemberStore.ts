@@ -30,8 +30,6 @@ export const useFamilyMembersStore = defineStore('familyMembers', {
       this.error = null;
       try {
         const response = await FamilyMembersService.fetchFamilyMembers(this.page, this.search, this.sortOrder);
-        console.log("huhu")
-        console.log(response)
         this.familyMembers = response.data.data.map((item: any) => ({
           id: item.id,
           firstName: item.attributes['first-name'],

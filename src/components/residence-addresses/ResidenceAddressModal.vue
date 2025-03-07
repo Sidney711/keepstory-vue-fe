@@ -41,6 +41,9 @@ import { required } from '@vuelidate/validators';
 import { useSnackbar } from '@/composables/useSnackbar';
 import { useI18n } from 'vue-i18n';
 import { ResidenceAddressService } from '@/services/ResidenceAddressService';
+import { useConfirm } from '@/composables/useConfirm'
+
+const { showConfirm } = useConfirm()
 
 const props = defineProps<{
   familyMemberId: string;
@@ -150,6 +153,18 @@ const submitForm = async () => {
 
 const deleteResidenceAddress = async () => {
   if (!localState.residenceAddressId) return;
+
+  const confirmed = await showConfirm({
+    message: 'Opravdu chcete smazat tuhle adresu?',
+    title: 'Smazání adresy',
+    confirmText: t('general.delete'),
+    cancelText: t('general.cancel')
+  })
+
+  if (!confirmed) {
+    return
+  }
+
   try {
     await ResidenceAddressService.deleteResidenceAddress(localState.residenceAddressId);
     showSnackbar(t('residence_address.alert.successDelete'), 'success');

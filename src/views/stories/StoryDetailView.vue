@@ -48,6 +48,11 @@ import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { StoriesService } from '@/services/storiesService';
+import { useConfirm } from '@/composables/useConfirm'
+import { useI18n } from 'vue-i18n';
+
+const { showConfirm } = useConfirm()
+const { t } = useI18n();
 
 interface StoryDetail {
   id: string;
@@ -114,6 +119,17 @@ const editStory = () => {
 };
 
 const deleteStory = async () => {
+  const confirmed = await showConfirm({
+    message: 'Opravdu chcete smazat tento příběh? Odebere se u všech členů rodiny, kterých se příběh týká.',
+    title: 'Smazání příběhu',
+    confirmText: t('general.delete'),
+    cancelText: t('general.cancel')
+  })
+
+  if (!confirmed) {
+    return
+  }
+
   const response = await StoriesService.deleteStory(storyId);
 
   if (response.status === 204) {
@@ -121,7 +137,6 @@ const deleteStory = async () => {
     goBack();
   } else {
     alert('Při mazání příběhu došlo k chybě.');
-    console.log(response);
   }
 };
 </script>

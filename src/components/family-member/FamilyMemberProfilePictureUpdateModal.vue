@@ -32,6 +32,11 @@ import { ref, computed } from 'vue';
 import { defineProps, defineEmits, defineExpose } from 'vue';
 import { FamilyMembersService } from '@/services/FamilyMemberService.ts';
 import { BACKEND_URL } from '@/env-constants.ts';
+import { useConfirm } from '@/composables/useConfirm'
+import { useI18n } from 'vue-i18n';
+
+const { showConfirm } = useConfirm()
+const { t } = useI18n();
 
 const props = defineProps<{
   memberId: string,
@@ -80,6 +85,17 @@ async function submitForm() {
 }
 
 async function deleteProfilePicture() {
+  const confirmed = await showConfirm({
+    message: 'Opravdu chcete smazat profilovou fotku?',
+    title: 'Smazání profilové fotky',
+    confirmText: t('general.delete'),
+    cancelText: t('general.cancel')
+  })
+
+  if (!confirmed) {
+    return
+  }
+
   try {
     await FamilyMembersService.deleteProfilePicture(props.memberId);
     closeDialog();

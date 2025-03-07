@@ -52,6 +52,11 @@ import { ref, onMounted } from 'vue'
 import GalleryUploadModal from '@/components/uploaders/GalleryUploadModal.vue'
 import { FamilyMembersService } from '@/services/FamilyMemberService.ts'
 import { BACKEND_URL } from '@/env-constants'
+import { useI18n } from 'vue-i18n';
+import { useConfirm } from '@/composables/useConfirm.ts'
+
+const { showConfirm } = useConfirm()
+const { t } = useI18n();
 
 interface GalleryItem {
   id: string;
@@ -74,8 +79,18 @@ const openUploadModal = () => {
 }
 
 const deleteGalleryItem = async (item: GalleryItem) => {
+  const confirmed = await showConfirm({
+    message: 'Opravdu chcete smazat tuhle fotku?',
+    title: 'Smazání fotky',
+    confirmText: t('general.delete'),
+    cancelText: t('general.cancel')
+  })
+
+  if (!confirmed) {
+    return
+  }
+
   try {
-    console.log('Mazání obrázku:', item);
     await FamilyMembersService.deleteGalleryImage(currentMemberId, item.id);
     const response = await FamilyMembersService.fetchGalleryImages(currentMemberId);
     const images: { id: string, url: string }[] = response.data.images || [];

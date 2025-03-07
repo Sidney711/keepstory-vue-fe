@@ -52,7 +52,6 @@ async function submitExport() {
     } else {
       await ExportPdfService.exportFamilyTree(props.memberId);
     }
-    console.log('Export spuštěn.');
   } catch (error) {
     console.error('Export selhal:', error);
   } finally {

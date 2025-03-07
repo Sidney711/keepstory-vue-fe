@@ -87,6 +87,11 @@ import { ref, onMounted, computed } from 'vue';
 import { FamilyMembersService } from '@/services/FamilyMemberService.ts';
 import { BACKEND_URL } from '@/env-constants';
 import DocUploadModal from '@/components/uploaders/DocUploadModal.vue';
+import { useConfirm } from '@/composables/useConfirm'
+import { useI18n } from 'vue-i18n';
+
+const { showConfirm } = useConfirm()
+const { t } = useI18n();
 
 interface DocumentItem {
   id: string;
@@ -127,6 +132,17 @@ const exportedPdfs = computed(() => {
 
 
 const deleteDocument = async (doc: DocumentItem) => {
+  const confirmed = await showConfirm({
+    message: 'Opravdu chcete smazat tento soubor?',
+    title: 'Smazání souboru',
+    confirmText: t('general.delete'),
+    cancelText: t('general.cancel')
+  })
+
+  if (!confirmed) {
+    return
+  }
+
   try {
     await FamilyMembersService.deleteDocument(memberId, doc.id);
     const index = documents.value.findIndex(d => d.id === doc.id);

@@ -78,6 +78,11 @@ import { BACKEND_URL } from '@/env-constants.ts';
 import FamilyMemberGeneralUpdateModal
   from '@/components/family-member/FamilyMemberGeneralUpdateModal.vue'
 import { FamilyMembersService } from '@/services/FamilyMemberService.ts'
+import { useConfirm } from '@/composables/useConfirm'
+import { useI18n } from 'vue-i18n';
+
+const { showConfirm } = useConfirm()
+const { t } = useI18n();
 
 const route = useRoute();
 const router = useRouter();
@@ -159,6 +164,17 @@ const editMember = () => {
 };
 
 const deleteMember = async () => {
+  const confirmed = await showConfirm({
+    message: 'Opravdu chcete smazat tohoto člena rodiny? Jeho smazáním dojde také k odebrání všech jeho dokumentů, souborů, příběhů apod. Tuto akci nelze vrátit zpět.',
+    title: 'Smazání člena rodiny',
+    confirmText: t('general.delete'),
+    cancelText: t('general.cancel')
+  })
+
+  if (!confirmed) {
+    return
+  }
+
   const response = await FamilyMembersService.deleteFamilyMember(memberId.value);
 
   if (response.status === 204) {
