@@ -32,6 +32,14 @@ import { ref, computed } from 'vue';
 import { defineProps, defineEmits, defineExpose } from 'vue';
 import { FamilyMembersService } from '@/services/FamilyMemberService';
 import { BACKEND_URL } from '@/env-constants';
+import { useConfirm } from '@/composables/useConfirm'
+import { useI18n } from 'vue-i18n';
+import { useSnackbar } from '@/composables/useSnackbar'
+
+const { showSnackbar } = useSnackbar()
+
+const { showConfirm } = useConfirm()
+const { t } = useI18n();
 
 const props = defineProps<{ memberId: string; currentSignatureUrl: string }>();
 const emit = defineEmits(['signatureUpdated']);
@@ -70,18 +78,33 @@ async function submitForm() {
     formData.append('data[attributes][signature]', signature.value);
     await FamilyMembersService.updateSignature(props.memberId, formData);
     closeDialog();
+    showSnackbar('Podpis byl přidán.', 'success')
     emit('signatureUpdated');
   } catch (error) {
+    showSnackbar('Při nahrávání podpisu došlo k chybě.', 'error')
     console.error('Chyba při aktualizaci podpisu:', error);
   }
 }
 
 async function deleteSignature() {
+  const confirmed = await showConfirm({
+    message: 'Opravdu chcete smazat podpis?',
+    title: 'Smazání podpisu',
+    confirmText: t('general.delete'),
+    cancelText: t('general.cancel')
+  })
+
+  if (!confirmed) {
+    return
+  }
+
   try {
     await FamilyMembersService.deleteSignature(props.memberId);
     closeDialog();
+    showSnackbar('Podpis byl odebrán.', 'success')
     emit('signatureUpdated');
   } catch (error) {
+    showSnackbar('Při mazání podpisu došlo k chybě.', 'error')
     console.error('Chyba při mazání podpisu:', error);
   }
 }

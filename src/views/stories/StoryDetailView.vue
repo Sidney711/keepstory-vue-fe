@@ -33,7 +33,7 @@
                 <span v-if="story.date"> | Datum: {{ story.date }}</span>
               </v-card-subtitle>
               <v-card-text>
-                <div v-html="story.content" class="prose max-w-none"></div>
+                <div v-html="story.content" class="prose max-w-none story-content"></div>
               </v-card-text>
             </v-card>
           </template>
@@ -48,6 +48,14 @@ import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { StoriesService } from '@/services/storiesService';
+import { useConfirm } from '@/composables/useConfirm'
+import { useI18n } from 'vue-i18n';
+import { useSnackbar } from '@/composables/useSnackbar'
+
+const { showSnackbar } = useSnackbar()
+
+const { showConfirm } = useConfirm()
+const { t } = useI18n();
 
 interface StoryDetail {
   id: string;
@@ -110,13 +118,71 @@ const goBack = () => {
 };
 
 const editStory = () => {
-  console.log("Edit story:", story.value);
+  router.push({ name: 'edit-story', params: { id: story.value?.id }, query: { person: familyMemberId } });
 };
 
-const deleteStory = () => {
-  console.log("Delete story:", story.value);
+const deleteStory = async () => {
+  const confirmed = await showConfirm({
+    message: 'Opravdu chcete smazat tento příběh? Odebere se u všech členů rodiny, kterých se příběh týká.',
+    title: 'Smazání příběhu',
+    confirmText: t('general.delete'),
+    cancelText: t('general.cancel')
+  })
+
+  if (!confirmed) {
+    return
+  }
+
+  const response = await StoriesService.deleteStory(storyId);
+
+  if (response.status === 204) {
+    showSnackbar('Příběh byl úspěšně smazán.', 'success');
+    goBack();
+  } else {
+    showSnackbar('Chyba při mazání příběhu.', 'error');
+  }
 };
 </script>
 
 <style scoped>
+:deep(.story-content h1) {
+  font-size: 32px !important;
+  font-weight: bold !important;
+  margin: 20px 0 10px !important;
+}
+
+:deep(.story-content h2) {
+  font-size: 28px !important;
+  font-weight: bold !important;
+  margin: 18px 0 9px !important;
+}
+
+:deep(.story-content h3) {
+  font-size: 24px !important;
+  font-weight: bold !important;
+  margin: 16px 0 8px !important;
+}
+
+:deep(.story-content h4) {
+  font-size: 20px !important;
+  font-weight: bold !important;
+  margin: 14px 0 7px !important;
+}
+
+:deep(.story-content h5) {
+  font-size: 18px !important;
+  font-weight: bold !important;
+  margin: 12px 0 6px !important;
+}
+
+:deep(.story-content h6) {
+  font-size: 16px !important;
+  font-weight: bold !important;
+  margin: 10px 0 5px !important;
+}
+
+:deep(.story-content p) {
+  font-size: 1rem !important;
+  margin-bottom: 1rem !important;
+}
 </style>

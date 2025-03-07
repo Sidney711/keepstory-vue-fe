@@ -31,7 +31,7 @@ const messages = {
       },
       alert: {
         fillCorrectly: "Vyplňte všechna pole správně.",
-        accountCreated: "Účet byl vytvořen. Zkontrolujte si e-mail pro verifikační odkaz.",
+        accountCreated: "Účet byl vytvořen. Na Váš e-mail byl zaslán verifikační odkaz.",
         registrationError: "Něco se pokazilo při registraci. Možná účet s touto e-mailovou adresou již existuje."
       }
     },
@@ -158,7 +158,7 @@ const messages = {
         title: "Smazat účet",
         confirmPasswordLabel: "Heslo pro potvrzení",
         button: "Smazat účet",
-        confirmMessage: "Opravdu chcete smazat účet? Tato operace je nevratná.",
+        confirmMessage: "Opravdu chcete smazat účet? Všichni členové rodiny a jejich data budou smazáni. Tato operace je nevratná.",
         alert: {
           success: "Účet byl smazán.",
           error: "Došlo k chybě při mazání účtu."
@@ -359,7 +359,7 @@ const messages = {
         title: "Delete Account",
         confirmPasswordLabel: "Password for Confirmation",
         button: "Delete Account",
-        confirmMessage: "Are you sure you want to delete your account? This action is irreversible.",
+        confirmMessage: "Are you sure you want to delete your account? All your family members and their data will be lost. This action is irreversible.",
         alert: {
           success: "Account has been deleted.",
           error: "An error occurred while deleting the account."

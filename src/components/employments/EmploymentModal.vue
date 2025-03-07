@@ -48,6 +48,9 @@ import { required } from '@vuelidate/validators';
 import { useSnackbar } from '@/composables/useSnackbar';
 import { useI18n } from 'vue-i18n';
 import { EmploymentService } from '@/services/EmploymentService';
+import { useConfirm } from '@/composables/useConfirm'
+
+const { showConfirm } = useConfirm()
 
 const props = defineProps<{
   familyMemberId: string;
@@ -164,6 +167,19 @@ const submitForm = async () => {
 
 const deleteEmployment = async () => {
   if (!localState.employmentId) return;
+
+  const confirmed = await showConfirm({
+    message: 'Opravdu chcete smazat tohle zaměstnání?',
+    title: 'Smazání zaměstnání',
+    confirmText: t('general.delete'),
+    cancelText: t('general.cancel')
+  })
+
+  if (!confirmed) {
+    return
+  }
+
+
   try {
     await EmploymentService.deleteEmployment(localState.employmentId);
     showSnackbar(t('employment.alert.successDelete'), 'success');

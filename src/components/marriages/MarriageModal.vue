@@ -46,6 +46,9 @@ import { useFamilyMembersStore } from '@/stores/familyMemberStore';
 import { useSnackbar } from '@/composables/useSnackbar';
 import { useI18n } from 'vue-i18n';
 import { MarriageService } from '@/services/MarriageService';
+import { useConfirm } from '@/composables/useConfirm'
+
+const { showConfirm } = useConfirm()
 
 const props = defineProps<{
   firstPartnerId: string;
@@ -182,6 +185,18 @@ const submitForm = async () => {
 
 const deleteMarriage = async () => {
   if (!localState.marriageId) return;
+
+  const confirmed = await showConfirm({
+    message: 'Opravdu chcete smazat tohle manželství?',
+    title: 'Smazání manželství',
+    confirmText: t('general.delete'),
+    cancelText: t('general.cancel')
+  })
+
+  if (!confirmed) {
+    return
+  }
+
   try {
     await MarriageService.deleteMarriage(localState.marriageId);
     showSnackbar(t('marriage.alert.successDelete'), 'success');

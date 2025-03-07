@@ -26,6 +26,10 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { FamilyMembersService } from '@/services/FamilyMemberService.ts';
+import { useSnackbar } from '@/composables/useSnackbar'
+
+const { showSnackbar } = useSnackbar()
+
 
 interface Props {
   modelValue: boolean;
@@ -58,10 +62,11 @@ const uploadFiles = async () => {
 
   try {
     await FamilyMembersService.uploadDocuments(props.memberId, formData);
+    showSnackbar('Dokumenty byly nahrány.', 'success')
     emit('files-uploaded');
   } catch (error) {
     console.error('Chyba při nahrávání dokumentů:', error);
-    alert('Nepodařilo se nahrát dokumenty.');
+    showSnackbar('Nepodařilo se nahrát dokumenty.', 'error')
   }
   close();
 };

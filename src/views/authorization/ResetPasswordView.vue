@@ -66,6 +66,24 @@
         </v-btn>
       </v-card-actions>
 
+      <div class="flex justify-center gap-1 mt-4">
+        <span
+          @click="changeLanguage('cs')"
+          :class="{'font-bold': locale === 'cs'}"
+          class="cursor-pointer"
+        >
+          {{ $t('menu.language.cs') }}
+        </span>
+        <span>/</span>
+        <span
+          @click="changeLanguage('en')"
+          :class="{'font-bold': locale === 'en'}"
+          class="cursor-pointer"
+        >
+          {{ $t('menu.language.en') }}
+        </span>
+      </div>
+
       <v-card-text class="text-center">
         <router-link
           data-testid="reset-password-back-to-login"
@@ -91,7 +109,7 @@ import type { ResetPasswordPayload } from '@/interfaces/accounts';
 import { useI18n } from 'vue-i18n';
 import { useSnackbar } from '@/composables/useSnackbar';
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 
 const visiblePassword = ref(false);
 const visibleConfirmPassword = ref(false);
@@ -106,6 +124,14 @@ const route = useRoute();
 const router = useRouter();
 
 onMounted(() => {
+  const savedLocale = localStorage.getItem('locale');
+  if (savedLocale) {
+    locale.value = savedLocale;
+  } else {
+    localStorage.setItem('locale', 'cs');
+    locale.value = 'cs';
+  }
+
   if (route.query.key && typeof route.query.key === 'string') {
     state.key = route.query.key;
   } else {
@@ -142,6 +168,11 @@ const submitForm = async () => {
   } catch {
     showSnackbar(t('resetPasswordPage.alert.error'), 'error');
   }
+};
+
+const changeLanguage = (lang: string) => {
+  locale.value = lang;
+  localStorage.setItem('locale', lang);
 };
 </script>
 

@@ -149,6 +149,7 @@ import AppLayout from '@/layouts/AppLayout.vue'
 import { AccountService } from '@/services/AccountService'
 import { useSnackbar } from '@/composables/useSnackbar'
 import { useConfirm } from '@/composables/useConfirm'
+import { useAuthorizationStore } from '@/stores/authorizationStore.ts'
 
 const { showConfirm } = useConfirm()
 const { t } = useI18n()
@@ -273,6 +274,8 @@ const submitCloseAccount = async () => {
   try {
     const payload = { password: closeAccountState.password }
     await AccountService.closeAccount(payload)
+    const authorizationStore = useAuthorizationStore()
+    await authorizationStore.logout()
     showSnackbar(t('profile.deleteAccount.alert.success'), 'success')
   } catch {
     showSnackbar(t('profile.deleteAccount.alert.error'), 'error')

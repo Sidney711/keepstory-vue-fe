@@ -32,6 +32,14 @@ import { ref, computed } from 'vue';
 import { defineProps, defineEmits, defineExpose } from 'vue';
 import { FamilyMembersService } from '@/services/FamilyMemberService.ts';
 import { BACKEND_URL } from '@/env-constants.ts';
+import { useConfirm } from '@/composables/useConfirm'
+import { useI18n } from 'vue-i18n';
+import { useSnackbar } from '@/composables/useSnackbar'
+
+const { showSnackbar } = useSnackbar()
+
+const { showConfirm } = useConfirm()
+const { t } = useI18n();
 
 const props = defineProps<{
   memberId: string,
@@ -73,18 +81,33 @@ async function submitForm() {
     formData.append('data[attributes][profile_picture]', profilePhoto.value);
     await FamilyMembersService.updateProfilePicture(props.memberId, formData);
     closeDialog();
+    showSnackbar('Profilová fotka byla přidána.', 'success')
     emit('profilePictureUpdated');
   } catch (error) {
+    showSnackbar('Při nahrávání profilové fotky došlo k chybě.', 'error')
     console.error('Chyba při aktualizaci profilové fotky:', error);
   }
 }
 
 async function deleteProfilePicture() {
+  const confirmed = await showConfirm({
+    message: 'Opravdu chcete smazat profilovou fotku?',
+    title: 'Smazání profilové fotky',
+    confirmText: t('general.delete'),
+    cancelText: t('general.cancel')
+  })
+
+  if (!confirmed) {
+    return
+  }
+
   try {
     await FamilyMembersService.deleteProfilePicture(props.memberId);
     closeDialog();
+    showSnackbar('Profilová fotka byla smazána.', 'success')
     emit('profilePictureUpdated');
   } catch (error) {
+    showSnackbar('Při smazání profilové fotky došlo k chybě.', 'success')
     console.error('Chyba při mazání profilové fotky:', error);
   }
 }

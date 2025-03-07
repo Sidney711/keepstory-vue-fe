@@ -68,6 +68,24 @@
         {{ $t('login.button.login') }}
       </v-btn>
 
+      <div class="flex justify-center gap-1 mt-4">
+        <span
+          @click="changeLanguage('cs')"
+          :class="{'font-bold': locale === 'cs'}"
+          class="cursor-pointer"
+        >
+          {{ $t('menu.language.cs') }}
+        </span>
+        <span>/</span>
+        <span
+          @click="changeLanguage('en')"
+          :class="{'font-bold': locale === 'en'}"
+          class="cursor-pointer"
+        >
+          {{ $t('menu.language.en') }}
+        </span>
+      </div>
+
       <v-card-text class="text-center flex flex-col gap-4">
         <router-link
           data-testid="register-link"
@@ -93,7 +111,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -103,7 +121,7 @@ import { required, minLength, email, maxLength } from '@/utils/i18n-validators'
 import { useSnackbar } from '@/composables/useSnackbar'
 
 const { showSnackbar } = useSnackbar()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const state = reactive<LoginRequest>({
   email: '',
@@ -136,6 +154,21 @@ const submitForm = async () => {
     showSnackbar(t('login.alert.loginFailed'), 'error')
   }
 }
+
+const changeLanguage = (lang: string) => {
+  locale.value = lang;
+  localStorage.setItem('locale', lang);
+}
+
+onMounted(() => {
+  const savedLocale = localStorage.getItem('locale');
+  if (savedLocale) {
+    locale.value = savedLocale;
+  } else {
+    localStorage.setItem('locale', 'cs');
+    locale.value = 'cs';
+  }
+});
 </script>
 
 <style scoped>

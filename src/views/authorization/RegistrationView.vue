@@ -82,6 +82,24 @@
         {{ $t('registration.button.signup') }}
       </v-btn>
 
+      <div class="flex justify-center gap-1 mt-4">
+        <span
+          @click="changeLanguage('cs')"
+          :class="{'font-bold': locale === 'cs'}"
+          class="cursor-pointer"
+        >
+          {{ $t('menu.language.cs') }}
+        </span>
+        <span>/</span>
+        <span
+          @click="changeLanguage('en')"
+          :class="{'font-bold': locale === 'en'}"
+          class="cursor-pointer"
+        >
+          {{ $t('menu.language.en') }}
+        </span>
+      </div>
+
       <v-card-text class="text-center">
         <router-link
           data-testid="login-link"
@@ -98,7 +116,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 import { useI18n } from 'vue-i18n'
 import { email, maxLength, minLength, required, sameAs } from '@/utils/i18n-validators'
@@ -107,7 +125,7 @@ import type { AccountRequest } from '@/interfaces/accounts'
 import router from '@/router'
 import { useSnackbar } from '@/composables/useSnackbar'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const visiblePassword = ref(false)
 const visibleConfirmPassword = ref(false)
@@ -153,6 +171,21 @@ const submitForm = async () => {
     showSnackbar(t('registration.alert.registrationError'), 'error')
   }
 }
+
+const changeLanguage = (lang: string) => {
+  locale.value = lang;
+  localStorage.setItem('locale', lang);
+}
+
+onMounted(() => {
+  const savedLocale = localStorage.getItem('locale');
+  if (savedLocale) {
+    locale.value = savedLocale;
+  } else {
+    localStorage.setItem('locale', 'cs');
+    locale.value = 'cs';
+  }
+});
 </script>
 
 <style scoped>

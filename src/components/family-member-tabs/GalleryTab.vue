@@ -52,6 +52,14 @@ import { ref, onMounted } from 'vue'
 import GalleryUploadModal from '@/components/uploaders/GalleryUploadModal.vue'
 import { FamilyMembersService } from '@/services/FamilyMemberService.ts'
 import { BACKEND_URL } from '@/env-constants'
+import { useI18n } from 'vue-i18n';
+import { useConfirm } from '@/composables/useConfirm.ts'
+import { useSnackbar } from '@/composables/useSnackbar'
+
+const { showSnackbar } = useSnackbar()
+
+const { showConfirm } = useConfirm()
+const { t } = useI18n();
 
 interface GalleryItem {
   id: string;
@@ -74,8 +82,18 @@ const openUploadModal = () => {
 }
 
 const deleteGalleryItem = async (item: GalleryItem) => {
+  const confirmed = await showConfirm({
+    message: 'Opravdu chcete smazat tuhle fotku?',
+    title: 'Smazání fotky',
+    confirmText: t('general.delete'),
+    cancelText: t('general.cancel')
+  })
+
+  if (!confirmed) {
+    return
+  }
+
   try {
-    console.log('Mazání obrázku:', item);
     await FamilyMembersService.deleteGalleryImage(currentMemberId, item.id);
     const response = await FamilyMembersService.fetchGalleryImages(currentMemberId);
     const images: { id: string, url: string }[] = response.data.images || [];
@@ -84,9 +102,10 @@ const deleteGalleryItem = async (item: GalleryItem) => {
       src: `${BACKEND_URL}${img.url}`,
       alt: 'Obrázek'
     }));
+    showSnackbar('Fotka byla úspěšně smazána.', 'success');
   } catch (error) {
+    showSnackbar('Nepodařilo se smazat fotku.', 'error');
     console.error(error);
-    alert('Nepodařilo se smazat obrázek.');
   }
 }
 
@@ -105,9 +124,10 @@ const downloadGalleryItem = async (item: GalleryItem) => {
     a.click();
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
+    showSnackbar('Fotka se za chvilku začne stahovat.', 'success');
   } catch (error) {
+    showSnackbar('Nepodařilo se stáhnout fotku.', 'error');
     console.error(error);
-    alert('Nepodařilo se stáhnout obrázek.');
   }
 }
 

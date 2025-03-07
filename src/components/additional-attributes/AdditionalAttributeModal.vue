@@ -42,6 +42,9 @@ import { required } from '@vuelidate/validators';
 import { useSnackbar } from '@/composables/useSnackbar';
 import { useI18n } from 'vue-i18n';
 import { AdditionalAttributeService } from '@/services/AdditionalAttributeService';
+import { useConfirm } from '@/composables/useConfirm'
+
+const { showConfirm } = useConfirm()
 
 const props = defineProps<{
   familyMemberId: string;
@@ -162,6 +165,18 @@ const submitForm = async () => {
 
 const deleteAdditionalAttribute = async () => {
   if (!localState.additionalAttributeId) return;
+
+  const confirmed = await showConfirm({
+    message: 'Opravdu chcete smazat tento údaj?',
+    title: 'Smazání údaje',
+    confirmText: t('general.delete'),
+    cancelText: t('general.cancel')
+  })
+
+  if (!confirmed) {
+    return
+  }
+
   try {
     await AdditionalAttributeService.deleteAdditionalAttribute(localState.additionalAttributeId);
     showSnackbar(t('additional_attribute.alert.successDelete'), 'success');
