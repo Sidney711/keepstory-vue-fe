@@ -47,6 +47,9 @@ import { required } from '@vuelidate/validators';
 import { useSnackbar } from '@/composables/useSnackbar';
 import { useI18n } from 'vue-i18n';
 import { EducationService } from '@/services/EducationService';
+import { useConfirm } from '@/composables/useConfirm'
+
+const { showConfirm } = useConfirm()
 
 const props = defineProps<{
   familyMemberId: string;
@@ -178,6 +181,18 @@ const submitForm = async () => {
 
 const deleteEducation = async () => {
   if (!localState.educationId) return;
+
+  const confirmed = await showConfirm({
+    message: 'Opravdu chcete smazat tohle vzdělání?',
+    title: 'Smazání vzdělání',
+    confirmText: t('general.delete'),
+    cancelText: t('general.cancel')
+  })
+
+  if (!confirmed) {
+    return
+  }
+
   try {
     await EducationService.deleteEducation(localState.educationId);
     showSnackbar(t('education.alert.successDelete'), 'success');

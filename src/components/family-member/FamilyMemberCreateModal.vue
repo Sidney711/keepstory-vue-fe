@@ -114,7 +114,8 @@ const submitForm = async () => {
         first_name: state.firstName,
         last_name: state.lastName,
         ...(state.dateOfBirth ? { date_of_birth: state.dateOfBirth } : {}),
-        ...(!state.isAlive && state.dateOfDeath ? { date_of_death: state.dateOfDeath } : {})
+        ...(!state.isAlive && state.dateOfDeath ? { date_of_death: state.dateOfDeath } : {}),
+        deceased: !state.isAlive
       }
     }
   }

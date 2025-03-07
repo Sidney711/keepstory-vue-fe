@@ -12,6 +12,18 @@ export class StoriesService {
   }
 
   static async fetchStory(storyId: string) {
-    return axios.get(`${BACKEND_URL_WITH_API}/stories/${storyId}`);
+    return axios.get(`${BACKEND_URL_WITH_API}/stories/${storyId}?include=family-members&fields[family-members]=id,first-name,last-name,date-of-birth`);
+  }
+
+  static async deleteStory(id: string) {
+    return axios.delete(`${BACKEND_URL_WITH_API}/stories/${id}`);
+  }
+
+  static async updateStory(id: string, payload: NewStoryPayload) {
+    return axios.patch(`${BACKEND_URL_WITH_API}/stories/${id}`, payload, {
+      headers: {
+        'Content-Type': 'application/vnd.api+json'
+      }
+    });
   }
 }

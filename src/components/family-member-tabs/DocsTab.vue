@@ -87,6 +87,14 @@ import { ref, onMounted, computed } from 'vue';
 import { FamilyMembersService } from '@/services/FamilyMemberService.ts';
 import { BACKEND_URL } from '@/env-constants';
 import DocUploadModal from '@/components/uploaders/DocUploadModal.vue';
+import { useConfirm } from '@/composables/useConfirm'
+import { useI18n } from 'vue-i18n';
+import { useSnackbar } from '@/composables/useSnackbar'
+
+const { showSnackbar } = useSnackbar()
+
+const { showConfirm } = useConfirm()
+const { t } = useI18n();
 
 interface DocumentItem {
   id: string;
@@ -127,15 +135,27 @@ const exportedPdfs = computed(() => {
 
 
 const deleteDocument = async (doc: DocumentItem) => {
+  const confirmed = await showConfirm({
+    message: 'Opravdu chcete smazat tento soubor?',
+    title: 'Smazání souboru',
+    confirmText: t('general.delete'),
+    cancelText: t('general.cancel')
+  })
+
+  if (!confirmed) {
+    return
+  }
+
   try {
     await FamilyMembersService.deleteDocument(memberId, doc.id);
     const index = documents.value.findIndex(d => d.id === doc.id);
     if (index !== -1) {
       documents.value.splice(index, 1);
     }
+    showSnackbar('Dokument byl smazán.', 'success')
   } catch (error) {
     console.error('Chyba při mazání dokumentu:', error);
-    alert('Nepodařilo se smazat dokument.');
+    showSnackbar('Nepodařilo se smazat dokument.', 'error')
   }
 };
 
@@ -154,9 +174,10 @@ const downloadDocument = async (doc: DocumentItem) => {
     a.click();
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
+    showSnackbar('Dokument se brzy začne stahovat.', 'success')
   } catch (error) {
     console.error('Nepodařilo se stáhnout dokument:', error);
-    alert('Nepodařilo se stáhnout dokument.');
+    showSnackbar('Nepodařilo se stáhnout dokument.', 'error')
   }
 };
 

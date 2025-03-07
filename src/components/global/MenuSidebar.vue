@@ -10,7 +10,7 @@
 
     <v-list>
       <v-list-item
-        prepend-icon="mdi-family-tree"
+        prepend-icon="mdi-home-heart"
         :title="t('menu.family')"
         value="family"
         @click="$emit('navigate', 'homepage')"

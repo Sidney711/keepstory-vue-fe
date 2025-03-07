@@ -34,7 +34,6 @@ export const useAuthorizationStore = defineStore('authorization', {
             this.loggedIn = false;
             this.account = null;
           }
-          console.log(response);
         } catch {
           this.loggedIn = false;
           this.account = null;

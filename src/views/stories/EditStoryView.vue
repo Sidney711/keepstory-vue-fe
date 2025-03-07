@@ -21,7 +21,7 @@
 
         <v-col cols="12" md="4">
           <v-card outlined class="mb-4">
-            <v-card-title>Informace o příběhu</v-card-title>
+            <v-card-title>Upravit příběh</v-card-title>
             <v-card-text>
               <v-row dense>
                 <v-col cols="12" lg="6">
@@ -81,8 +81,8 @@
 
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="primary" @click="publishStory">
-                Publikovat příběh
+              <v-btn color="primary" @click="updateStory">
+                Uložit změny
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -119,20 +119,41 @@ const storyYear = ref('')
 const dateType = ref('exact')
 const isDateApprox = ref(false)
 const personId = ref<string>('')
+const storyId = ref<string>('')
 
 const quillRef = ref<any>(null)
 
 const familyStore = useFamilyMembersStore()
-onMounted(() => {
+const route = useRoute()
+
+onMounted(async () => {
   if (!familyStore.familyMembers.length) {
-    familyStore.fetchFamilyMembers()
+    await familyStore.fetchFamilyMembers()
   }
 
-  const route = useRoute()
   personId.value = route.query.person as string
-  if (personId.value) {
-    selectedPersons.value = [personId.value]
-  } else {
+  storyId.value = route.params.id as string
+
+  if (!personId.value || !storyId.value) {
+    router.push('/')
+    return
+  }
+
+  try {
+    const response = await StoriesService.fetchStory(storyId.value)
+    const attrs = response.data.data.attributes
+    storyTitle.value = attrs.title
+    storyContent.value = attrs.content
+    dateType.value = attrs['date-type'] || 'exact'
+    if (dateType.value === 'exact') {
+      storyDate.value = attrs['story-date']
+    } else {
+      storyYear.value = attrs['story-year']
+    }
+    isDateApprox.value = attrs['is-date-approx']
+    selectedPersons.value = response.data.included.map((item: any) => item.id)
+  } catch (error) {
+    console.error('Chyba při načítání příběhu:', error)
     router.push('/')
   }
 })
@@ -153,38 +174,40 @@ const focusEditor = () => {
   }
 };
 
-const publishStory = async () => {
+const updateStory = async () => {
   const payload: NewStoryPayload = {
     data: {
       type: 'stories',
+      id: storyId.value,
       attributes: {
         title: storyTitle.value,
         content: storyContent.value,
-        date_type: dateType.value,
-        story_date: dateType.value === 'exact' ? storyDate.value || '' : undefined,
-        story_year: dateType.value === 'year' ? storyYear.value : undefined,
-        is_date_approx: isDateApprox.value,
+        "date-type": dateType.value,
+        "story-date": dateType.value === 'exact' ? storyDate.value || '' : undefined,
+        "story-year": dateType.value === 'year' ? storyYear.value : undefined,
+        "is-date-approx": isDateApprox.value,
       },
       relationships: {
-        family_members: {
+        "family-members": {
           data: selectedPersons.value.map(id => ({
-            type: 'family_members',
+            type: 'family-members',
             id,
           })),
         },
       },
     },
   }
-
   try {
-    const response = await StoriesService.createStory(payload)
-    showSnackbar('Příběh byl úspěšně publikován.', 'success')
-    await router.push('/story-detail/' + response.data.id + '?person=' + personId.value)
+    await StoriesService.updateStory(storyId.value, payload)
+    showSnackbar('Příběh byl úspěšně aktualizován.', 'success')
+    await router.push('/story-detail/' + storyId.value + '?person=' + personId.value)
   } catch (error) {
-    showSnackbar('Chyba při publikaci příběhu.', 'error')
-    console.error('Chyba při publikaci příběhu:', error)
+    showSnackbar('Chyba při aktualizaci příběhu.', 'error')
+    console.error('Chyba při aktualizaci příběhu:', error)
   }
 }
+
+
 </script>
 
 <style scoped>
