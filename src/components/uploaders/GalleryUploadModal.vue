@@ -26,8 +26,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, vShow, watch } from 'vue'
 import { FamilyMembersService } from '@/services/FamilyMemberService.ts'
+import { useSnackbar } from '@/composables/useSnackbar'
+
+const { showSnackbar } = useSnackbar()
+
 
 interface Props {
   modelValue: boolean;
@@ -56,7 +60,7 @@ watch(dialog, (newVal) => {
 const uploadFiles = async () => {
   const validFiles = files.value.filter(file => file.type.startsWith('image/'));
   if (validFiles.length !== files.value.length) {
-    alert('Nahrávat můžete pouze obrázky!');
+    showSnackbar('Nahrávat můžete pouze obrázky!', 'error');
     return;
   }
 
@@ -68,9 +72,10 @@ const uploadFiles = async () => {
   try {
     await FamilyMembersService.uploadGalleryImages(props.memberId, formData);
     emit('files-uploaded');
+    showSnackbar('Fotky byly úspěšně nahrány.', 'success');
   } catch (error) {
+    showSnackbar('Nahrávání fotek selhalo.', 'error');
     console.error(error);
-    alert('Nepodařilo se nahrát obrázky.');
   }
   close();
 }

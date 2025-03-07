@@ -89,6 +89,9 @@ import { BACKEND_URL } from '@/env-constants';
 import DocUploadModal from '@/components/uploaders/DocUploadModal.vue';
 import { useConfirm } from '@/composables/useConfirm'
 import { useI18n } from 'vue-i18n';
+import { useSnackbar } from '@/composables/useSnackbar'
+
+const { showSnackbar } = useSnackbar()
 
 const { showConfirm } = useConfirm()
 const { t } = useI18n();
@@ -149,9 +152,10 @@ const deleteDocument = async (doc: DocumentItem) => {
     if (index !== -1) {
       documents.value.splice(index, 1);
     }
+    showSnackbar('Dokument byl smazán.', 'success')
   } catch (error) {
     console.error('Chyba při mazání dokumentu:', error);
-    alert('Nepodařilo se smazat dokument.');
+    showSnackbar('Nepodařilo se smazat dokument.', 'error')
   }
 };
 
@@ -170,9 +174,10 @@ const downloadDocument = async (doc: DocumentItem) => {
     a.click();
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
+    showSnackbar('Dokument se brzy začne stahovat.', 'success')
   } catch (error) {
     console.error('Nepodařilo se stáhnout dokument:', error);
-    alert('Nepodařilo se stáhnout dokument.');
+    showSnackbar('Nepodařilo se stáhnout dokument.', 'error')
   }
 };
 

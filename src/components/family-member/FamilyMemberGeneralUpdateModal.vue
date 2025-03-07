@@ -182,7 +182,9 @@ import { required } from '@vuelidate/validators'
 import { useFamilyMembersStore } from '@/stores/familyMemberStore'
 import type { FamilyMember, UpdateFamilyMemberPayload } from '@/interfaces/familyMembers'
 import { FamilyMembersService } from '@/services/FamilyMemberService.ts'
-import { BACKEND_URL } from '@/env-constants.ts'
+import { useSnackbar } from '@/composables/useSnackbar'
+
+const { showSnackbar } = useSnackbar()
 
 function isoToDateLocal(iso: string): string {
   if (!iso) return ''
@@ -394,8 +396,10 @@ async function submitForm() {
   try {
     await FamilyMembersService.updateFamilyMember(props.memberId, payload)
     closeDialog()
+    showSnackbar('Údaje byly upraveny.', 'success')
     emit('memberUpdated')
   } catch (error) {
+    showSnackbar('Při ukládání změn došlo k chybě.', 'error')
     console.error('Chyba při aktualizaci člena:', error)
   }
 }

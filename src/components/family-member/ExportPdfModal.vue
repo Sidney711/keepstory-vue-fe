@@ -29,6 +29,9 @@ import { ExportPdfService } from '@/services/ExportPdfService';
 const dialog = ref(false);
 const exportType = ref<'member' | 'family' | 'family_tree'>('family_tree');
 const loading = ref(false);
+import { useSnackbar } from '@/composables/useSnackbar'
+
+const { showSnackbar } = useSnackbar()
 
 const props = defineProps<{
   memberId: string;
@@ -52,7 +55,9 @@ async function submitExport() {
     } else {
       await ExportPdfService.exportFamilyTree(props.memberId);
     }
+    showSnackbar('Export byl úspěšně zahájen. Budete informováni emailem, až bude export hotový.', 'success');
   } catch (error) {
+    showSnackbar('Export selhal. Zkuste to prosím znovu.', 'error');
     console.error('Export selhal:', error);
   } finally {
     loading.value = false;

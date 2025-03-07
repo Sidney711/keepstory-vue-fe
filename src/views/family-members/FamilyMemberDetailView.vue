@@ -80,6 +80,9 @@ import FamilyMemberGeneralUpdateModal
 import { FamilyMembersService } from '@/services/FamilyMemberService.ts'
 import { useConfirm } from '@/composables/useConfirm'
 import { useI18n } from 'vue-i18n';
+import { useSnackbar } from '@/composables/useSnackbar'
+
+const { showSnackbar } = useSnackbar()
 
 const { showConfirm } = useConfirm()
 const { t } = useI18n();
@@ -178,9 +181,11 @@ const deleteMember = async () => {
   const response = await FamilyMembersService.deleteFamilyMember(memberId.value);
 
   if (response.status === 204) {
-    alert('Člen rodiny byl úspěšně smazán.');
+    showSnackbar('Člen rodiny byl smazán.', 'success')
     familyStore.page = 1;
     await router.push({ name: 'homepage' });
+  } else {
+    showSnackbar('Nepodařilo se smazat člena rodiny.', 'error')
   }
 };
 

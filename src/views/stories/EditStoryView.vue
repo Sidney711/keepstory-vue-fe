@@ -102,6 +102,9 @@ import { VDateInput } from 'vuetify/labs/VDateInput'
 import BlotFormatter from 'quill-blot-formatter'
 import { StoriesService } from '@/services/storiesService'
 import type { NewStoryPayload } from '@/interfaces/stories'
+import { useSnackbar } from '@/composables/useSnackbar'
+
+const { showSnackbar } = useSnackbar()
 
 const modules = {
   name: 'blotFormatter',
@@ -196,8 +199,10 @@ const updateStory = async () => {
   }
   try {
     await StoriesService.updateStory(storyId.value, payload)
+    showSnackbar('Příběh byl úspěšně aktualizován.', 'success')
     await router.push('/story-detail/' + storyId.value + '?person=' + personId.value)
   } catch (error) {
+    showSnackbar('Chyba při aktualizaci příběhu.', 'error')
     console.error('Chyba při aktualizaci příběhu:', error)
   }
 }

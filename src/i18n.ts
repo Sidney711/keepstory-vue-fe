@@ -31,7 +31,7 @@ const messages = {
       },
       alert: {
         fillCorrectly: "Vyplňte všechna pole správně.",
-        accountCreated: "Účet byl vytvořen. Zkontrolujte si e-mail pro verifikační odkaz.",
+        accountCreated: "Účet byl vytvořen. Na Váš e-mail byl zaslán verifikační odkaz.",
         registrationError: "Něco se pokazilo při registraci. Možná účet s touto e-mailovou adresou již existuje."
       }
     },

@@ -50,6 +50,9 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { StoriesService } from '@/services/storiesService';
 import { useConfirm } from '@/composables/useConfirm'
 import { useI18n } from 'vue-i18n';
+import { useSnackbar } from '@/composables/useSnackbar'
+
+const { showSnackbar } = useSnackbar()
 
 const { showConfirm } = useConfirm()
 const { t } = useI18n();
@@ -133,10 +136,10 @@ const deleteStory = async () => {
   const response = await StoriesService.deleteStory(storyId);
 
   if (response.status === 204) {
-    alert('Příběh byl úspěšně smazán.');
+    showSnackbar('Příběh byl úspěšně smazán.', 'success');
     goBack();
   } else {
-    alert('Při mazání příběhu došlo k chybě.');
+    showSnackbar('Chyba při mazání příběhu.', 'error');
   }
 };
 </script>

@@ -34,6 +34,9 @@ import { FamilyMembersService } from '@/services/FamilyMemberService';
 import { BACKEND_URL } from '@/env-constants';
 import { useConfirm } from '@/composables/useConfirm'
 import { useI18n } from 'vue-i18n';
+import { useSnackbar } from '@/composables/useSnackbar'
+
+const { showSnackbar } = useSnackbar()
 
 const { showConfirm } = useConfirm()
 const { t } = useI18n();
@@ -75,8 +78,10 @@ async function submitForm() {
     formData.append('data[attributes][signature]', signature.value);
     await FamilyMembersService.updateSignature(props.memberId, formData);
     closeDialog();
+    showSnackbar('Podpis byl přidán.', 'success')
     emit('signatureUpdated');
   } catch (error) {
+    showSnackbar('Při nahrávání podpisu došlo k chybě.', 'error')
     console.error('Chyba při aktualizaci podpisu:', error);
   }
 }
@@ -96,8 +101,10 @@ async function deleteSignature() {
   try {
     await FamilyMembersService.deleteSignature(props.memberId);
     closeDialog();
+    showSnackbar('Podpis byl odebrán.', 'success')
     emit('signatureUpdated');
   } catch (error) {
+    showSnackbar('Při mazání podpisu došlo k chybě.', 'error')
     console.error('Chyba při mazání podpisu:', error);
   }
 }
