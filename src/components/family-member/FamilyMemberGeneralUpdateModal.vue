@@ -278,16 +278,10 @@ function resetForm() {
   state.gender = familyMember.value.gender
   state.religion = familyMember.value.religion
   state.profession = familyMember.value.profession
+  state.isAlive = !familyMember.value.deceased
 
-  if (familyMember.value.dateOfDeath) {
-    state.isAlive = false
-    state.dateOfDeath = isoToDateLocal(familyMember.value.dateOfDeath)
-    state.deathTime = isoToTimeLocal(familyMember.value.deathTime)
-  } else {
-    state.isAlive = true
-    state.dateOfDeath = ''
-    state.deathTime = ''
-  }
+  state.dateOfDeath = isoToDateLocal(familyMember.value.dateOfDeath)
+  state.deathTime = isoToTimeLocal(familyMember.value.deathTime)
 
   state.deathPlace = familyMember.value.deathPlace
   state.causeOfDeath = familyMember.value.causeOfDeath
