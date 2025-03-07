@@ -33,7 +33,7 @@
                 <span v-if="story.date"> | Datum: {{ story.date }}</span>
               </v-card-subtitle>
               <v-card-text>
-                <div v-html="story.content" class="prose max-w-none"></div>
+                <div v-html="story.content" class="prose max-w-none story-content"></div>
               </v-card-text>
             </v-card>
           </template>
@@ -127,4 +127,44 @@ const deleteStory = async () => {
 </script>
 
 <style scoped>
+:deep(.story-content h1) {
+  font-size: 32px !important;
+  font-weight: bold !important;
+  margin: 20px 0 10px !important;
+}
+
+:deep(.story-content h2) {
+  font-size: 28px !important;
+  font-weight: bold !important;
+  margin: 18px 0 9px !important;
+}
+
+:deep(.story-content h3) {
+  font-size: 24px !important;
+  font-weight: bold !important;
+  margin: 16px 0 8px !important;
+}
+
+:deep(.story-content h4) {
+  font-size: 20px !important;
+  font-weight: bold !important;
+  margin: 14px 0 7px !important;
+}
+
+:deep(.story-content h5) {
+  font-size: 18px !important;
+  font-weight: bold !important;
+  margin: 12px 0 6px !important;
+}
+
+:deep(.story-content h6) {
+  font-size: 16px !important;
+  font-weight: bold !important;
+  margin: 10px 0 5px !important;
+}
+
+:deep(.story-content p) {
+  font-size: 1rem !important;
+  margin-bottom: 1rem !important;
+}
 </style>
