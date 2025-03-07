@@ -41,6 +41,24 @@
         </v-btn>
       </v-card-actions>
 
+      <div class="flex justify-center gap-1 mt-4">
+        <span
+          @click="changeLanguage('cs')"
+          :class="{'font-bold': locale === 'cs'}"
+          class="cursor-pointer"
+        >
+          {{ $t('menu.language.cs') }}
+        </span>
+        <span>/</span>
+        <span
+          @click="changeLanguage('en')"
+          :class="{'font-bold': locale === 'en'}"
+          class="cursor-pointer"
+        >
+          {{ $t('menu.language.en') }}
+        </span>
+      </div>
+
       <v-card-text class="text-center">
         <router-link
           data-testid="reset-password-back-to-login"
@@ -57,7 +75,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue';
+import { onMounted, reactive } from 'vue'
 import { useVuelidate } from '@vuelidate/core';
 import { useI18n } from 'vue-i18n';
 import { required, email } from '@/utils/i18n-validators';
@@ -66,7 +84,7 @@ import type { ResetPasswordRequest } from '@/interfaces/accounts';
 import router from '@/router';
 import { useSnackbar } from '@/composables/useSnackbar';
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const { showSnackbar } = useSnackbar();
 
 const state = reactive<ResetPasswordRequest>({
@@ -93,6 +111,21 @@ const submitForm = async () => {
     showSnackbar(t('resetPassword.alert.error'), 'error');
   }
 };
+
+const changeLanguage = (lang: string) => {
+  locale.value = lang;
+  localStorage.setItem('locale', lang);
+}
+
+onMounted(() => {
+  const savedLocale = localStorage.getItem('locale');
+  if (savedLocale) {
+    locale.value = savedLocale;
+  } else {
+    localStorage.setItem('locale', 'cs');
+    locale.value = 'cs';
+  }
+});
 </script>
 
 <style scoped>
