@@ -127,9 +127,7 @@ const familyStore = useFamilyMembersStore()
 const route = useRoute()
 
 onMounted(async () => {
-  if (!familyStore.familyMembers.length) {
-    await familyStore.fetchFamilyMembers()
-  }
+  await familyStore.fetchMinifiedFamilyMembers()
 
   personId.value = route.query.person as string
   storyId.value = route.params.id as string
@@ -159,7 +157,7 @@ onMounted(async () => {
 })
 
 const personsItems = computed(() =>
-  familyStore.familyMembers.map(person => ({
+  familyStore.allMinifiedFamilyMembers.map(person => ({
     text: `${person.firstName} ${person.lastName} (nar. ${person.dateOfBirth ? person.dateOfBirth : '-'})`,
     value: person.id
   }))

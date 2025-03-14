@@ -119,26 +119,24 @@ const storyYear = ref('')
 const dateType = ref('exact')
 const isDateApprox = ref(false)
 const personId = ref<string>('')
+const route = useRoute()
 
 const quillRef = ref<any>(null)
 
 const familyStore = useFamilyMembersStore()
-onMounted(() => {
-  if (!familyStore.familyMembers.length) {
-    familyStore.fetchFamilyMembers()
-  }
+onMounted(async () => {
+  await familyStore.fetchMinifiedFamilyMembers()
 
-  const route = useRoute()
   personId.value = route.query.person as string
   if (personId.value) {
     selectedPersons.value = [personId.value]
   } else {
-    router.push('/')
+    await router.push('/')
   }
 })
 
 const personsItems = computed(() =>
-  familyStore.familyMembers.map(person => ({
+  familyStore.allMinifiedFamilyMembers.map(person => ({
     text: `${person.firstName} ${person.lastName} (nar. ${person.dateOfBirth ? person.dateOfBirth : '-'})`,
     value: person.id
   }))

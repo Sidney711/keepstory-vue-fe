@@ -39,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, watch } from 'vue';
+import { ref, reactive, computed, watch, onMounted } from 'vue'
 import useVuelidate from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { useFamilyMembersStore } from '@/stores/familyMemberStore';
@@ -93,9 +93,12 @@ const v$ = useVuelidate(rules, localState);
 
 const familyStore = useFamilyMembersStore();
 
+onMounted(async () => {
+  await familyStore.fetchMinifiedFamilyMembers()
+});
+
 const secondPartnerOptions = computed(() =>
-  familyStore.familyMembers
-    .filter(member => member.id !== props.firstPartnerId)
+  familyStore.allMinifiedFamilyMembers
     .map(member => ({
       text: `${member.firstName} ${member.lastName} (nar. ${member.dateOfBirth || '-'})`,
       value: member.id

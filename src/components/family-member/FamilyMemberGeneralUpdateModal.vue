@@ -257,7 +257,7 @@ const rules = {
 const v$ = useVuelidate(rules, state)
 
 const personsItems = computed(() =>
-  familyStore.familyMembers
+  familyStore.allMinifiedFamilyMembers
     .filter(member => member.id !== props.memberId)
     .map(member => ({
       text: `${member.firstName} ${member.lastName} (nar. ${member.dateOfBirth ? isoToDateLocal(member.dateOfBirth) : '-'})`,
@@ -305,9 +305,8 @@ function resetForm() {
 }
 
 onMounted(async () => {
-  if (!familyMember.value) {
-    await familyStore.fetchFamilyMembers()
-  }
+  await familyStore.fetchMinifiedFamilyMembers()
+
   if (familyMember.value) {
     resetForm()
   }

@@ -9,6 +9,12 @@ export class FamilyMembersService {
     );
   }
 
+  static async fetchMinifiedFamilyMembers() {
+    return axios.get(
+      `${BACKEND_URL_WITH_API}/family-members?fields[family-members]=first-name,last-name,date-of-birth&sort=first-name`
+    );
+  }
+
   static async fetchFamilyMember(memberId: string) {
     return axios.get(`${BACKEND_URL_WITH_API}/family-members/${memberId}`);
   }
