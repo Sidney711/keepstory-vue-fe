@@ -41,12 +41,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, watch } from 'vue';
-import useVuelidate from '@vuelidate/core';
-import { required } from '@vuelidate/validators';
-import { useSnackbar } from '@/composables/useSnackbar';
-import { useI18n } from 'vue-i18n';
-import { EducationService } from '@/services/EducationService';
+import { ref, reactive, computed, watch } from 'vue'
+import useVuelidate from '@vuelidate/core'
+import { required, maxLength } from '@/utils/i18n-validators'
+import { useSnackbar } from '@/composables/useSnackbar'
+import { useI18n } from 'vue-i18n'
+import { EducationService } from '@/services/EducationService'
 import { useConfirm } from '@/composables/useConfirm'
 
 const { showConfirm } = useConfirm()
@@ -54,48 +54,48 @@ const { showConfirm } = useConfirm()
 const props = defineProps<{
   familyMemberId: string;
   educationData?: { id: string; schoolName: string; address: string; period: string } | null;
-}>();
+}>()
 
-const emit = defineEmits(['educationUpdated']);
+const emit = defineEmits(['educationUpdated'])
 
-const dialog = ref(false);
+const dialog = ref(false)
 
 const localState = reactive({
   schoolName: '',
   address: '',
   period: '',
   educationId: ''
-});
+})
 
-const isUpdate = computed(() => !!props.educationData);
+const isUpdate = computed(() => !!props.educationData)
 
 watch(
   () => props.educationData,
   (newData) => {
     if (newData) {
-      localState.schoolName = newData.schoolName;
-      localState.address = newData.address;
-      localState.period = newData.period;
-      localState.educationId = newData.id;
+      localState.schoolName = newData.schoolName
+      localState.address = newData.address
+      localState.period = newData.period
+      localState.educationId = newData.id
     } else {
-      localState.schoolName = '';
-      localState.address = '';
-      localState.period = '';
-      localState.educationId = '';
+      localState.schoolName = ''
+      localState.address = ''
+      localState.period = ''
+      localState.educationId = ''
     }
   },
   { immediate: true }
-);
+)
 
 const rules = {
-  schoolName: { required },
-  address: { },
-  period: {}
-};
+  schoolName: { required, maxLength: maxLength(250) },
+  address: { maxLength: maxLength(250) },
+  period: { maxLength: maxLength(100) }
+}
 
-const v$ = useVuelidate(rules, localState);
-const { showSnackbar } = useSnackbar();
-const { t } = useI18n();
+const v$ = useVuelidate(rules, localState)
+const { showSnackbar } = useSnackbar()
+const { t } = useI18n()
 
 const relationships =
   isUpdate.value && localState.educationId
@@ -108,32 +108,32 @@ const relationships =
       family_member: {
         data: { type: 'family_members', id: props.familyMemberId }
       }
-    };
+    }
 
 const openDialog = () => {
   if (!props.educationData) {
-    localState.schoolName = '';
-    localState.address = '';
-    localState.period = '';
-    localState.educationId = '';
+    localState.schoolName = ''
+    localState.address = ''
+    localState.period = ''
+    localState.educationId = ''
   }
-  dialog.value = true;
-};
+  dialog.value = true
+}
 
 const closeDialog = () => {
-  dialog.value = false;
+  dialog.value = false
   if (!isUpdate.value) {
-    localState.schoolName = '';
-    localState.address = '';
-    localState.period = '';
-    localState.educationId = '';
+    localState.schoolName = ''
+    localState.address = ''
+    localState.period = ''
+    localState.educationId = ''
   }
-  v$.value.$reset();
-};
+  v$.value.$reset()
+}
 
 const submitForm = async () => {
-  const valid = await v$.value.$validate();
-  if (!valid) return;
+  const valid = await v$.value.$validate()
+  if (!valid) return
 
   const rels =
     isUpdate.value && localState.educationId
@@ -146,7 +146,7 @@ const submitForm = async () => {
         family_member: {
           data: { type: 'family_members', id: props.familyMemberId }
         }
-      };
+      }
 
   const dataPayload: any = {
     type: 'educations',
@@ -156,31 +156,31 @@ const submitForm = async () => {
       period: localState.period
     },
     relationships: rels
-  };
-
-  if (isUpdate.value && localState.educationId) {
-    dataPayload.id = localState.educationId;
   }
 
-  const payload = { data: dataPayload };
+  if (isUpdate.value && localState.educationId) {
+    dataPayload.id = localState.educationId
+  }
+
+  const payload = { data: dataPayload }
 
   try {
     if (isUpdate.value && localState.educationId) {
-      await EducationService.updateEducation(localState.educationId, payload);
-      showSnackbar(t('education.alert.successUpdate'), 'success');
+      await EducationService.updateEducation(localState.educationId, payload)
+      showSnackbar(t('education.alert.successUpdate'), 'success')
     } else {
-      await EducationService.createEducation(payload);
-      showSnackbar(t('education.alert.successCreate'), 'success');
+      await EducationService.createEducation(payload)
+      showSnackbar(t('education.alert.successCreate'), 'success')
     }
-    emit('educationUpdated');
-    closeDialog();
+    emit('educationUpdated')
+    closeDialog()
   } catch (err: any) {
-    showSnackbar(t('education.alert.error'), 'error');
+    showSnackbar(t('education.alert.error'), 'error')
   }
-};
+}
 
 const deleteEducation = async () => {
-  if (!localState.educationId) return;
+  if (!localState.educationId) return
 
   const confirmed = await showConfirm({
     message: 'Opravdu chcete smazat tohle vzdělání?',
@@ -194,16 +194,16 @@ const deleteEducation = async () => {
   }
 
   try {
-    await EducationService.deleteEducation(localState.educationId);
-    showSnackbar(t('education.alert.successDelete'), 'success');
-    emit('educationUpdated');
-    closeDialog();
+    await EducationService.deleteEducation(localState.educationId)
+    showSnackbar(t('education.alert.successDelete'), 'success')
+    emit('educationUpdated')
+    closeDialog()
   } catch (err: any) {
-    showSnackbar(t('education.alert.errorDelete'), 'error');
+    showSnackbar(t('education.alert.errorDelete'), 'error')
   }
-};
+}
 
-defineExpose({ openDialog, closeDialog });
+defineExpose({ openDialog, closeDialog })
 </script>
 
 <style scoped>

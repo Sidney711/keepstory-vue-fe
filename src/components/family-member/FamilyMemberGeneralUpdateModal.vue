@@ -26,6 +26,8 @@
             />
             <v-textarea
               v-model="state.shortDescription"
+              :error-messages="v$.shortDescription.$errors.map(e => e.$message)"
+              @blur="v$.shortDescription.$touch"
               label="Krátký popis osoby"
               rows="2"
               outlined
@@ -35,17 +37,23 @@
               <v-text-field
                 v-model="state.birthLastName"
                 label="Rodné příjmení"
+                :error-messages="v$.birthLastName.$errors.map(e => e.$message)"
+                @blur="v$.birthLastName.$touch"
                 outlined
               />
               <v-text-field
                 v-model="state.dateOfBirth"
                 label="Datum narození"
                 type="date"
+                :error-messages="v$.dateOfBirth.$errors.map(e => e.$message)"
+                @blur="v$.dateOfBirth.$touch"
                 outlined
               />
               <v-text-field
                 v-model="state.birthPlace"
                 label="Místo narození"
+                :error-messages="v$.birthPlace.$errors.map(e => e.$message)"
+                @blur="v$.birthPlace.$touch"
                 outlined
               />
               <v-text-field
@@ -66,23 +74,25 @@
               <v-text-field
                 v-model="state.religion"
                 label="Náboženství"
+                :error-messages="v$.religion.$errors.map(e => e.$message)"
+                @blur="v$.religion.$touch"
                 outlined
               />
               <v-text-field
                 v-model="state.profession"
                 label="Profese"
+                :error-messages="v$.profession.$errors.map(e => e.$message)"
+                @blur="v$.profession.$touch"
                 outlined
               />
             </div>
           </section>
-
           <v-checkbox
             v-model="state.isAlive"
             label="Žije osoba"
             @change="onAliveChange"
             class="mt-4"
           />
-
           <template v-if="!state.isAlive">
             <section class="mb-6">
               <h2 class="mb-2 text-lg font-bold border-b pb-1">Informace o úmrtí</h2>
@@ -91,44 +101,57 @@
                   v-model="state.dateOfDeath"
                   label="Datum úmrtí"
                   type="date"
+                  :error-messages="v$.dateOfDeath.$errors.map(e => e.$message)"
+                  @blur="v$.dateOfDeath.$touch"
                   outlined
                 />
                 <v-text-field
                   v-model="state.deathTime"
                   label="Čas úmrtí"
                   type="time"
+                  :error-messages="v$.deathTime.$errors.map(e => e.$message)"
+                  @blur="v$.deathTime.$touch"
                   outlined
                 />
                 <v-text-field
                   v-model="state.deathPlace"
                   label="Místo úmrtí"
+                  :error-messages="v$.deathPlace.$errors.map(e => e.$message)"
+                  @blur="v$.deathPlace.$touch"
                   outlined
                 />
                 <v-text-field
                   v-model="state.causeOfDeath"
                   label="Příčina smrti"
+                  :error-messages="v$.causeOfDeath.$errors.map(e => e.$message)"
+                  @blur="v$.causeOfDeath.$touch"
                   outlined
                 />
                 <v-text-field
                   v-model="state.burialDate"
                   label="Datum pohřbu"
                   type="date"
+                  :error-messages="v$.burialDate.$errors.map(e => e.$message)"
+                  @blur="v$.burialDate.$touch"
                   outlined
                 />
                 <v-text-field
                   v-model="state.burialPlace"
                   label="Místo pohřbu"
+                  :error-messages="v$.burialPlace.$errors.map(e => e.$message)"
+                  @blur="v$.burialPlace.$touch"
                   outlined
                 />
                 <v-text-field
                   v-model="state.internmentPlace"
                   label="Místo pochování"
+                  :error-messages="v$.internmentPlace.$errors.map(e => e.$message)"
+                  @blur="v$.internmentPlace.$touch"
                   outlined
                 />
               </div>
             </section>
           </template>
-
           <section class="mb-6">
             <h2 class="mb-2 text-lg font-bold border-b pb-1">Rodinné vazby a další informace</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -148,6 +171,8 @@
                 label="Otec"
                 item-title="text"
                 item-value="value"
+                :error-messages="v$.fatherId.$errors.map(e => e.$message)"
+                @blur="v$.fatherId.$touch"
                 outlined
                 clearable
               />
@@ -155,6 +180,8 @@
             <v-text-field
               v-model="state.hobbies"
               label="Koníčky a zájmy"
+              :error-messages="v$.hobbies.$errors.map(e => e.$message)"
+              @blur="v$.hobbies.$touch"
               outlined
               class="mt-4"
             />
@@ -162,6 +189,8 @@
               v-model="state.shortMessage"
               label="Krátký vzkaz"
               rows="2"
+              :error-messages="v$.shortMessage.$errors.map(e => e.$message)"
+              @blur="v$.shortMessage.$touch"
               outlined
               class="mt-4"
             />
@@ -181,15 +210,19 @@
 import { ref, reactive, computed, watch, onMounted } from 'vue'
 import { defineProps, defineEmits, defineExpose } from 'vue'
 import useVuelidate from '@vuelidate/core'
-import { required } from '@vuelidate/validators'
+import { required, maxLength } from '@/utils/i18n-validators'
+import { createI18nMessage } from '@vuelidate/validators'
+import { i18n } from '@/i18n'
 import { useFamilyMembersStore } from '@/stores/familyMemberStore'
 import type { FamilyMember, UpdateFamilyMemberPayload } from '@/interfaces/familyMembers'
-import { FamilyMembersService } from '@/services/FamilyMemberService.ts'
+import { FamilyMembersService } from '@/services/FamilyMemberService'
 import { useSnackbar } from '@/composables/useSnackbar'
 
 const { showSnackbar } = useSnackbar()
 
-function isoToDateLocal(iso: string): string {
+const withI18nMessage = createI18nMessage({ t: i18n.global.t.bind(i18n) })
+
+const isoToDateLocal = (iso: string): string => {
   if (!iso) return ''
   const d = new Date(iso)
   const year = d.getFullYear()
@@ -198,7 +231,7 @@ function isoToDateLocal(iso: string): string {
   return `${year}-${month}-${day}`
 }
 
-function isoToTimeLocal(iso: string): string {
+const isoToTimeLocal = (iso: string): string => {
   if (!iso) return ''
   const d = new Date(iso)
   const hours = String(d.getHours()).padStart(2, '0')
@@ -206,7 +239,7 @@ function isoToTimeLocal(iso: string): string {
   return `${hours}:${minutes}`
 }
 
-function convertLocalTimeToUTCString(time: string): string {
+const convertLocalTimeToUTCString = (time: string): string => {
   if (!time || !/^\d{2}:\d{2}$/.test(time)) return ''
   const [hours, minutes] = time.split(':').map(Number)
   const localDate = new Date()
@@ -223,6 +256,7 @@ const familyMember = computed<FamilyMember | null>(() => {
   if (familyStore.familyMemberDetail && familyStore.familyMemberDetail.id === props.memberId) {
     return familyStore.familyMemberDetail
   }
+  return null
 })
 
 const dialog = ref(false)
@@ -247,16 +281,52 @@ const state = reactive({
   burialDate: '',
   burialPlace: '',
   internmentPlace: '',
-  motherId: '' as string,
-  fatherId: '' as string,
+  motherId: '',
+  fatherId: '',
   hobbies: '',
   shortMessage: ''
 })
 
+const notAfterToday = withI18nMessage((value: string) => {
+  if (!value) return true
+  return new Date(value) <= new Date()
+}, { message: 'Datum nesmí být pozdější než dnešní.' })
+
+const birthBeforeDeath = withI18nMessage((value: string, vm: any) => {
+  if (!value || !vm.dateOfBirth) return true
+  return new Date(vm.dateOfBirth) <= new Date(value)
+}, { message: 'Datum narození musí být dřívější než datum úmrtí.' })
+
+const emptyIfAlive = withI18nMessage((value: any, vm: any) => {
+  return vm.isAlive ? (!value || value === '') : true
+}, { message: 'Tato hodnota nesmí být zadána, pokud je osoba naživu.' })
+
+const differentFromMother = withI18nMessage((value: any, vm: any) => {
+  if (!value || !vm.motherId) return true
+  return value !== vm.motherId
+}, { message: 'Matka a otec musí být rozdílné osoby.' })
+
 const rules = {
-  firstName: { required },
-  lastName: { required }
+  firstName: { required, maxLength: maxLength(100) },
+  lastName: { required, maxLength: maxLength(100) },
+  dateOfBirth: { notAfterToday },
+  dateOfDeath: { notAfterToday, birthBeforeDeath, emptyIfAlive },
+  birthLastName: { maxLength: maxLength(100) },
+  birthPlace: { maxLength: maxLength(250) },
+  religion: { maxLength: maxLength(100) },
+  deathTime: { emptyIfAlive },
+  deathPlace: { maxLength: maxLength(250), emptyIfAlive },
+  causeOfDeath: { maxLength: maxLength(100), emptyIfAlive },
+  burialDate: { emptyIfAlive },
+  burialPlace: { maxLength: maxLength(250), emptyIfAlive },
+  internmentPlace: { maxLength: maxLength(250), emptyIfAlive },
+  profession: { maxLength: maxLength(1000) },
+  hobbies: { maxLength: maxLength(1000) },
+  shortDescription: { maxLength: maxLength(2000) },
+  shortMessage: { maxLength: maxLength(2000) },
+  fatherId: { differentFromMother }
 }
+
 const v$ = useVuelidate(rules, state)
 
 const personsItems = computed(() =>
@@ -270,9 +340,8 @@ const personsItems = computed(() =>
 
 const genderItems = ['female', 'male', 'other']
 
-function resetForm() {
+const resetForm = () => {
   if (!familyMember.value) return
-
   state.firstName = familyMember.value.firstName
   state.lastName = familyMember.value.lastName
   state.shortDescription = familyMember.value.shortDescription
@@ -284,32 +353,25 @@ function resetForm() {
   state.religion = familyMember.value.religion
   state.profession = familyMember.value.profession
   state.isAlive = !familyMember.value.deceased
-
   state.dateOfDeath = isoToDateLocal(familyMember.value.dateOfDeath)
   state.deathTime = isoToTimeLocal(familyMember.value.deathTime)
-
   state.deathPlace = familyMember.value.deathPlace
   state.causeOfDeath = familyMember.value.causeOfDeath
   state.burialDate = isoToDateLocal(familyMember.value.burialDate)
   state.burialPlace = familyMember.value.burialPlace
   state.internmentPlace = familyMember.value.internmentPlace
-
   const motherRel = familyMember.value.relationShipTree.find(r => r.relationship === 'mother')
   state.motherId = personsItems.value.find(p => p.value == motherRel?.id)
-
   const fatherRel = familyMember.value.relationShipTree.find(r => r.relationship === 'father')
   state.fatherId = personsItems.value.find(p => p.value == fatherRel?.id)
-
   state.hobbies = familyMember.value.hobbiesAndInterests || ''
   state.shortMessage = familyMember.value.shortMessage
   state.profilePhoto = null
-
   v$.value.$reset()
 }
 
 onMounted(async () => {
   await familyStore.fetchMinifiedFamilyMembers()
-
   if (familyMember.value) {
     resetForm()
   }
@@ -319,7 +381,7 @@ watch(familyMember, (newMember) => {
   if (newMember) resetForm()
 }, { immediate: true })
 
-function onAliveChange() {
+const onAliveChange = () => {
   if (state.isAlive) {
     state.dateOfDeath = ''
     state.deathTime = ''
@@ -331,33 +393,26 @@ function onAliveChange() {
   }
 }
 
-function openDialog() {
+const openDialog = () => {
   dialog.value = true
 }
 
-function closeDialog() {
+const closeDialog = () => {
   dialog.value = false
   resetForm()
 }
 
-async function submitForm() {
+const submitForm = async () => {
   const valid = await v$.value.$validate()
   if (!valid) return
-
-  const utcBirthTime = state.birthTime
-    ? convertLocalTimeToUTCString(state.birthTime)
-    : ''
-  const utcDeathTime = state.deathTime
-    ? convertLocalTimeToUTCString(state.deathTime)
-    : ''
-
+  const utcBirthTime = state.birthTime ? convertLocalTimeToUTCString(state.birthTime) : ''
+  const utcDeathTime = state.deathTime ? convertLocalTimeToUTCString(state.deathTime) : ''
   if (state.motherId && typeof state.motherId === 'object' && state.motherId.value) {
     state.motherId = state.motherId.value
   }
   if (state.fatherId && typeof state.fatherId === 'object' && state.fatherId.value) {
     state.fatherId = state.fatherId.value
   }
-
   const payload: UpdateFamilyMemberPayload = {
     data: {
       type: 'family-members',
@@ -394,14 +449,13 @@ async function submitForm() {
       }
     }
   }
-
   try {
     await FamilyMembersService.updateFamilyMember(props.memberId, payload)
     closeDialog()
     showSnackbar('Údaje byly upraveny.', 'success')
     emit('memberUpdated')
   } catch (error) {
-    showSnackbar('Při ukládání změn došlo k chybě.', 'error')
+    showSnackbar('Při ukládání změn došlo k chybě. Možná není možné, aby některá z vámi zadaných rodinných vazeb nastala.', 'error')
     console.error('Chyba při aktualizaci člena:', error)
   }
 }

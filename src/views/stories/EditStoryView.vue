@@ -9,7 +9,7 @@
           <div @click="focusEditor" style="height: 80vh;">
             <QuillEditor
               ref="quillRef"
-              v-model:content="storyContent"
+              v-model:content="storyState.storyContent"
               :modules="modules"
               content-type="html"
               theme="snow"
@@ -18,7 +18,6 @@
             />
           </div>
         </v-col>
-
         <v-col cols="12" md="4">
           <v-card outlined class="mb-4">
             <v-card-title>Upravit příběh</v-card-title>
@@ -26,60 +25,62 @@
               <v-row dense>
                 <v-col cols="12" lg="6">
                   <v-text-field
-                    v-model="storyTitle"
+                    v-model="storyState.storyTitle"
                     label="Název příběhu"
+                    :error-messages="v$.storyTitle.$errors.map(e => e.$message)"
+                    @blur="v$.storyTitle.$touch"
                     required
                   ></v-text-field>
                 </v-col>
-
                 <v-col cols="12" lg="6">
+                  <!-- Použití stejného v-select jako při vytváření -->
                   <v-select
-                    v-model="selectedPersons"
+                    v-model="storyState.selectedPersons"
                     :items="personsItems"
                     label="Koho se příběh týká"
                     multiple
                     chips
+                    :rules="[v => (v && v.length > 0) || 'Musí být vybrán alespoň jeden člen']"
                     required
                     item-title="text"
                     item-value="value"
                     :return-object="false"
                   />
                 </v-col>
-
                 <v-col cols="12">
-                  <v-radio-group v-model="dateType" row>
+                  <v-radio-group v-model="storyState.dateType" row @change="resetDates">
                     <v-radio label="Přesné datum" value="exact"></v-radio>
                     <v-radio label="Pouze rok" value="year"></v-radio>
                   </v-radio-group>
                 </v-col>
-
-                <v-col v-if="dateType === 'exact'">
+                <v-col v-if="storyState.dateType === 'exact'">
                   <v-text-field
-                    v-model="storyDate"
+                    v-model="storyState.storyDate"
                     label="Vyberte datum"
                     type="date"
+                    :error-messages="v$.storyDate.$errors.map(e => e.$message)"
+                    @blur="v$.storyDate.$touch"
                   ></v-text-field>
                 </v-col>
-
-                <v-col v-else-if="dateType === 'year'">
+                <v-col v-else-if="storyState.dateType === 'year'">
                   <v-text-field
-                    v-model="storyYear"
+                    v-model="storyState.storyYear"
                     label="Rok příběhu"
                     type="number"
                     min="0"
                     required
+                    :error-messages="v$.storyYear.$errors.map(e => e.$message)"
+                    @blur="v$.storyYear.$touch"
                   ></v-text-field>
                 </v-col>
-
                 <v-col cols="12">
                   <v-checkbox
-                    v-model="isDateApprox"
+                    v-model="storyState.isDateApprox"
                     label="Odhad datumu"
                   ></v-checkbox>
                 </v-col>
               </v-row>
             </v-card-text>
-
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="primary" @click="updateStory">
@@ -94,102 +95,150 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import router from '@/router'
 import AppLayout from '@/layouts/AppLayout.vue'
 import { useFamilyMembersStore } from '@/stores/familyMemberStore'
-import { VDateInput } from 'vuetify/labs/VDateInput'
 import BlotFormatter from 'quill-blot-formatter'
 import { StoriesService } from '@/services/storiesService'
 import type { NewStoryPayload } from '@/interfaces/stories'
 import { useSnackbar } from '@/composables/useSnackbar'
+import useVuelidate from '@vuelidate/core'
+import { required, maxLength, createI18nMessage } from '@vuelidate/validators'
+import { i18n } from '@/i18n'
 
 const { showSnackbar } = useSnackbar()
+const withI18nMessage = createI18nMessage({ t: i18n.global.t.bind(i18n) })
 
 const modules = {
   name: 'blotFormatter',
   module: BlotFormatter
 }
 
-const storyTitle = ref('')
-const storyContent = ref('')
-const selectedPersons = ref<string[]>([])
-const storyDate = ref(null)
-const storyYear = ref('')
-const dateType = ref('exact')
-const isDateApprox = ref(false)
 const personId = ref<string>('')
 const storyId = ref<string>('')
 
-const quillRef = ref<any>(null)
-
-const familyStore = useFamilyMembersStore()
 const route = useRoute()
+const familyStore = useFamilyMembersStore()
 
-onMounted(async () => {
-  await familyStore.fetchMinifiedFamilyMembers()
-
-  personId.value = route.query.person as string
-  storyId.value = route.params.id as string
-
-  if (!personId.value || !storyId.value) {
-    router.push('/')
-    return
-  }
-
-  try {
-    const response = await StoriesService.fetchStory(storyId.value)
-    const attrs = response.data.data.attributes
-    storyTitle.value = attrs.title
-    storyContent.value = attrs.content
-    dateType.value = attrs['date-type'] || 'exact'
-    if (dateType.value === 'exact') {
-      storyDate.value = attrs['story-date']
-    } else {
-      storyYear.value = attrs['story-year']
-    }
-    isDateApprox.value = attrs['is-date-approx']
-    selectedPersons.value = response.data.included.map((item: any) => item.id)
-  } catch (error) {
-    console.error('Chyba při načítání příběhu:', error)
-    router.push('/')
-  }
+const storyState = reactive({
+  storyTitle: '',
+  storyContent: '',
+  selectedPersons: [] as string[],
+  dateType: 'exact',
+  storyDate: '',
+  storyYear: '',
+  isDateApprox: false
 })
+
+// Custom validátory s i18n zprávami
+const notInFuture = withI18nMessage((value: string) => {
+  if (!value) return true
+  return new Date(value) <= new Date()
+}, { message: 'Datum nesmí být v budoucnu.' })
+
+const validYear = withI18nMessage((value: string) => {
+  if (value === '0' || value === 0) return true
+  if (!value) return true
+  const num = parseInt(value)
+  const currentYear = new Date().getFullYear()
+  return (num >= 0 && num <= currentYear)
+}, { message: 'Rok musí být nezáporný a nesmí být v budoucnu.' })
+
+const emptyIfExact = withI18nMessage((value: string, vm: any) => {
+  return vm.dateType === 'exact' ? (value === '' || value == null) : true
+}, { message: 'Pro vybraný typ data nesmí být rok zadán.' })
+
+const emptyIfYear = withI18nMessage((value: string, vm: any) => {
+  return vm.dateType === 'year' ? (value === '' || value == null) : true
+}, { message: 'Pro vybraný typ data nesmí být datum zadáno.' })
+
+const rules = {
+  storyTitle: { required, maxLength: maxLength(255) },
+  storyDate: { notInFuture, emptyIfYear },
+  storyYear: { validYear, emptyIfExact },
+  selectedPersons: {
+    required: (value: any) =>
+      (Array.isArray(value) && value.length > 0) || 'Musí být vybrán alespoň jeden člen'
+  }
+}
+
+const v$ = useVuelidate(rules, storyState)
 
 const personsItems = computed(() =>
   familyStore.allMinifiedFamilyMembers.map(person => ({
-    text: `${person.firstName} ${person.lastName} (nar. ${person.dateOfBirth ? person.dateOfBirth : '-'})`,
+    text: `${person.firstName} ${person.lastName} (nar. ${person.dateOfBirth || '-'})`,
     value: person.id
   }))
 )
 
+const quillRef = ref<any>(null)
 const focusEditor = () => {
-  const editor = quillRef.value?.editor;
+  const editor = quillRef.value?.editor
   if (editor) {
-    const length = editor.getLength();
-    editor.focus();
-    editor.setSelection(length, 0);
+    const length = editor.getLength()
+    editor.focus()
+    editor.setSelection(length, 0)
   }
-};
+}
+
+onMounted(async () => {
+  await familyStore.fetchMinifiedFamilyMembers()
+  personId.value = route.query.person as string
+  storyId.value = route.params.id as string
+  if (!personId.value || !storyId.value) {
+    await router.push('/')
+    return
+  }
+  try {
+    const response = await StoriesService.fetchStory(storyId.value)
+    const attrs = response.data.data.attributes
+    storyState.storyTitle = attrs.title
+    storyState.storyContent = attrs.content
+    storyState.dateType = attrs['date-type'] || 'exact'
+    if (storyState.dateType === 'exact') {
+      storyState.storyDate = attrs['story-date']
+    } else {
+      storyState.storyYear = attrs['story-year']
+    }
+    storyState.isDateApprox = attrs['is-date-approx']
+    // Předpokládáme, že response.data.included obsahuje rodinné členy
+    storyState.selectedPersons = response.data.included.map((item: any) => item.id)
+  } catch (error) {
+    console.error('Chyba při načítání příběhu:', error)
+    await router.push('/')
+  }
+})
+
+const resetDates = () => {
+  storyState.storyYear = ''
+  storyState.storyDate = ''
+}
 
 const updateStory = async () => {
+  if (storyState.selectedPersons == null || storyState.selectedPersons.length === 0) {
+    return
+  }
+  v$.value.$touch()
+  await v$.value.$validate()
+  if (v$.value.$error) return
   const payload: NewStoryPayload = {
     data: {
       type: 'stories',
       id: storyId.value,
       attributes: {
-        title: storyTitle.value,
-        content: storyContent.value,
-        "date-type": dateType.value,
-        "story-date": dateType.value === 'exact' ? storyDate.value || '' : undefined,
-        "story-year": dateType.value === 'year' ? storyYear.value : undefined,
-        "is-date-approx": isDateApprox.value,
+        title: storyState.storyTitle,
+        content: storyState.storyContent,
+        "date-type": storyState.dateType,
+        "story-date": storyState.dateType === 'exact' ? storyState.storyDate || '' : undefined,
+        "story-year": storyState.dateType === 'year' ? storyState.storyYear : undefined,
+        "is-date-approx": storyState.isDateApprox,
       },
       relationships: {
         "family-members": {
-          data: selectedPersons.value.map(id => ({
-            type: 'family-members',
+          data: storyState.selectedPersons.map(id => ({
+            type: 'family_members',
             id,
           })),
         },
@@ -206,7 +255,7 @@ const updateStory = async () => {
   }
 }
 
-
+defineExpose({ updateStory })
 </script>
 
 <style scoped>
