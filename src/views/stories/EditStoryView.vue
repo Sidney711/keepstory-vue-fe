@@ -54,10 +54,11 @@
                 </v-col>
 
                 <v-col v-if="dateType === 'exact'">
-                  <v-date-input
+                  <v-text-field
                     v-model="storyDate"
                     label="Vyberte datum"
-                  ></v-date-input>
+                    type="date"
+                  ></v-text-field>
                 </v-col>
 
                 <v-col v-else-if="dateType === 'year'">

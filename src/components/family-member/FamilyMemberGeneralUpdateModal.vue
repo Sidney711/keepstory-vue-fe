@@ -61,6 +61,7 @@
                 :items="genderItems"
                 label="Pohlaví"
                 outlined
+                clearable
               />
               <v-text-field
                 v-model="state.religion"
@@ -139,6 +140,7 @@
                 item-value="value"
                 :return-object="false"
                 outlined
+                clearable
               />
               <v-select
                 v-model="state.fatherId"
@@ -147,6 +149,7 @@
                 item-title="text"
                 item-value="value"
                 outlined
+                clearable
               />
             </div>
             <v-text-field
@@ -383,10 +386,10 @@ async function submitForm() {
       },
       relationships: {
         mother: {
-          data: { type: 'family-members', id: +state.motherId }
+          data: { type: 'family-members', id: state.motherId }
         },
         father: {
-          data: { type: 'family-members', id: +state.fatherId }
+          data: { type: 'family-members', id: state.fatherId }
         }
       }
     }
