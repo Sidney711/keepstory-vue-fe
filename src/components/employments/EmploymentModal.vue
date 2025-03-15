@@ -42,12 +42,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, watch } from 'vue';
-import useVuelidate from '@vuelidate/core';
-import { required } from '@vuelidate/validators';
-import { useSnackbar } from '@/composables/useSnackbar';
-import { useI18n } from 'vue-i18n';
-import { EmploymentService } from '@/services/EmploymentService';
+import { ref, reactive, computed, watch } from 'vue'
+import useVuelidate from '@vuelidate/core'
+import { required, maxLength } from '@/utils/i18n-validators'
+import { useSnackbar } from '@/composables/useSnackbar'
+import { useI18n } from 'vue-i18n'
+import { EmploymentService } from '@/services/EmploymentService'
 import { useConfirm } from '@/composables/useConfirm'
 
 const { showConfirm } = useConfirm()
@@ -55,72 +55,73 @@ const { showConfirm } = useConfirm()
 const props = defineProps<{
   familyMemberId: string;
   employmentData?: { id: string; employer: string; address: string; period: string } | null;
-}>();
+}>()
 
-const emit = defineEmits(['employmentUpdated']);
+const emit = defineEmits(['employmentUpdated'])
 
-const dialog = ref(false);
+const dialog = ref(false)
 
 const localState = reactive({
   employer: '',
   address: '',
   period: '',
   employmentId: ''
-});
+})
 
-const isUpdate = computed(() => !!props.employmentData);
+const isUpdate = computed(() => !!props.employmentData)
 
 watch(
   () => props.employmentData,
   (newData) => {
     if (newData) {
-      localState.employer = newData.employer;
-      localState.address = newData.address;
-      localState.period = newData.period;
-      localState.employmentId = newData.id;
+      localState.employer = newData.employer
+      localState.address = newData.address
+      localState.period = newData.period
+      localState.employmentId = newData.id
     } else {
-      localState.employer = '';
-      localState.address = '';
-      localState.period = '';
-      localState.employmentId = '';
+      localState.employer = ''
+      localState.address = ''
+      localState.period = ''
+      localState.employmentId = ''
     }
   },
   { immediate: true }
-);
+)
 
 const rules = {
-  employer: { required },
-  address: { required },
-  period: {}
-};
-const v$ = useVuelidate(rules, localState);
-const { showSnackbar } = useSnackbar();
-const { t } = useI18n();
+  employer: { required, maxLength: maxLength(250) },
+  address: { maxLength: maxLength(250) },
+  period: { maxLength: maxLength(100) }
+}
+
+const v$ = useVuelidate(rules, localState)
+const { showSnackbar } = useSnackbar()
+const { t } = useI18n()
 
 const openDialog = () => {
   if (!props.employmentData) {
-    localState.employer = '';
-    localState.address = '';
-    localState.period = '';
-    localState.employmentId = '';
+    localState.employer = ''
+    localState.address = ''
+    localState.period = ''
+    localState.employmentId = ''
   }
-  dialog.value = true;
-};
+  dialog.value = true
+}
 
 const closeDialog = () => {
-  dialog.value = false;
+  dialog.value = false
   if (!isUpdate.value) {
-    localState.employer = '';
-    localState.address = '';
-    localState.period = '';
-    localState.employmentId = '';
+    localState.employer = ''
+    localState.address = ''
+    localState.period = ''
+    localState.employmentId = ''
   }
-  v$.value.$reset();
-};
+  v$.value.$reset()
+}
 
 const submitForm = async () => {
-  const valid = await v$.value.$validate();
-  if (!valid) return;
+  const valid = await v$.value.$validate()
+  if (!valid) return
 
   const relationships =
     isUpdate.value && localState.employmentId
@@ -133,7 +134,7 @@ const submitForm = async () => {
         family_member: {
           data: { type: 'family_members', id: props.familyMemberId }
         }
-      };
+      }
 
   const dataPayload: any = {
     type: 'employments',
@@ -143,30 +144,30 @@ const submitForm = async () => {
       period: localState.period
     },
     relationships
-  };
+  }
 
   if (isUpdate.value && localState.employmentId) {
-    dataPayload.id = localState.employmentId;
+    dataPayload.id = localState.employmentId
   }
-  const payload = { data: dataPayload };
+  const payload = { data: dataPayload }
 
   try {
     if (isUpdate.value && localState.employmentId) {
-      await EmploymentService.updateEmployment(localState.employmentId, payload);
-      showSnackbar(t('employment.alert.successUpdate'), 'success');
+      await EmploymentService.updateEmployment(localState.employmentId, payload)
+      showSnackbar(t('employment.alert.successUpdate'), 'success')
     } else {
-      await EmploymentService.createEmployment(payload);
-      showSnackbar(t('employment.alert.successCreate'), 'success');
+      await EmploymentService.createEmployment(payload)
+      showSnackbar(t('employment.alert.successCreate'), 'success')
     }
-    emit('employmentUpdated');
-    closeDialog();
+    emit('employmentUpdated')
+    closeDialog()
   } catch (err: any) {
-    showSnackbar(t('employment.alert.error'), 'error');
+    showSnackbar(t('employment.alert.error'), 'error')
   }
-};
+}
 
 const deleteEmployment = async () => {
-  if (!localState.employmentId) return;
+  if (!localState.employmentId) return
 
   const confirmed = await showConfirm({
     message: 'Opravdu chcete smazat tohle zaměstnání?',
@@ -175,22 +176,19 @@ const deleteEmployment = async () => {
     cancelText: t('general.cancel')
   })
 
-  if (!confirmed) {
-    return
-  }
-
+  if (!confirmed) return
 
   try {
-    await EmploymentService.deleteEmployment(localState.employmentId);
-    showSnackbar(t('employment.alert.successDelete'), 'success');
-    emit('employmentUpdated');
-    closeDialog();
+    await EmploymentService.deleteEmployment(localState.employmentId)
+    showSnackbar(t('employment.alert.successDelete'), 'success')
+    emit('employmentUpdated')
+    closeDialog()
   } catch (err: any) {
-    showSnackbar(t('employment.alert.errorDelete'), 'error');
+    showSnackbar(t('employment.alert.errorDelete'), 'error')
   }
-};
+}
 
-defineExpose({ openDialog, closeDialog });
+defineExpose({ openDialog, closeDialog })
 </script>
 
 <style scoped>

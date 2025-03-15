@@ -35,12 +35,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, watch } from 'vue';
-import useVuelidate from '@vuelidate/core';
-import { required } from '@vuelidate/validators';
-import { useSnackbar } from '@/composables/useSnackbar';
-import { useI18n } from 'vue-i18n';
-import { ResidenceAddressService } from '@/services/ResidenceAddressService';
+import { ref, reactive, computed, watch } from 'vue'
+import useVuelidate from '@vuelidate/core'
+import { required, maxLength } from '@/utils/i18n-validators'
+import { useSnackbar } from '@/composables/useSnackbar'
+import { useI18n } from 'vue-i18n'
+import { ResidenceAddressService } from '@/services/ResidenceAddressService'
 import { useConfirm } from '@/composables/useConfirm'
 
 const { showConfirm } = useConfirm()
@@ -48,66 +48,67 @@ const { showConfirm } = useConfirm()
 const props = defineProps<{
   familyMemberId: string;
   residenceAddressData?: { id: string; address: string; period: string } | null;
-}>();
+}>()
 
-const emit = defineEmits(['residenceAddressUpdated']);
+const emit = defineEmits(['residenceAddressUpdated'])
 
-const dialog = ref(false);
+const dialog = ref(false)
 
 const localState = reactive({
   address: '',
   period: '',
   residenceAddressId: ''
-});
+})
 
-const isUpdate = computed(() => !!props.residenceAddressData);
+const isUpdate = computed(() => !!props.residenceAddressData)
 
 watch(
   () => props.residenceAddressData,
   (newData) => {
     if (newData) {
-      localState.address = newData.address;
-      localState.period = newData.period;
-      localState.residenceAddressId = newData.id;
+      localState.address = newData.address
+      localState.period = newData.period
+      localState.residenceAddressId = newData.id
     } else {
-      localState.address = '';
-      localState.period = '';
-      localState.residenceAddressId = '';
+      localState.address = ''
+      localState.period = ''
+      localState.residenceAddressId = ''
     }
   },
   { immediate: true }
-);
+)
 
 const rules = {
-  address: { required },
-  period: {}
-};
-const v$ = useVuelidate(rules, localState);
-const { showSnackbar } = useSnackbar();
-const { t } = useI18n();
+  address: { required, maxLength: maxLength(250) },
+  period: { maxLength: maxLength(100) }
+}
+
+const v$ = useVuelidate(rules, localState)
+const { showSnackbar } = useSnackbar()
+const { t } = useI18n()
 
 const openDialog = () => {
   if (!props.residenceAddressData) {
-    localState.address = '';
-    localState.period = '';
-    localState.residenceAddressId = '';
+    localState.address = ''
+    localState.period = ''
+    localState.residenceAddressId = ''
   }
-  dialog.value = true;
-};
+  dialog.value = true
+}
 
 const closeDialog = () => {
-  dialog.value = false;
+  dialog.value = false
   if (!isUpdate.value) {
-    localState.address = '';
-    localState.period = '';
-    localState.residenceAddressId = '';
+    localState.address = ''
+    localState.period = ''
+    localState.residenceAddressId = ''
   }
-  v$.value.$reset();
-};
+  v$.value.$reset()
+}
 
 const submitForm = async () => {
-  const valid = await v$.value.$validate();
-  if (!valid) return;
+  const valid = await v$.value.$validate()
+  if (!valid) return
 
   const relationships =
     isUpdate.value && localState.residenceAddressId
@@ -120,7 +121,7 @@ const submitForm = async () => {
         family_member: {
           data: { type: 'family_members', id: props.familyMemberId }
         }
-      };
+      }
 
   const dataPayload: any = {
     type: 'residence_addresses',
@@ -129,30 +130,30 @@ const submitForm = async () => {
       period: localState.period
     },
     relationships
-  };
+  }
 
   if (isUpdate.value && localState.residenceAddressId) {
-    dataPayload.id = localState.residenceAddressId;
+    dataPayload.id = localState.residenceAddressId
   }
-  const payload = { data: dataPayload };
+  const payload = { data: dataPayload }
 
   try {
     if (isUpdate.value && localState.residenceAddressId) {
-      await ResidenceAddressService.updateResidenceAddress(localState.residenceAddressId, payload);
-      showSnackbar(t('residence_address.alert.successUpdate'), 'success');
+      await ResidenceAddressService.updateResidenceAddress(localState.residenceAddressId, payload)
+      showSnackbar(t('residence_address.alert.successUpdate'), 'success')
     } else {
-      await ResidenceAddressService.createResidenceAddress(payload);
-      showSnackbar(t('residence_address.alert.successCreate'), 'success');
+      await ResidenceAddressService.createResidenceAddress(payload)
+      showSnackbar(t('residence_address.alert.successCreate'), 'success')
     }
-    emit('residenceAddressUpdated');
-    closeDialog();
+    emit('residenceAddressUpdated')
+    closeDialog()
   } catch (err: any) {
-    showSnackbar(t('residence_address.alert.error'), 'error');
+    showSnackbar(t('residence_address.alert.error'), 'error')
   }
-};
+}
 
 const deleteResidenceAddress = async () => {
-  if (!localState.residenceAddressId) return;
+  if (!localState.residenceAddressId) return
 
   const confirmed = await showConfirm({
     message: 'Opravdu chcete smazat tuhle adresu?',
@@ -161,21 +162,19 @@ const deleteResidenceAddress = async () => {
     cancelText: t('general.cancel')
   })
 
-  if (!confirmed) {
-    return
-  }
+  if (!confirmed) return
 
   try {
-    await ResidenceAddressService.deleteResidenceAddress(localState.residenceAddressId);
-    showSnackbar(t('residence_address.alert.successDelete'), 'success');
-    emit('residenceAddressUpdated');
-    closeDialog();
+    await ResidenceAddressService.deleteResidenceAddress(localState.residenceAddressId)
+    showSnackbar(t('residence_address.alert.successDelete'), 'success')
+    emit('residenceAddressUpdated')
+    closeDialog()
   } catch (err: any) {
-    showSnackbar(t('residence_address.alert.errorDelete'), 'error');
+    showSnackbar(t('residence_address.alert.errorDelete'), 'error')
   }
-};
+}
 
-defineExpose({ openDialog, closeDialog });
+defineExpose({ openDialog, closeDialog })
 </script>
 
 <style scoped>
