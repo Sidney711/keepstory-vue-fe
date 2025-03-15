@@ -38,13 +38,13 @@
 <script setup lang="ts">
 import { ref, reactive, computed, watch } from 'vue';
 import useVuelidate from '@vuelidate/core';
-import { required } from '@vuelidate/validators';
+import { required, maxLength } from '@/utils/i18n-validators';
 import { useSnackbar } from '@/composables/useSnackbar';
 import { useI18n } from 'vue-i18n';
 import { AdditionalAttributeService } from '@/services/AdditionalAttributeService';
-import { useConfirm } from '@/composables/useConfirm'
+import { useConfirm } from '@/composables/useConfirm';
 
-const { showConfirm } = useConfirm()
+const { showConfirm } = useConfirm();
 
 const props = defineProps<{
   familyMemberId: string;
@@ -80,8 +80,13 @@ watch(
 );
 
 const rules = {
-  attributeName: { required },
-  longText: {}
+  attributeName: {
+    required,
+    maxLength: maxLength(150)
+  },
+  longText: {
+    maxLength: maxLength(2000)
+  }
 };
 const v$ = useVuelidate(rules, localState);
 const { showSnackbar } = useSnackbar();
@@ -114,7 +119,6 @@ const submitForm = async () => {
   let relationships;
 
   if (isUpdate.value && localState.additionalAttributeId) {
-    // Při update se používá kebab-case
     attributes = {
       'attribute-name': localState.attributeName,
       'long-text': localState.longText
@@ -125,7 +129,6 @@ const submitForm = async () => {
       }
     };
   } else {
-    // Při vytvoření se používá snake_case
     attributes = {
       'attribute_name': localState.attributeName,
       'long_text': localState.longText
@@ -171,10 +174,10 @@ const deleteAdditionalAttribute = async () => {
     title: 'Smazání údaje',
     confirmText: t('general.delete'),
     cancelText: t('general.cancel')
-  })
+  });
 
   if (!confirmed) {
-    return
+    return;
   }
 
   try {

@@ -5,6 +5,7 @@ import type { FamilyMember } from '@/interfaces/familyMembers.ts'
 interface FamilyState {
   familyMembers: FamilyMember[];
   familyMemberDetail: FamilyMember;
+  allMinifiedFamilyMembers: FamilyMember[];
   page: number;
   search: string;
   sortOrder: string;
@@ -17,6 +18,7 @@ export const useFamilyMembersStore = defineStore('familyMembers', {
   state: (): FamilyState => ({
     familyMembers: [],
     familyMemberDetail: {} as FamilyMember,
+    allMinifiedFamilyMembers: [],
     page: 1,
     search: '',
     sortOrder: 'asc',
@@ -46,6 +48,23 @@ export const useFamilyMembersStore = defineStore('familyMembers', {
         } else {
           this.totalPages = 1;
         }
+      } catch (err: any) {
+        this.error = err.message;
+      } finally {
+        this.loading = false;
+      }
+    },
+    async fetchMinifiedFamilyMembers() {
+      this.loading = true;
+      this.error = null;
+      try {
+        const response = await FamilyMembersService.fetchMinifiedFamilyMembers();
+        this.allMinifiedFamilyMembers = response.data.data.map((item: any) => ({
+          id: item.id,
+          firstName: item.attributes['first-name'],
+          lastName: item.attributes['last-name'],
+          dateOfBirth: item.attributes['date-of-birth']
+        }));
       } catch (err: any) {
         this.error = err.message;
       } finally {
