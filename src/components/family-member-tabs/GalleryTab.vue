@@ -51,7 +51,6 @@
 import { ref, onMounted } from 'vue'
 import GalleryUploadModal from '@/components/uploaders/GalleryUploadModal.vue'
 import { FamilyMembersService } from '@/services/FamilyMemberService.ts'
-import { BACKEND_URL } from '@/env-constants'
 import { useI18n } from 'vue-i18n';
 import { useConfirm } from '@/composables/useConfirm.ts'
 import { useSnackbar } from '@/composables/useSnackbar'
@@ -99,7 +98,7 @@ const deleteGalleryItem = async (item: GalleryItem) => {
     const images: { id: string, url: string }[] = response.data.images || [];
     galleryItems.value = images.map((img) => ({
       id: img.id.toString(),
-      src: `${BACKEND_URL}${img.url}`,
+      src: `${img.url}`,
       alt: 'Obrázek'
     }));
     showSnackbar('Fotka byla úspěšně smazána.', 'success');
@@ -137,7 +136,7 @@ const handleFilesUploaded = async () => {
     const images: { id: string, url: string }[] = response.data.images || [];
     galleryItems.value = images.map((img) => ({
       id: img.id.toString(),
-      src: `${BACKEND_URL}${img.url}`,
+      src: `${img.url}`,
       alt: 'Obrázek'
     }));
   } catch (error) {
@@ -152,7 +151,7 @@ onMounted(async () => {
     const images: { id: string, url: string }[] = response.data.images || [];
     galleryItems.value = images.map((img) => ({
       id: img.id.toString(),
-      src: `${BACKEND_URL}${img.url}`,
+      src: `${img.url}`,
       alt: 'Obrázek'
     }));
   } catch (error) {

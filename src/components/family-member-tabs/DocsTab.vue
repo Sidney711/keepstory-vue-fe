@@ -85,7 +85,6 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
 import { FamilyMembersService } from '@/services/FamilyMemberService.ts';
-import { BACKEND_URL } from '@/env-constants';
 import DocUploadModal from '@/components/uploaders/DocUploadModal.vue';
 import { useConfirm } from '@/composables/useConfirm'
 import { useI18n } from 'vue-i18n';
@@ -115,7 +114,7 @@ const fetchDocuments = async () => {
     const docs: DocumentItem[] = response.data.documents || [];
     documents.value = docs.map(doc => ({
       id: doc.id.toString(),
-      url: `${BACKEND_URL}${doc.url}`,
+      url: `${doc.url}`,
       filename: doc.filename,
       created_at: doc.created_at,
       type: doc.type
