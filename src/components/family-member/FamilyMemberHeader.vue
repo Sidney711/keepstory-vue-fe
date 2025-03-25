@@ -5,13 +5,13 @@
         v-if="member.profilePictureUrl"
         :src="BACKEND_URL + member.profilePictureUrl"
         height="300px"
-        alt="Profilový obrázek"
+        :alt="$t('profile.profilePictureAlt')"
       />
       <v-img
         v-else
         src="/avatar-blank.png"
         height="300px"
-        alt="Profilový obrázek"
+        :alt="$t('profile.profilePictureAlt')"
       />
       <v-btn
         icon
@@ -39,10 +39,10 @@
     </v-card-title>
 
     <v-card-subtitle>
-      Datum narození: {{ formatDate(member.dateOfBirth) }}
+      {{ $t('family.label.dateOfBirth') }}: {{ formatDate(member.dateOfBirth) }}
       <template v-if="member.dateOfDeath">
         <br />
-        Datum úmrtí: {{ formatDate(member.dateOfDeath) }}
+        {{ $t('family.label.dateOfDeath') }}: {{ formatDate(member.dateOfDeath) }}
       </template>
     </v-card-subtitle>
 

@@ -2,7 +2,7 @@
   <v-dialog v-model="dialog" max-width="500">
     <v-card>
       <v-card-title class="headline d-flex justify-space-between align-center">
-        <span>{{ isUpdate ? 'Upravit zaměstnání' : 'Přidat zaměstnání' }}</span>
+        <span>{{ isUpdate ? t('employment.dialog.title.update') : t('employment.dialog.title.create') }}</span>
         <v-btn v-if="isUpdate" color="error" @click="deleteEmployment" icon>
           <v-icon>mdi-delete</v-icon>
         </v-btn>
@@ -11,21 +11,21 @@
         <v-form ref="form" @submit.prevent="submitForm">
           <v-text-field
             v-model="localState.employer"
-            label="Zaměstnavatel"
+            :label="t('employment.field.employer')"
             :error-messages="v$.employer.$errors.map(e => e.$message)"
             @blur="v$.employer.$touch"
             required
           />
           <v-text-field
             v-model="localState.address"
-            label="Adresa zaměstnavatele"
+            :label="t('employment.field.address')"
             :error-messages="v$.address.$errors.map(e => e.$message)"
             @blur="v$.address.$touch"
             required
           />
           <v-text-field
             v-model="localState.period"
-            label="Období"
+            :label="t('employment.field.period')"
             :error-messages="v$.period.$errors.map(e => e.$message)"
             @blur="v$.period.$touch"
           />
@@ -33,9 +33,9 @@
       </v-card-text>
       <v-card-actions>
         <v-btn color="primary" @click="submitForm">
-          {{ isUpdate ? 'Upravit' : 'Vytvořit' }}
+          {{ isUpdate ? t('employment.button.update') : t('employment.button.create') }}
         </v-btn>
-        <v-btn text @click="closeDialog">Zrušit</v-btn>
+        <v-btn text @click="closeDialog">{{ t('general.cancel') }}</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -170,8 +170,8 @@ const deleteEmployment = async () => {
   if (!localState.employmentId) return
 
   const confirmed = await showConfirm({
-    message: 'Opravdu chcete smazat tohle zaměstnání?',
-    title: 'Smazání zaměstnání',
+    message: t('employment.delete.confirmMessage'),
+    title: t('employment.delete.title'),
     confirmText: t('general.delete'),
     cancelText: t('general.cancel')
   })
@@ -180,11 +180,11 @@ const deleteEmployment = async () => {
 
   try {
     await EmploymentService.deleteEmployment(localState.employmentId)
-    showSnackbar(t('employment.alert.successDelete'), 'success')
+    showSnackbar(t('employment.delete.alert.successDelete'), 'success')
     emit('employmentUpdated')
     closeDialog()
   } catch (err: any) {
-    showSnackbar(t('employment.alert.errorDelete'), 'error')
+    showSnackbar(t('employment.delete.alert.errorDelete'), 'error')
   }
 }
 

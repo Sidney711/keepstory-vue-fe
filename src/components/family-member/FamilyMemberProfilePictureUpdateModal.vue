@@ -1,12 +1,12 @@
 <template>
   <v-dialog v-model="dialog" max-width="600px">
     <v-card>
-      <v-card-title class="headline">Aktualizace profilové fotky</v-card-title>
+      <v-card-title class="headline">{{ $t('profile.updateProfilePictureTitle') }}</v-card-title>
       <v-card-text>
         <v-form @submit.prevent="submitForm">
           <v-file-input
             v-model="profilePhoto"
-            label="Vyberte novou fotku"
+            :label="$t('profile.chooseNewPhoto')"
             accept="image/*"
             prepend-icon="mdi-image"
             outlined
@@ -14,14 +14,14 @@
           />
           <div v-if="hasProfilePicture" class="mb-4">
             <v-img :src="profileImageSrc" height="200px" />
-            <v-btn color="error" @click="deleteProfilePicture">Smazat fotku</v-btn>
+            <v-btn color="error" @click="deleteProfilePicture">{{ $t('profile.deletePhoto') }}</v-btn>
           </div>
         </v-form>
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn color="primary" @click="submitForm">Uložit</v-btn>
-        <v-btn text @click="closeDialog">Zrušit</v-btn>
+        <v-btn color="primary" @click="submitForm">{{ $t('general.save') }}</v-btn>
+        <v-btn text @click="closeDialog">{{ $t('general.cancel') }}</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -81,33 +81,33 @@ async function submitForm() {
     formData.append('data[attributes][profile_picture]', profilePhoto.value);
     await FamilyMembersService.updateProfilePicture(props.memberId, formData);
     closeDialog();
-    showSnackbar('Profilová fotka byla přidána.', 'success')
+    showSnackbar(t('profile.photoAdded'), 'success');
     emit('profilePictureUpdated');
   } catch (error) {
-    showSnackbar('Při nahrávání profilové fotky došlo k chybě.', 'error')
+    showSnackbar(t('profile.photoUploadError'), 'error');
     console.error('Chyba při aktualizaci profilové fotky:', error);
   }
 }
 
 async function deleteProfilePicture() {
   const confirmed = await showConfirm({
-    message: 'Opravdu chcete smazat profilovou fotku?',
-    title: 'Smazání profilové fotky',
+    message: t('profile.confirmDeletePhotoMessage'),
+    title: t('profile.deletePhotoTitle'),
     confirmText: t('general.delete'),
     cancelText: t('general.cancel')
-  })
+  });
 
   if (!confirmed) {
-    return
+    return;
   }
 
   try {
     await FamilyMembersService.deleteProfilePicture(props.memberId);
     closeDialog();
-    showSnackbar('Profilová fotka byla smazána.', 'success')
+    showSnackbar(t('profile.photoDeleted'), 'success');
     emit('profilePictureUpdated');
   } catch (error) {
-    showSnackbar('Při smazání profilové fotky došlo k chybě.', 'success')
+    showSnackbar(t('profile.photoDeleteError'), 'error');
     console.error('Chyba při mazání profilové fotky:', error);
   }
 }

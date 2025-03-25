@@ -1,12 +1,12 @@
 <template>
   <v-dialog v-model="dialog" max-width="600px">
     <v-card>
-      <v-card-title class="headline">Aktualizace podpisu</v-card-title>
+      <v-card-title class="headline">{{ $t('signature.updateSignatureTitle') }}</v-card-title>
       <v-card-text>
         <v-form @submit.prevent="submitForm">
           <v-file-input
             v-model="signature"
-            label="Vyberte nový podpis"
+            :label="$t('signature.chooseNewSignature')"
             accept="image/*"
             prepend-icon="mdi-pencil"
             outlined
@@ -14,14 +14,14 @@
           />
           <div v-if="hasSignature" class="mb-4">
             <v-img :src="signatureImageSrc" height="200px" />
-            <v-btn color="error" @click="deleteSignature">Smazat podpis</v-btn>
+            <v-btn color="error" @click="deleteSignature">{{ $t('signature.deleteSignature') }}</v-btn>
           </div>
         </v-form>
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn color="primary" @click="submitForm">Uložit</v-btn>
-        <v-btn text @click="closeDialog">Zrušit</v-btn>
+        <v-btn color="primary" @click="submitForm">{{ $t('general.save') }}</v-btn>
+        <v-btn text @click="closeDialog">{{ $t('general.cancel') }}</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -78,18 +78,18 @@ async function submitForm() {
     formData.append('data[attributes][signature]', signature.value);
     await FamilyMembersService.updateSignature(props.memberId, formData);
     closeDialog();
-    showSnackbar('Podpis byl přidán.', 'success')
+    showSnackbar(t('signature.signatureAdded'), 'success')
     emit('signatureUpdated');
   } catch (error) {
-    showSnackbar('Při nahrávání podpisu došlo k chybě.', 'error')
+    showSnackbar(t('signature.signatureUploadError'), 'error')
     console.error('Chyba při aktualizaci podpisu:', error);
   }
 }
 
 async function deleteSignature() {
   const confirmed = await showConfirm({
-    message: 'Opravdu chcete smazat podpis?',
-    title: 'Smazání podpisu',
+    message: t('signature.confirmDeleteSignatureMessage'),
+    title: t('signature.deleteSignatureTitle'),
     confirmText: t('general.delete'),
     cancelText: t('general.cancel')
   })
@@ -101,10 +101,10 @@ async function deleteSignature() {
   try {
     await FamilyMembersService.deleteSignature(props.memberId);
     closeDialog();
-    showSnackbar('Podpis byl odebrán.', 'success')
+    showSnackbar(t('signature.signatureDeleted'), 'success')
     emit('signatureUpdated');
   } catch (error) {
-    showSnackbar('Při mazání podpisu došlo k chybě.', 'error')
+    showSnackbar(t('signature.signatureDeleteError'), 'error')
     console.error('Chyba při mazání podpisu:', error);
   }
 }

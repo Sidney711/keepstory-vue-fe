@@ -5,33 +5,33 @@
         <v-row>
           <v-col cols="12">
             <v-card class="mb-4" outlined>
-              <v-card-title class="text-h5 font-bold bg-red-200">Osobní údaje</v-card-title>
+              <v-card-title class="text-h5 font-bold bg-red-200">{{ $t('family.personalDetails') }}</v-card-title>
               <v-divider></v-divider>
               <v-card-text>
                 <v-row>
                   <v-col cols="12" md="6">
-                    <div><strong>Jméno:</strong> {{member.firstName}}</div>
+                    <div><strong>{{ $t('family.label.firstName') }}:</strong> {{ member.firstName }}</div>
                   </v-col>
                   <v-col cols="12" md="6">
-                    <div><strong>Příjmení:</strong> {{member.lastName}}</div>
+                    <div><strong>{{ $t('family.label.lastName') }}:</strong> {{ member.lastName }}</div>
                   </v-col>
                   <v-col cols="12" md="6">
-                    <div><strong>Rodné příjmení:</strong> {{member.birthLastName}}</div>
+                    <div><strong>{{ $t('family.label.birthLastName') }}:</strong> {{ member.birthLastName }}</div>
                   </v-col>
                   <v-col cols="12" md="6">
-                    <div><strong>Datum narození:</strong> {{formatDate(member.dateOfBirth)}}</div>
+                    <div><strong>{{ $t('family.label.dateOfBirth') }}:</strong> {{ formatDate(member.dateOfBirth) }}</div>
                   </v-col>
                   <v-col cols="12" md="6">
-                    <div><strong>Místo narození:</strong> {{member.birthPlace}}</div>
+                    <div><strong>{{ $t('family.label.birthPlace') }}:</strong> {{ member.birthPlace }}</div>
                   </v-col>
                   <v-col cols="12" md="6">
-                    <div><strong>Čas narození:</strong> {{ formatTime(member.birthTime) }}</div>
+                    <div><strong>{{ $t('family.label.birthTime') }}:</strong> {{ formatTime(member.birthTime) }}</div>
                   </v-col>
                   <v-col cols="12" md="6">
-                    <div><strong>Pohlaví:</strong> {{member.gender}}</div>
+                    <div><strong>{{ $t('family.label.gender') }}:</strong> {{ member.gender }}</div>
                   </v-col>
                   <v-col cols="12" md="6">
-                    <div><strong>Náboženství:</strong> {{member.religion}}</div>
+                    <div><strong>{{ $t('family.label.religion') }}:</strong> {{ member.religion }}</div>
                   </v-col>
                 </v-row>
               </v-card-text>
@@ -42,30 +42,30 @@
         <v-row v-if="member.deceased">
           <v-col cols="12">
             <v-card class="mb-4" outlined>
-              <v-card-title class="text-h5 font-bold bg-red-200">Informace o úmrtí</v-card-title>
+              <v-card-title class="text-h5 font-bold bg-red-200">{{ $t('family.section.deathInfo') }}</v-card-title>
               <v-divider></v-divider>
               <v-card-text>
                 <v-row>
                   <v-col cols="12" md="6">
-                    <div><strong>Datum úmrtí:</strong> {{formatDate(member.dateOfDeath)}}</div>
+                    <div><strong>{{ $t('family.label.dateOfDeath') }}:</strong> {{ formatDate(member.dateOfDeath) }}</div>
                   </v-col>
                   <v-col cols="12" md="6">
-                    <div><strong>Čas úmrtí:</strong> {{formatTime(member.deathTime)}}</div>
+                    <div><strong>{{ $t('family.label.deathTime') }}:</strong> {{ formatTime(member.deathTime) }}</div>
                   </v-col>
                   <v-col cols="12" md="6">
-                    <div><strong>Místo úmrtí:</strong> {{member.deathPlace}}</div>
+                    <div><strong>{{ $t('family.label.deathPlace') }}:</strong> {{ member.deathPlace }}</div>
                   </v-col>
                   <v-col cols="12" md="6">
-                    <div><strong>Příčina smrti:</strong> {{member.causeOfDeath}}</div>
+                    <div><strong>{{ $t('family.label.causeOfDeath') }}:</strong> {{ member.causeOfDeath }}</div>
                   </v-col>
                   <v-col cols="12" md="6">
-                    <div><strong>Datum pohřbu:</strong> {{formatDate(member.burialDate)}}</div>
+                    <div><strong>{{ $t('family.label.burialDate') }}:</strong> {{ formatDate(member.burialDate) }}</div>
                   </v-col>
                   <v-col cols="12" md="6">
-                    <div><strong>Místo pohřbu:</strong> {{member.burialPlace}}</div>
+                    <div><strong>{{ $t('family.label.burialPlace') }}:</strong> {{ member.burialPlace }}</div>
                   </v-col>
                   <v-col cols="12" md="6">
-                    <div><strong>Místo pochování:</strong> {{member.internmentPlace}}</div>
+                    <div><strong>{{ $t('family.label.internmentPlace') }}:</strong> {{ member.internmentPlace }}</div>
                   </v-col>
                 </v-row>
               </v-card-text>
@@ -76,7 +76,7 @@
         <v-row>
           <v-col cols="12">
             <v-card class="mb-4" outlined>
-              <v-card-title class="text-h5 font-bold bg-red-200">Příbuzní</v-card-title>
+              <v-card-title class="text-h5 font-bold bg-red-200">{{ $t('family.relatives') }}</v-card-title>
               <v-divider></v-divider>
               <v-card-text>
                 <v-list dense>
@@ -101,7 +101,7 @@
             <v-card class="mb-4" outlined>
               <v-card-title class="text-h5 font-bold bg-red-200">
                 <div class="flex items-center w-full">
-                  <span>Manželství</span>
+                  <span>{{ $t('marriage.title') }}</span>
                   <v-btn icon class="ml-4" @click="onAddMarriage" size="35">
                     <v-icon size="23">mdi-plus</v-icon>
                   </v-btn>
@@ -119,13 +119,13 @@
                       <div class="flex items-center justify-between w-full pr-2">
                         <div>
                           <div>
-                            <strong>Partner: </strong>
+                            <strong>{{ $t('marriage.partnerLabel') }}:</strong>
                             <router-link :to="`/family-member-detail/${marriage.partnerId}`" class="hover:text-red-500">
                               {{ marriage.firstName }} {{ marriage.lastName }}
                             </router-link>
                           </div>
                           <div>
-                            <strong>Období:</strong> {{ marriage.period }}
+                            <strong>{{ $t('marriage.periodLabel') }}:</strong> {{ marriage.period }}
                           </div>
                         </div>
                         <v-btn icon class="ml-4" @click="onEditMarriage(marriage)" size="35">
@@ -152,7 +152,7 @@
             <v-card class="mb-4" outlined>
               <v-card-title class="text-h5 font-bold bg-red-200">
                 <div class="flex items-center w-full">
-                  <span>Vzdělání</span>
+                  <span>{{ $t('education.title') }}</span>
                   <v-btn icon class="ml-4" @click="onAddEducation" size="35">
                     <v-icon size="23">mdi-plus</v-icon>
                   </v-btn>
@@ -170,13 +170,13 @@
                       <div class="flex items-center justify-between w-full pr-2">
                         <div>
                           <div>
-                            <strong>Název:</strong> {{ education.schoolName }}
+                            <strong>{{ $t('education.field.schoolName') }}:</strong> {{ education.schoolName }}
                           </div>
                           <div>
-                            <strong>Adresa:</strong> {{ education.address }}
+                            <strong>{{ $t('education.field.address') }}:</strong> {{ education.address }}
                           </div>
                           <div>
-                            <strong>Období:</strong> {{ education.period }}
+                            <strong>{{ $t('education.field.period') }}:</strong> {{ education.period }}
                           </div>
                         </div>
                         <v-btn icon class="ml-4" @click="onEditEducation(education)" size="35">
@@ -203,7 +203,7 @@
             <v-card class="mb-4" outlined>
               <v-card-title class="text-h5 font-bold bg-red-200">
                 <div class="flex items-center w-full">
-                  <span>Zaměstnání a profese</span>
+                  <span>{{ $t('employment.title') }}</span>
                   <v-btn icon class="ml-4" @click="onAddEmployment" size="35">
                     <v-icon size="23">mdi-plus</v-icon>
                   </v-btn>
@@ -221,13 +221,13 @@
                       <div class="flex items-center justify-between w-full pr-2">
                         <div>
                           <div>
-                            <strong>Zaměstnavatel:</strong> {{ employment.employer }}
+                            <strong>{{ $t('employment.employerLabel') }}:</strong> {{ employment.employer }}
                           </div>
                           <div>
-                            <strong>Adresa:</strong> {{ employment.address }}
+                            <strong>{{ $t('employment.addressLabel') }}:</strong> {{ employment.address }}
                           </div>
                           <div>
-                            <strong>Období:</strong> {{ employment.period }}
+                            <strong>{{ $t('employment.periodLabel') }}:</strong> {{ employment.period }}
                           </div>
                         </div>
                         <v-btn icon class="ml-4" @click="onEditEmployment(employment)" size="35">
@@ -241,7 +241,7 @@
                       <div class="flex items-center justify-between w-full pr-2">
                         <div>
                           <div>
-                            <strong>Profese:</strong> {{ member.profession }}
+                            <strong>{{ $t('employment.profession') }}:</strong> {{ member.profession }}
                           </div>
                         </div>
                       </div>
@@ -265,7 +265,7 @@
             <v-card class="mb-4" outlined>
               <v-card-title class="text-h5 font-bold bg-red-200">
                 <div class="flex items-center w-full">
-                  <span>Adresy pobytu</span>
+                  <span>{{ $t('residence.title') }}</span>
                   <v-btn icon class="ml-4" @click="onAddResidenceAddress" size="35">
                     <v-icon size="23">mdi-plus</v-icon>
                   </v-btn>
@@ -283,10 +283,10 @@
                       <div class="flex items-center justify-between w-full pr-2">
                         <div>
                           <div>
-                            <strong>Adresa:</strong> {{ residence.address }}
+                            <strong>{{ $t('residence.addressLabel') }}:</strong> {{ residence.address }}
                           </div>
                           <div>
-                            <strong>Období:</strong> {{ residence.period }}
+                            <strong>{{ $t('residence.periodLabel') }}:</strong> {{ residence.period }}
                           </div>
                         </div>
                         <v-btn icon class="ml-4" @click="onEditResidenceAddress(residence)" size="35">
@@ -311,7 +311,7 @@
         <v-row>
           <v-col cols="12">
             <v-card class="mb-4" outlined>
-              <v-card-title class="text-h5 font-bold bg-red-200">Koníčky a zájmy</v-card-title>
+              <v-card-title class="text-h5 font-bold bg-red-200">{{ $t('family.hobbiesTitle') }}</v-card-title>
               <v-divider></v-divider>
               <v-card-text>
                 <p>{{member.hobbiesAndInterests}}</p>
@@ -323,7 +323,7 @@
         <v-row>
           <v-col cols="12">
             <v-card class="mb-4" outlined>
-              <v-card-title class="text-h5 font-bold bg-red-200">Krátký vzkaz</v-card-title>
+              <v-card-title class="text-h5 font-bold bg-red-200">{{ $t('family.shortMessageTitle') }}</v-card-title>
               <v-divider></v-divider>
               <v-card-text>
                 <p>{{member.shortMessage}}</p>
@@ -337,7 +337,7 @@
             <v-card class="mb-4" outlined>
               <v-card-title class="text-h5 font-bold bg-red-200">
                 <div class="flex items-center w-full">
-                  <span>Podpis</span>
+                  <span>{{ $t('signature.label') }}</span>
                   <v-btn icon class="ml-4" @click="openSignatureModal" size="35">
                     <v-icon size="23">mdi-image-edit</v-icon>
                   </v-btn>
@@ -345,7 +345,7 @@
               </v-card-title>
               <v-divider></v-divider>
               <v-card-text class="flex">
-                <v-img v-if="member.signatureUrl" :src="BACKEND_URL + member.signatureUrl" max-width="200" alt="Podpis" />
+                <v-img v-if="member.signatureUrl" :src="BACKEND_URL + member.signatureUrl" max-width="200" :alt="$t('signature.label')" />
               </v-card-text>
             </v-card>
           </v-col>
@@ -356,7 +356,7 @@
             <v-card class="mb-4" outlined>
               <v-card-title class="text-h5 font-bold bg-red-200">
                 <div class="flex items-center w-full">
-                  <span>Další údaje</span>
+                  <span>{{ $t('additional_attribute.label') }}</span>
                   <v-btn icon class="ml-4" @click="onAddAdditionalAttribute" size="35">
                     <v-icon size="23">mdi-plus</v-icon>
                   </v-btn>
