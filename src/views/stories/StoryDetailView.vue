@@ -1,8 +1,8 @@
 <template>
   <AppLayout>
     <v-container class="py-4" fluid>
-      <v-btn color="primary" class="mb-4" @click="goBack">
-        Zpět na člena rodiny
+      <v-btn color="red" variant="tonal" class="mb-4" @click="goBack">
+        {{ t('family.backToMember') }}
       </v-btn>
 
       <v-row justify="center">
@@ -29,8 +29,8 @@
                 </div>
               </v-card-title>
               <v-card-subtitle class="text-body-2 text-gray-600">
-                <span>Vytvořeno: {{ formatDate(story.createdAt) }}</span>
-                <span v-if="story.date"> | Datum: {{ story.date }}</span>
+                <span>{{ t('story.created') }} {{ formatDate(story.createdAt) }}</span>
+                <span v-if="story.date"> | {{ t('story.date') }}: {{ story.date }}</span>
               </v-card-subtitle>
               <v-card-text>
                 <div v-html="story.content" class="prose max-w-none story-content"></div>
@@ -53,7 +53,6 @@ import { useI18n } from 'vue-i18n';
 import { useSnackbar } from '@/composables/useSnackbar'
 
 const { showSnackbar } = useSnackbar()
-
 const { showConfirm } = useConfirm()
 const { t } = useI18n();
 
@@ -83,7 +82,7 @@ const fetchStoryDetail = async () => {
     const attrs = response.data.data.attributes;
     let dateStr = attrs["date-type"] === 'exact' ? attrs["story-date"] : attrs["story-year"];
     if (attrs["is-date-approx"]) {
-      dateStr = dateStr ? `${dateStr} (odhad)` : 'odhad';
+      dateStr = dateStr ? `${dateStr} (${t('story.approximate')})` : t('story.approximate');
     }
     story.value = {
       id: response.data.data.id,
@@ -123,8 +122,8 @@ const editStory = () => {
 
 const deleteStory = async () => {
   const confirmed = await showConfirm({
-    message: 'Opravdu chcete smazat tento příběh? Odebere se u všech členů rodiny, kterých se příběh týká.',
-    title: 'Smazání příběhu',
+    message: t('story.deleteConfirmMessage'),
+    title: t('story.deleteTitle'),
     confirmText: t('general.delete'),
     cancelText: t('general.cancel')
   })
@@ -136,10 +135,10 @@ const deleteStory = async () => {
   const response = await StoriesService.deleteStory(storyId);
 
   if (response.status === 204) {
-    showSnackbar('Příběh byl úspěšně smazán.', 'success');
+    showSnackbar(t('story.deleteSuccess'), 'success');
     goBack();
   } else {
-    showSnackbar('Chyba při mazání příběhu.', 'error');
+    showSnackbar(t('story.deleteError'), 'error');
   }
 };
 </script>

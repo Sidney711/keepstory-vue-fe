@@ -2,7 +2,7 @@
   <v-dialog v-model="dialog" max-width="500">
     <v-card>
       <v-card-title class="headline d-flex justify-space-between align-center">
-        <span>{{ isUpdate ? 'Upravit manželství' : 'Přidat manželství' }}</span>
+        <span>{{ isUpdate ? $t('marriage.updateTitle') : $t('marriage.createTitle') }}</span>
         <v-btn v-if="isUpdate" color="error" @click="deleteMarriage" icon>
           <v-icon>mdi-delete</v-icon>
         </v-btn>
@@ -11,14 +11,14 @@
         <v-form ref="form" @submit.prevent="submitForm">
           <v-text-field
             v-model="localState.period"
-            label="Období"
+            :label="$t('marriage.period')"
             :error-messages="v$.period.$errors.map(e => e.$message)"
             @blur="v$.period.$touch"
           />
           <v-select
             v-model="localState.secondPartnerId"
             :items="secondPartnerOptions"
-            label="Druhý partner"
+            :label="$t('marriage.secondPartner')"
             item-title="text"
             item-value="value"
             :return-object="false"
@@ -29,10 +29,10 @@
         </v-form>
       </v-card-text>
       <v-card-actions>
-        <v-btn color="primary" @click="submitForm">
-          {{ isUpdate ? 'Upravit' : 'Vytvořit' }}
+        <v-btn color="red" variant="tonal" @click="submitForm">
+          {{ isUpdate ? $t('marriage.update') : $t('marriage.create') }}
         </v-btn>
-        <v-btn text @click="closeDialog">Zrušit</v-btn>
+        <v-btn text @click="closeDialog">{{ $t('general.cancel') }}</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -68,7 +68,7 @@ onMounted(async () => {
 })
 const secondPartnerOptions = computed(() =>
   familyStore.allMinifiedFamilyMembers.map(member => ({
-    text: `${member.firstName} ${member.lastName} (nar. ${member.dateOfBirth || '-'})`,
+    text: `${member.firstName} ${member.lastName} (${t('family.text.birthDate')} ${member.dateOfBirth || '-'})`,
     value: member.id
   }))
 )
@@ -166,8 +166,8 @@ const submitForm = async () => {
 const deleteMarriage = async () => {
   if (!localState.marriageId) return
   const confirmed = await showConfirm({
-    message: 'Opravdu chcete smazat tohle manželství?',
-    title: 'Smazání manželství',
+    message: t('marriage.deleteConfirmMessage'),
+    title: t('marriage.deleteTitle'),
     confirmText: t('general.delete'),
     cancelText: t('general.cancel')
   })

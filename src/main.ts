@@ -27,6 +27,9 @@ const vuetify = createVuetify({
   directives,
 })
 
+const savedLocale = localStorage.getItem('locale') || 'cs';
+i18n.global.locale = savedLocale;
+
 app.component('QuillEditor', QuillEditor)
 
 app.use(createPinia())

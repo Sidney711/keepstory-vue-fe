@@ -1,11 +1,11 @@
 <template>
   <v-dialog v-model="dialog" max-width="500">
     <v-card>
-      <v-card-title>Nahrát fotky</v-card-title>
+      <v-card-title>{{ $t('gallery.uploadTitle') }}</v-card-title>
       <v-card-text>
         <v-file-input
           v-model="files"
-          label="Přetáhněte fotky sem nebo klikněte pro výběr"
+          :label="$t('gallery.dropzoneLabel')"
           prepend-icon="mdi-upload"
           multiple
           show-size
@@ -18,20 +18,21 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn text @click="close">Zavřít</v-btn>
-        <v-btn color="primary" text @click="uploadFiles">Nahrát</v-btn>
+        <v-btn text @click="close">{{ $t('general.close') }}</v-btn>
+        <v-btn color="red" variant="tonal" text @click="uploadFiles">{{ $t('gallery.upload') }}</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
 <script setup lang="ts">
-import { ref, vShow, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { FamilyMembersService } from '@/services/FamilyMemberService.ts'
 import { useSnackbar } from '@/composables/useSnackbar'
+import { useI18n } from 'vue-i18n'
 
 const { showSnackbar } = useSnackbar()
-
+const { t } = useI18n()
 
 interface Props {
   modelValue: boolean;
@@ -53,31 +54,30 @@ const close = () => {
 }
 
 watch(dialog, (newVal) => {
-  emit('update:modelValue', newVal);
-});
-
+  emit('update:modelValue', newVal)
+})
 
 const uploadFiles = async () => {
-  const validFiles = files.value.filter(file => file.type.startsWith('image/'));
+  const validFiles = files.value.filter(file => file.type.startsWith('image/'))
   if (validFiles.length !== files.value.length) {
-    showSnackbar('Nahrávat můžete pouze obrázky!', 'error');
-    return;
+    showSnackbar(t('gallery.onlyImages'), 'error')
+    return
   }
 
-  const formData = new FormData();
+  const formData = new FormData()
   validFiles.forEach(file => {
-    formData.append('data[attributes][images][]', file);
-  });
+    formData.append('data[attributes][images][]', file)
+  })
 
   try {
-    await FamilyMembersService.uploadGalleryImages(props.memberId, formData);
-    emit('files-uploaded');
-    showSnackbar('Fotky byly úspěšně nahrány.', 'success');
+    await FamilyMembersService.uploadGalleryImages(props.memberId, formData)
+    emit('files-uploaded')
+    showSnackbar(t('gallery.uploadSuccess'), 'success')
   } catch (error) {
-    showSnackbar('Nahrávání fotek selhalo.', 'error');
-    console.error(error);
+    showSnackbar(t('gallery.uploadError'), 'error')
+    console.error(error)
   }
-  close();
+  close()
 }
 
 watch(

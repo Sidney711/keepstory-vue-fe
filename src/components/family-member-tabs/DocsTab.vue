@@ -2,10 +2,10 @@
   <v-card flat>
     <v-card-title class="flex items-center justify-between">
       <div class="flex justify-between items-center">
-        <span class="text-lg font-medium">Nahrané dokumenty</span>
-        <v-btn color="primary" @click="openUploadModal" class="flex items-center">
+        <span class="text-lg font-medium">{{ $t('documents.uploaded') }}</span>
+        <v-btn color="red" variant="tonal" @click="openUploadModal" class="flex items-center">
           <v-icon left>mdi-upload</v-icon>
-          Nahrát dokumenty
+          {{ $t('documents.uploadButton') }}
         </v-btn>
       </div>
     </v-card-title>
@@ -41,7 +41,9 @@
       </v-list-item>
     </v-list>
 
-    <v-card-title class="mt-4"><span class="text-lg font-medium">Vyexportované PDF</span></v-card-title>
+    <v-card-title class="mt-4">
+      <span class="text-lg font-medium">{{ $t('documents.exportedPDF') }}</span>
+    </v-card-title>
     <v-divider />
     <v-list>
       <v-list-item
@@ -86,13 +88,12 @@
 import { ref, onMounted, computed } from 'vue';
 import { FamilyMembersService } from '@/services/FamilyMemberService.ts';
 import DocUploadModal from '@/components/uploaders/DocUploadModal.vue';
-import { useConfirm } from '@/composables/useConfirm'
+import { useConfirm } from '@/composables/useConfirm';
 import { useI18n } from 'vue-i18n';
-import { useSnackbar } from '@/composables/useSnackbar'
+import { useSnackbar } from '@/composables/useSnackbar';
 
-const { showSnackbar } = useSnackbar()
-
-const { showConfirm } = useConfirm()
+const { showSnackbar } = useSnackbar();
+const { showConfirm } = useConfirm();
 const { t } = useI18n();
 
 interface DocumentItem {
@@ -122,7 +123,7 @@ const fetchDocuments = async () => {
   } catch (error) {
     console.error('Chyba při načítání dokumentů:', error);
   }
-}
+};
 
 const originalDocuments = computed(() => {
   return documents.value.filter(doc => doc.type === 'uploaded');
@@ -132,17 +133,16 @@ const exportedPdfs = computed(() => {
   return documents.value.filter(doc => doc.type === 'export');
 });
 
-
 const deleteDocument = async (doc: DocumentItem) => {
   const confirmed = await showConfirm({
-    message: 'Opravdu chcete smazat tento soubor?',
-    title: 'Smazání souboru',
+    message: t('documents.deleteConfirmMessage'),
+    title: t('documents.deleteTitle'),
     confirmText: t('general.delete'),
     cancelText: t('general.cancel')
-  })
+  });
 
   if (!confirmed) {
-    return
+    return;
   }
 
   try {
@@ -151,10 +151,10 @@ const deleteDocument = async (doc: DocumentItem) => {
     if (index !== -1) {
       documents.value.splice(index, 1);
     }
-    showSnackbar('Dokument byl smazán.', 'success')
+    showSnackbar(t('documents.documentDeleted'), 'success');
   } catch (error) {
     console.error('Chyba při mazání dokumentu:', error);
-    showSnackbar('Nepodařilo se smazat dokument.', 'error')
+    showSnackbar(t('documents.documentDeleteError'), 'error');
   }
 };
 
@@ -173,10 +173,10 @@ const downloadDocument = async (doc: DocumentItem) => {
     a.click();
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
-    showSnackbar('Dokument se brzy začne stahovat.', 'success')
+    showSnackbar(t('documents.documentDownloading'), 'success');
   } catch (error) {
     console.error('Nepodařilo se stáhnout dokument:', error);
-    showSnackbar('Nepodařilo se stáhnout dokument.', 'error')
+    showSnackbar(t('documents.documentDownloadError'), 'error');
   }
 };
 

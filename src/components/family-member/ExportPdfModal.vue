@@ -1,22 +1,20 @@
 <template>
   <v-dialog v-model="dialog" max-width="500">
     <v-card>
-      <v-card-title class="headline">Export PDF</v-card-title>
+      <v-card-title class="headline">{{ t('export_pdf.title') }}</v-card-title>
       <v-card-text>
-        <p>Vyberte, co chcete exportovat:</p>
+        <p>{{ t('export_pdf.chooseExport') }}</p>
         <v-radio-group v-model="exportType">
-          <v-radio label="Exportovat rodokmen tohoto člena" value="family_tree" />
-          <v-radio label="Exportovat knihu pouze tohoto člena" value="member" />
-          <v-radio label="Exportovat knihu celé rodiny" value="family" />
+          <v-radio :label="t('export_pdf.radio.family_tree')" value="family_tree" />
+          <v-radio :label="t('export_pdf.radio.member')" value="member" />
+          <v-radio :label="t('export_pdf.radio.family')" value="family" />
         </v-radio-group>
-        <p class="mt-4">
-          Výsledný export bude uložen v dokumentech a budete informováni emailem, až bude export hotový.
-        </p>
+        <p class="mt-4">{{ t('export_pdf.description') }}</p>
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn text color="grey" @click="closeDialog">Zrušit</v-btn>
-        <v-btn color="primary" @click="submitExport" :loading="loading">Exportovat</v-btn>
+        <v-btn text color="grey" @click="closeDialog">{{ t('general.cancel') }}</v-btn>
+        <v-btn color="red" variant="tonal" @click="submitExport" :loading="loading">{{ t('export_pdf.button.export') }}</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -25,11 +23,13 @@
 <script setup lang="ts">
 import { ref, defineExpose } from 'vue';
 import { ExportPdfService } from '@/services/ExportPdfService';
+const { t } = useI18n()
 
 const dialog = ref(false);
 const exportType = ref<'member' | 'family' | 'family_tree'>('family_tree');
 const loading = ref(false);
 import { useSnackbar } from '@/composables/useSnackbar'
+import { useI18n } from 'vue-i18n'
 
 const { showSnackbar } = useSnackbar()
 
@@ -55,9 +55,9 @@ async function submitExport() {
     } else {
       await ExportPdfService.exportFamilyTree(props.memberId);
     }
-    showSnackbar('Export byl úspěšně zahájen. Budete informováni emailem, až bude export hotový.', 'success');
+    showSnackbar(t('export_pdf.alert.success'), 'success');
   } catch (error) {
-    showSnackbar('Export selhal. Zkuste to prosím znovu.', 'error');
+    showSnackbar(t('export_pdf.alert.error'), 'error');
     console.error('Export selhal:', error);
   } finally {
     loading.value = false;

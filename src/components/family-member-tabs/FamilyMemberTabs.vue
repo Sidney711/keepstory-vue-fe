@@ -1,9 +1,9 @@
 <template>
   <v-tabs v-model="currentTab" background-color="grey lighten-4" class="mt-4" grow>
-    <v-tab value="info">Základní informace</v-tab>
-    <v-tab value="docs">Dokumenty a exporty</v-tab>
-    <v-tab value="gallery">Galerie</v-tab>
-    <v-tab value="stories">Příběhy</v-tab>
+    <v-tab value="info">{{ $t('tabs.basicInfo') }}</v-tab>
+    <v-tab value="docs">{{ $t('tabs.docs') }}</v-tab>
+    <v-tab value="gallery">{{ $t('tabs.gallery') }}</v-tab>
+    <v-tab value="stories">{{ $t('tabs.stories') }}</v-tab>
   </v-tabs>
 
   <v-tabs-items v-model="currentTab">

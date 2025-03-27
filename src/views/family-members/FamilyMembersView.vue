@@ -1,7 +1,7 @@
 <template>
   <AppLayout>
     <v-container class="py-4" fluid>
-      <v-btn color="primary" class="mb-4" @click="openCreateModal">
+      <v-btn color="red" variant="tonal" class="mb-4" @click="openCreateModal">
         {{ t('family.button.create') }}
       </v-btn>
 
@@ -17,7 +17,7 @@
             <v-col cols="12" sm="7" md="5">
               <v-text-field
                 v-model="searchInput"
-                label="Hledat..."
+                :label="t('family.search')"
                 append-icon="mdi-magnify"
                 outlined
                 dense
@@ -27,7 +27,7 @@
               <v-select
                 v-model="sortOrder"
                 :items="sortOptions"
-                label="Seřadit podle data narození"
+                :label="t('family.sortByDOB')"
                 outlined
                 dense
                 item-title="text"
@@ -138,8 +138,8 @@ watch(() => familyStore.page, () => {
 })
 
 const sortOptions = [
-  { text: 'Od nejstaršího', value: 'asc' },
-  { text: 'Od nejmladšího', value: 'desc' }
+  { text: t('family.sortOptions.oldest'), value: 'asc' },
+  { text: t('family.sortOptions.youngest'), value: 'desc' }
 ]
 
 const createModal = ref(null)

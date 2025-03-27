@@ -2,7 +2,7 @@
   <v-dialog v-model="dialog" max-width="500">
     <v-card>
       <v-card-title class="headline d-flex justify-space-between align-center">
-        <span>{{ isUpdate ? 'Upravit adresu pobytu' : 'Přidat adresu pobytu' }}</span>
+        <span>{{ isUpdate ? $t('residence_address.updateTitle') : $t('residence_address.createTitle') }}</span>
         <v-btn v-if="isUpdate" color="error" @click="deleteResidenceAddress" icon>
           <v-icon>mdi-delete</v-icon>
         </v-btn>
@@ -11,24 +11,24 @@
         <v-form ref="form" @submit.prevent="submitForm">
           <v-text-field
             v-model="localState.address"
-            label="Adresa"
+            :label="$t('residence_address.address')"
             :error-messages="v$.address.$errors.map(e => e.$message)"
             @blur="v$.address.$touch"
             required
           />
           <v-text-field
             v-model="localState.period"
-            label="Období"
+            :label="$t('residence_address.period')"
             :error-messages="v$.period.$errors.map(e => e.$message)"
             @blur="v$.period.$touch"
           />
         </v-form>
       </v-card-text>
       <v-card-actions>
-        <v-btn color="primary" @click="submitForm">
-          {{ isUpdate ? 'Upravit' : 'Vytvořit' }}
+        <v-btn color="red" variant="tonal" @click="submitForm">
+          {{ isUpdate ? $t('residence_address.update') : $t('residence_address.create') }}
         </v-btn>
-        <v-btn text @click="closeDialog">Zrušit</v-btn>
+        <v-btn text @click="closeDialog">{{ $t('general.cancel') }}</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -156,8 +156,8 @@ const deleteResidenceAddress = async () => {
   if (!localState.residenceAddressId) return
 
   const confirmed = await showConfirm({
-    message: 'Opravdu chcete smazat tuhle adresu?',
-    title: 'Smazání adresy',
+    message: t('residence_address.deleteConfirmMessage'),
+    title: t('residence_address.deleteTitle'),
     confirmText: t('general.delete'),
     cancelText: t('general.cancel')
   })

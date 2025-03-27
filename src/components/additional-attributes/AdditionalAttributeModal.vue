@@ -2,7 +2,7 @@
   <v-dialog v-model="dialog" max-width="500">
     <v-card>
       <v-card-title class="headline d-flex justify-space-between align-center">
-        <span>{{ isUpdate ? 'Upravit další údaj' : 'Přidat další údaj' }}</span>
+        <span>{{ isUpdate ? t('additional_attribute.dialog.title.update') : t('additional_attribute.dialog.title.create') }}</span>
         <v-btn v-if="isUpdate" color="error" @click="deleteAdditionalAttribute" icon>
           <v-icon>mdi-delete</v-icon>
         </v-btn>
@@ -11,14 +11,14 @@
         <v-form ref="form" @submit.prevent="submitForm">
           <v-text-field
             v-model="localState.attributeName"
-            label="Název atributu"
+            :label="t('additional_attribute.field.attributeName')"
             :error-messages="v$.attributeName.$errors.map(e => e.$message)"
             @blur="v$.attributeName.$touch"
             required
           />
           <v-textarea
             v-model="localState.longText"
-            label="Text"
+            :label="t('additional_attribute.field.longText')"
             :error-messages="v$.longText.$errors.map(e => e.$message)"
             @blur="v$.longText.$touch"
             outlined
@@ -26,10 +26,10 @@
         </v-form>
       </v-card-text>
       <v-card-actions>
-        <v-btn color="primary" @click="submitForm">
-          {{ isUpdate ? 'Upravit' : 'Vytvořit' }}
+        <v-btn color="red" variant="tonal" @click="submitForm">
+          {{ isUpdate ? t('additional_attribute.button.update') : t('additional_attribute.button.create') }}
         </v-btn>
-        <v-btn text @click="closeDialog">Zrušit</v-btn>
+        <v-btn text @click="closeDialog">{{ t('general.cancel') }}</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -170,8 +170,8 @@ const deleteAdditionalAttribute = async () => {
   if (!localState.additionalAttributeId) return;
 
   const confirmed = await showConfirm({
-    message: 'Opravdu chcete smazat tento údaj?',
-    title: 'Smazání údaje',
+    message: t('additional_attribute.delete.confirmMessage'),
+    title: t('additional_attribute.delete.title'),
     confirmText: t('general.delete'),
     cancelText: t('general.cancel')
   });
