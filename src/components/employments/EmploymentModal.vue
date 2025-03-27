@@ -32,7 +32,7 @@
         </v-form>
       </v-card-text>
       <v-card-actions>
-        <v-btn color="primary" @click="submitForm">
+        <v-btn color="red" variant="tonal" @click="submitForm">
           {{ isUpdate ? t('employment.button.update') : t('employment.button.create') }}
         </v-btn>
         <v-btn text @click="closeDialog">{{ t('general.cancel') }}</v-btn>

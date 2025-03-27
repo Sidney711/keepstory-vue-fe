@@ -5,8 +5,8 @@
       <v-card-text>{{ confirmMessage }}</v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn data-testid="global-confirm-cancel-button" text color="primary" @click="onCancel">{{ confirmCancelText }}</v-btn>
-        <v-btn data-testid="global-confirm-confirm-button" text color="primary" @click="onConfirm">{{ confirmConfirmText }}</v-btn>
+        <v-btn data-testid="global-confirm-cancel-button" text color="red" variant="tonal" @click="onCancel">{{ confirmCancelText }}</v-btn>
+        <v-btn data-testid="global-confirm-confirm-button" text color="red" variant="tonal" @click="onConfirm">{{ confirmConfirmText }}</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

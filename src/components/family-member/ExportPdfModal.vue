@@ -14,7 +14,7 @@
       <v-card-actions>
         <v-spacer />
         <v-btn text color="grey" @click="closeDialog">{{ t('general.cancel') }}</v-btn>
-        <v-btn color="primary" @click="submitExport" :loading="loading">{{ t('export_pdf.button.export') }}</v-btn>
+        <v-btn color="red" variant="tonal" @click="submitExport" :loading="loading">{{ t('export_pdf.button.export') }}</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

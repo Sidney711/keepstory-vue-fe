@@ -20,7 +20,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn color="primary" @click="submitForm">{{ $t('general.save') }}</v-btn>
+        <v-btn color="red" variant="tonal" @click="submitForm">{{ $t('general.save') }}</v-btn>
         <v-btn text @click="closeDialog">{{ $t('general.cancel') }}</v-btn>
       </v-card-actions>
     </v-card>

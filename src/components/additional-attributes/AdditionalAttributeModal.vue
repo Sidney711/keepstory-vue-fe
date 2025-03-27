@@ -26,7 +26,7 @@
         </v-form>
       </v-card-text>
       <v-card-actions>
-        <v-btn color="primary" @click="submitForm">
+        <v-btn color="red" variant="tonal" @click="submitForm">
           {{ isUpdate ? t('additional_attribute.button.update') : t('additional_attribute.button.create') }}
         </v-btn>
         <v-btn text @click="closeDialog">{{ t('general.cancel') }}</v-btn>

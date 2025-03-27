@@ -2,6 +2,21 @@ import { createI18n } from 'vue-i18n'
 
 const messages = {
   cs: {
+    titles: {
+      login: "Přihlášení",
+      registration: "Registrace",
+      verifyAccount: "Ověření účtu",
+      verifyAccountResend: "Znovu odeslat ověřovací e-mail",
+      resetPasswordRequest: "Obnovení hesla",
+      resetPassword: "Resetování hesla",
+      profile: "Profil",
+      verifyEmailChange: "Ověření změny e-mailu",
+      familyMembers: "Moje rodina",
+      familyMemberDetail: "Detail člena rodiny",
+      newStory: "Nový příběh",
+      storyDetail: "Detail příběhu",
+      editStory: "Editace příběhu"
+    },
     validations: {
       required: "Pole je povinné.",
       minLength: "Pole musí mít minimálně {min} znaků.",
@@ -191,6 +206,7 @@ const messages = {
       delete: "Smazat",
       cancel: "Zrušit",
       confirmation: "Potvrzení",
+      backToFamily: "Zpět na rodinu",
       save: "Uložit"
     },
     family: {
@@ -239,6 +255,23 @@ const messages = {
       relatives: "Příbuzní",
       hobbiesTitle: "Koníčky a zájmy",
       shortMessageTitle: "Krátký vzkaz",
+      notFound: "Člen rodiny nebyl nalezen.",
+      deleteConfirmMessage: "Opravdu chcete smazat tohoto člena rodiny? Jeho smazáním dojde také k odebrání všech jeho dokumentů, souborů, příběhů apod. Tuto akci nelze vrátit zpět.",
+      deleteTitle: "Smazání člena rodiny",
+      deleteSuccess: "Člen rodiny byl smazán.",
+      deleteError: "Nepodařilo se smazat člena rodiny.",
+      approximate: "odhad",
+      button: {
+        create: "Vytvořit člena"
+      },
+      loading: "Načítání...",
+      search: "Hledat...",
+      sortByDOB: "Seřadit podle data narození",
+      sortOptions: {
+        oldest: "Od nejstaršího",
+        youngest: "Od nejmladšího"
+      },
+      backToMember: "Zpět na člena rodiny",
     },
     additional_attribute: {
       dialog: {
@@ -368,15 +401,143 @@ const messages = {
     marriage: {
       title: "Manželství",
       partnerLabel: "Partner",
-      periodLabel: "Období"
+      periodLabel: "Období",
+      updateTitle: "Upravit manželství",
+      createTitle: "Přidat manželství",
+      period: "Období",
+      secondPartner: "Druhý partner",
+      update: "Upravit",
+      create: "Vytvořit",
+      alert: {
+        successUpdate: "Manželství bylo úspěšně upraveno.",
+        successCreate: "Manželství bylo úspěšně vytvořeno.",
+        error: "Došlo k chybě při zpracování manželství.",
+        successDelete: "Manželství bylo úspěšně smazáno.",
+        errorDelete: "Došlo k chybě při mazání manželství."
+      },
+      deleteConfirmMessage: "Opravdu chcete smazat tohle manželství?",
+      deleteTitle: "Smazání manželství"
     },
     residence: {
       title: "Adresy pobytu",
       addressLabel: "Adresa",
       periodLabel: "Období"
+    },
+    documents: {
+      uploaded: "Nahrané dokumenty",
+      uploadButton: "Nahrát dokumenty",
+      exportedPDF: "Vyexportované PDF",
+      deleteConfirmMessage: "Opravdu chcete smazat tento soubor?",
+      deleteTitle: "Smazání souboru",
+      documentDeleted: "Dokument byl smazán.",
+      documentDeleteError: "Nepodařilo se smazat dokument.",
+      documentDownloading: "Dokument se brzy začne stahovat.",
+      documentDownloadError: "Nepodařilo se stáhnout dokument.",
+      uploadTitle: "Nahrát dokumenty",
+      dropzoneLabel: "Přetáhněte dokumenty sem nebo klikněte pro výběr",
+      upload: "Nahrát",
+      uploadSuccess: "Dokumenty byly nahrány.",
+      uploadError: "Nepodařilo se nahrát dokumenty."
+    },
+    tabs: {
+      basicInfo: "Základní informace",
+      docs: "Dokumenty a exporty",
+      gallery: "Galerie",
+      stories: "Příběhy"
+    },
+    gallery: {
+      title: "Galerie",
+      uploadPhotos: "Nahrát fotky",
+      deleteConfirmMessage: "Opravdu chcete smazat tuhle fotku?",
+      deleteTitle: "Smazání fotky",
+      photoDeleted: "Fotka byla úspěšně smazána.",
+      photoDeleteError: "Nepodařilo se smazat fotku.",
+      photoDownloading: "Fotka se za chvilku začne stahovat.",
+      photoDownloadError: "Nepodařilo se stáhnout fotku.",
+      imageAlt: "Obrázek",
+      uploadTitle: "Nahrát fotky",
+      dropzoneLabel: "Přetáhněte fotky sem nebo klikněte pro výběr",
+      upload: "Nahrát",
+      uploadSuccess: "Fotky byly úspěšně nahrány.",
+      uploadError: "Nahrávání fotek selhalo.",
+      onlyImages: "Nahrávat můžete pouze obrázky!"
+    },
+    stories: {
+      newStory: "Nový příběh",
+      created: "Vytvořeno:",
+      date: "Datum"
+    },
+    residence_address: {
+      updateTitle: "Upravit adresu pobytu",
+      createTitle: "Přidat adresu pobytu",
+      address: "Adresa",
+      period: "Období",
+      update: "Upravit",
+      create: "Vytvořit",
+      alert: {
+        successUpdate: "Adresa pobytu byla úspěšně upravena.",
+        successCreate: "Adresa pobytu byla úspěšně vytvořena.",
+        successDelete: "Adresa pobytu byla úspěšně smazána.",
+        error: "Došlo k chybě při zpracování adresy pobytu.",
+        errorDelete: "Došlo k chybě při mazání adresy pobytu."
+      },
+      deleteConfirmMessage: "Opravdu chcete smazat tuhle adresu?",
+      deleteTitle: "Smazání adresy"
+    },
+    story: {
+      editTitle: "Upravit příběh",
+      editInfo: "Informace o příběhu",
+      label: {
+        title: "Název příběhu",
+        targetMembers: "Koho se příběh týká",
+        selectDate: "Vyberte datum",
+        year: "Rok příběhu",
+        dateApproximation: "Odhad datumu"
+      },
+      radio: {
+        exactDate: "Přesné datum",
+        yearOnly: "Pouze rok"
+      },
+      button: {
+        saveChanges: "Uložit změny",
+        publish: "Publikovat příběh"
+      },
+      validation: {
+        futureDate: "Datum nesmí být v budoucnu.",
+        validYear: "Rok musí být nezáporný a nesmí být v budoucnu.",
+        emptyIfExact: "Pro vybraný typ data nesmí být rok zadán.",
+        emptyIfYear: "Pro vybraný typ data nesmí být datum zadáno.",
+        atLeastOneMember: "Musí být vybrán alespoň jeden člen"
+      },
+      updateSuccess: "Příběh byl úspěšně aktualizován.",
+      updateError: "Chyba při aktualizaci příběhu.",
+      publishSuccess: "Příběh byl úspěšně publikován.",
+      publishError: "Chyba při publikaci příběhu.",
+      created: "Vytvořeno:",
+      date: "Datum",
+      deleteConfirmMessage: "Opravdu chcete smazat tento příběh? Odebere se u všech členů rodiny, kterých se příběh týká.",
+      deleteTitle: "Smazání příběhu",
+      deleteSuccess: "Příběh byl úspěšně smazán.",
+      deleteError: "Chyba při mazání příběhu.",
+      approximate: "odhad"
     }
   },
   en: {
+    titles: {
+      login: "Login",
+      registration: "Registration",
+      verifyAccount: "Verify Account",
+      verifyAccountResend: "Resend Verification Email",
+      resetPasswordRequest: "Reset Password Request",
+      resetPassword: "Reset Password",
+      profile: "Profile",
+      verifyEmailChange: "Verify Email Change",
+      familyMembers: "My Family",
+      familyMemberDetail: "Family Member Detail",
+      newStory: "New Story",
+      storyDetail: "Story Detail",
+      editStory: "Edit Story"
+    },
     validations: {
       required: "The field is required.",
       minLength: "The field must have at least {min} characters.",
@@ -566,7 +727,8 @@ const messages = {
       delete: "Delete",
       cancel: "Cancel",
       confirmation: "Confirmation",
-      save: "Save"
+      save: "Save",
+      backToFamily: "Back to Family"
     },
     family: {
       loading: "Loading data...",
@@ -620,7 +782,20 @@ const messages = {
       personalDetails: "Personal Details",
       relatives: "Relatives",
       hobbiesTitle: "Hobbies and Interests",
-      shortMessageTitle: "Short Message"
+      shortMessageTitle: "Short Message",
+      notFound: "Family member not found.",
+      deleteConfirmMessage: "Are you sure you want to delete this family member? Deleting will also remove all documents, files, stories, etc. This action cannot be undone.",
+      deleteTitle: "Delete Family Member",
+      deleteSuccess: "Family member has been deleted.",
+      deleteError: "Failed to delete family member.",
+      approximate: "approx.",
+      search: "Search...",
+      sortByDOB: "Sort by Date of Birth",
+      sortOptions: {
+        oldest: "Oldest first",
+        youngest: "Youngest first"
+      },
+      backToMember: "Back to Family Member"
     },
     additional_attribute: {
       dialog: {
@@ -750,7 +925,22 @@ const messages = {
     marriage: {
       title: "Marriages",
       partnerLabel: "Partner",
-      periodLabel: "Period"
+      periodLabel: "Period",
+      updateTitle: "Edit Marriage",
+      createTitle: "Add Marriage",
+      period: "Period",
+      secondPartner: "Second Partner",
+      update: "Update",
+      create: "Create",
+      alert: {
+        successUpdate: "Marriage has been successfully updated.",
+        successCreate: "Marriage has been successfully created.",
+        error: "An error occurred while processing the marriage.",
+        successDelete: "Marriage has been successfully deleted.",
+        errorDelete: "An error occurred while deleting the marriage."
+      },
+      deleteConfirmMessage: "Are you sure you want to delete this marriage?",
+      deleteTitle: "Delete Marriage"
     },
     title: "Employment and Profession",
     employerLabel: "Employer",
@@ -762,6 +952,104 @@ const messages = {
       addressLabel: "Address",
       periodLabel: "Period"
     },
+    documents: {
+      uploaded: "Uploaded Documents",
+      uploadButton: "Upload Documents",
+      exportedPDF: "Exported PDF",
+      deleteConfirmMessage: "Are you sure you want to delete this file?",
+      deleteTitle: "Delete File",
+      documentDeleted: "Document has been deleted.",
+      documentDeleteError: "Failed to delete the document.",
+      documentDownloading: "The document will start downloading shortly.",
+      documentDownloadError: "Failed to download the document.",
+      uploadTitle: "Upload Documents",
+      dropzoneLabel: "Drag and drop documents here or click to select",
+      upload: "Upload",
+      uploadSuccess: "Documents have been uploaded.",
+      uploadError: "Failed to upload documents."
+    },
+    tabs: {
+      basicInfo: "Basic Information",
+      docs: "Documents and Exports",
+      gallery: "Gallery",
+      stories: "Stories"
+    },
+    gallery: {
+      title: "Gallery",
+      uploadPhotos: "Upload Photos",
+      deleteConfirmMessage: "Are you sure you want to delete this photo?",
+      deleteTitle: "Delete Photo",
+      photoDeleted: "Photo has been successfully deleted.",
+      photoDeleteError: "Failed to delete the photo.",
+      photoDownloading: "The photo will start downloading shortly.",
+      photoDownloadError: "Failed to download the photo.",
+      imageAlt: "Image",
+      uploadTitle: "Upload Photos",
+      dropzoneLabel: "Drag and drop photos here or click to select",
+      upload: "Upload",
+      uploadSuccess: "Photos have been successfully uploaded.",
+      uploadError: "Photo upload failed.",
+      onlyImages: "Only images can be uploaded!"
+    },
+    stories: {
+      newStory: "New Story",
+      created: "Created:",
+      date: "Date"
+    },
+    residence_address: {
+      updateTitle: "Edit Residence Address",
+      createTitle: "Add Residence Address",
+      address: "Address",
+      period: "Period",
+      update: "Update",
+      create: "Create",
+      alert: {
+        successUpdate: "Residence address has been successfully updated.",
+        successCreate: "Residence address has been successfully created.",
+        successDelete: "Residence address has been successfully deleted.",
+        error: "An error occurred while processing the residence address.",
+        errorDelete: "An error occurred while deleting the residence address."
+      },
+      deleteConfirmMessage: "Are you sure you want to delete this address?",
+      deleteTitle: "Delete Address"
+    },
+    story: {
+      editTitle: "Edit Story",
+      editInfo: "Story Information",
+      label: {
+        title: "Story Title",
+        targetMembers: "Who is this story about",
+        selectDate: "Select a date",
+        year: "Story Year",
+        dateApproximation: "Date approximation"
+      },
+      radio: {
+        exactDate: "Exact date",
+        yearOnly: "Year only"
+      },
+      button: {
+        saveChanges: "Save Changes",
+        publish: "Publish Story"
+      },
+      validation: {
+        futureDate: "The date must not be in the future.",
+        validYear: "The year must be non-negative and not in the future.",
+        emptyIfExact: "No year should be entered for exact date type.",
+        emptyIfYear: "No date should be entered for year-only type.",
+        atLeastOneMember: "At least one member must be selected"
+      },
+      updateSuccess: "The story has been successfully updated.",
+      updateError: "Error updating the story.",
+      publishSuccess: "The story has been successfully published.",
+      publishError: "Error publishing the story.",
+      created: "Created:",
+      date: "Date",
+      deleteConfirmMessage: "Are you sure you want to delete this story? It will be removed from all family members it is associated with.",
+      deleteTitle: "Delete Story",
+      deleteSuccess: "The story has been successfully deleted.",
+      deleteError: "Error deleting the story.",
+      approximate: "approx."
+    }
   }
 }
 

@@ -1,8 +1,8 @@
 <template>
   <AppLayout>
     <v-container class="py-4" fluid>
-      <v-btn color="primary" class="mb-4" to="/">
-        Zpět na rodinu
+      <v-btn color="red" variant="tonal" class="mb-4" to="/">
+        {{ $t('general.backToFamily') }}
       </v-btn>
 
       <v-row justify="center">
@@ -26,7 +26,7 @@
           </template>
           <template v-else>
             <v-alert type="warning">
-              Člen rodiny nebyl nalezen.
+              {{ $t('family.notFound') }}
             </v-alert>
           </template>
         </v-col>
@@ -75,16 +75,14 @@ import FamilyMemberTabs from '@/components/family-member-tabs/FamilyMemberTabs.v
 import FamilyMemberProfilePictureUpdateModal from '@/components/family-member/FamilyMemberProfilePictureUpdateModal.vue';
 import ExportPdfModal from '@/components/family-member/ExportPdfModal.vue';
 import { BACKEND_URL } from '@/env-constants.ts';
-import FamilyMemberGeneralUpdateModal
-  from '@/components/family-member/FamilyMemberGeneralUpdateModal.vue'
-import { FamilyMembersService } from '@/services/FamilyMemberService.ts'
-import { useConfirm } from '@/composables/useConfirm'
+import FamilyMemberGeneralUpdateModal from '@/components/family-member/FamilyMemberGeneralUpdateModal.vue';
+import { FamilyMembersService } from '@/services/FamilyMemberService.ts';
+import { useConfirm } from '@/composables/useConfirm';
 import { useI18n } from 'vue-i18n';
-import { useSnackbar } from '@/composables/useSnackbar'
+import { useSnackbar } from '@/composables/useSnackbar';
 
-const { showSnackbar } = useSnackbar()
-
-const { showConfirm } = useConfirm()
+const { showSnackbar } = useSnackbar();
+const { showConfirm } = useConfirm();
 const { t } = useI18n();
 
 const route = useRoute();
@@ -94,9 +92,9 @@ const familyStore = useFamilyMembersStore();
 const memberId = computed(() => route.params.id as string);
 const member = computed(() => {
   if (familyStore.familyMemberDetail && familyStore.familyMemberDetail.id === memberId.value) {
-    return familyStore.familyMemberDetail
+    return familyStore.familyMemberDetail;
   }
-})
+});
 
 const onMemberUpdated = async () => {
   await familyStore.fetchFamilyMember(memberId.value);
@@ -140,7 +138,7 @@ const fetchStories = async (familyMemberId: string) => {
       const attrs = item.attributes;
       let dateStr = attrs["date-type"] === 'exact' ? attrs["story-date"] : attrs["story-year"];
       if (attrs["is-date-approx"]) {
-        dateStr = dateStr ? `${dateStr} (odhad)` : 'odhad';
+        dateStr = dateStr ? `${dateStr} (${t('family.approximate')})` : t('family.approximate');
       }
       return {
         id: item.id,
@@ -168,24 +166,24 @@ const editMember = () => {
 
 const deleteMember = async () => {
   const confirmed = await showConfirm({
-    message: 'Opravdu chcete smazat tohoto člena rodiny? Jeho smazáním dojde také k odebrání všech jeho dokumentů, souborů, příběhů apod. Tuto akci nelze vrátit zpět.',
-    title: 'Smazání člena rodiny',
+    message: t('family.deleteConfirmMessage'),
+    title: t('family.deleteTitle'),
     confirmText: t('general.delete'),
     cancelText: t('general.cancel')
-  })
+  });
 
   if (!confirmed) {
-    return
+    return;
   }
 
   const response = await FamilyMembersService.deleteFamilyMember(memberId.value);
 
   if (response.status === 204) {
-    showSnackbar('Člen rodiny byl smazán.', 'success')
+    showSnackbar(t('family.deleteSuccess'), 'success');
     familyStore.page = 1;
     await router.push({ name: 'homepage' });
   } else {
-    showSnackbar('Nepodařilo se smazat člena rodiny.', 'error')
+    showSnackbar(t('family.deleteError'), 'error');
   }
 };
 
