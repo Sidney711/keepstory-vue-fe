@@ -119,7 +119,7 @@
                       <div class="flex items-center justify-between w-full pr-2">
                         <div>
                           <div>
-                            <strong>{{ $t('marriage.partnerLabel') }}:</strong>
+                            <strong>{{ $t('marriage.partnerLabel') }}: </strong>
                             <router-link :to="`/family-member-detail/${marriage.partnerId}`" class="hover:text-red-500">
                               {{ marriage.firstName }} {{ marriage.lastName }}
                             </router-link>
