@@ -1,8 +1,8 @@
 <template>
   <AppLayout>
     <v-container fluid class="py-4">
-      <v-btn color="primary" class="mb-4" :to="'/family-member-detail/' + personId">
-        Zpět na člena rodiny
+      <v-btn color="red" variant="tonal" class="mb-4" :to="'/family-member-detail/' + personId">
+        {{ t('family.backToMember') }}
       </v-btn>
       <v-row>
         <v-col cols="12" md="8">
@@ -20,27 +20,26 @@
         </v-col>
         <v-col cols="12" md="4">
           <v-card outlined class="mb-4">
-            <v-card-title>Upravit příběh</v-card-title>
+            <v-card-title>{{ t('story.editTitle') }}</v-card-title>
             <v-card-text>
               <v-row dense>
                 <v-col cols="12" lg="6">
                   <v-text-field
                     v-model="storyState.storyTitle"
-                    label="Název příběhu"
+                    :label="t('story.label.title')"
                     :error-messages="v$.storyTitle.$errors.map(e => e.$message)"
                     @blur="v$.storyTitle.$touch"
                     required
                   ></v-text-field>
                 </v-col>
                 <v-col cols="12" lg="6">
-                  <!-- Použití stejného v-select jako při vytváření -->
                   <v-select
                     v-model="storyState.selectedPersons"
                     :items="personsItems"
-                    label="Koho se příběh týká"
+                    :label="t('story.label.targetMembers')"
                     multiple
                     chips
-                    :rules="[v => (v && v.length > 0) || 'Musí být vybrán alespoň jeden člen']"
+                    :rules="[v => (v && v.length > 0) || t('story.validation.atLeastOneMember')]"
                     required
                     item-title="text"
                     item-value="value"
@@ -49,14 +48,14 @@
                 </v-col>
                 <v-col cols="12">
                   <v-radio-group v-model="storyState.dateType" row @change="resetDates">
-                    <v-radio label="Přesné datum" value="exact"></v-radio>
-                    <v-radio label="Pouze rok" value="year"></v-radio>
+                    <v-radio :label="t('story.radio.exactDate')" value="exact"></v-radio>
+                    <v-radio :label="t('story.radio.yearOnly')" value="year"></v-radio>
                   </v-radio-group>
                 </v-col>
                 <v-col v-if="storyState.dateType === 'exact'">
                   <v-text-field
                     v-model="storyState.storyDate"
-                    label="Vyberte datum"
+                    :label="t('story.label.selectDate')"
                     type="date"
                     :error-messages="v$.storyDate.$errors.map(e => e.$message)"
                     @blur="v$.storyDate.$touch"
@@ -65,7 +64,7 @@
                 <v-col v-else-if="storyState.dateType === 'year'">
                   <v-text-field
                     v-model="storyState.storyYear"
-                    label="Rok příběhu"
+                    :label="t('story.label.year')"
                     type="number"
                     min="0"
                     required
@@ -76,15 +75,15 @@
                 <v-col cols="12">
                   <v-checkbox
                     v-model="storyState.isDateApprox"
-                    label="Odhad datumu"
+                    :label="t('story.label.dateApproximation')"
                   ></v-checkbox>
                 </v-col>
               </v-row>
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="primary" @click="updateStory">
-                Uložit změny
+              <v-btn color="red" variant="tonal" @click="updateStory">
+                {{ t('story.button.saveChanges') }}
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -107,7 +106,9 @@ import { useSnackbar } from '@/composables/useSnackbar'
 import useVuelidate from '@vuelidate/core'
 import { required, maxLength, createI18nMessage } from '@vuelidate/validators'
 import { i18n } from '@/i18n'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const { showSnackbar } = useSnackbar()
 const withI18nMessage = createI18nMessage({ t: i18n.global.t.bind(i18n) })
 
@@ -132,11 +133,11 @@ const storyState = reactive({
   isDateApprox: false
 })
 
-// Custom validátory s i18n zprávami
+// Validátory
 const notInFuture = withI18nMessage((value: string) => {
   if (!value) return true
   return new Date(value) <= new Date()
-}, { message: 'Datum nesmí být v budoucnu.' })
+}, { message: t('story.validation.futureDate') })
 
 const validYear = withI18nMessage((value: string) => {
   if (value === '0' || value === 0) return true
@@ -144,15 +145,15 @@ const validYear = withI18nMessage((value: string) => {
   const num = parseInt(value)
   const currentYear = new Date().getFullYear()
   return (num >= 0 && num <= currentYear)
-}, { message: 'Rok musí být nezáporný a nesmí být v budoucnu.' })
+}, { message: t('story.validation.validYear') })
 
 const emptyIfExact = withI18nMessage((value: string, vm: any) => {
   return vm.dateType === 'exact' ? (value === '' || value == null) : true
-}, { message: 'Pro vybraný typ data nesmí být rok zadán.' })
+}, { message: t('story.validation.emptyIfExact') })
 
 const emptyIfYear = withI18nMessage((value: string, vm: any) => {
   return vm.dateType === 'year' ? (value === '' || value == null) : true
-}, { message: 'Pro vybraný typ data nesmí být datum zadáno.' })
+}, { message: t('story.validation.emptyIfYear') })
 
 const rules = {
   storyTitle: { required, maxLength: maxLength(255) },
@@ -160,7 +161,7 @@ const rules = {
   storyYear: { validYear, emptyIfExact },
   selectedPersons: {
     required: (value: any) =>
-      (Array.isArray(value) && value.length > 0) || 'Musí být vybrán alespoň jeden člen'
+      (Array.isArray(value) && value.length > 0) || t('story.validation.atLeastOneMember')
   }
 }
 
@@ -168,7 +169,7 @@ const v$ = useVuelidate(rules, storyState)
 
 const personsItems = computed(() =>
   familyStore.allMinifiedFamilyMembers.map(person => ({
-    text: `${person.firstName} ${person.lastName} (nar. ${person.dateOfBirth || '-'})`,
+    text: `${person.firstName} ${person.lastName} (${t('family.text.birthDate')} ${person.dateOfBirth || '-'})`,
     value: person.id
   }))
 )
@@ -203,7 +204,6 @@ onMounted(async () => {
       storyState.storyYear = attrs['story-year']
     }
     storyState.isDateApprox = attrs['is-date-approx']
-    // Předpokládáme, že response.data.included obsahuje rodinné členy
     storyState.selectedPersons = response.data.included.map((item: any) => item.id)
   } catch (error) {
     console.error('Chyba při načítání příběhu:', error)
@@ -247,10 +247,10 @@ const updateStory = async () => {
   }
   try {
     await StoriesService.updateStory(storyId.value, payload)
-    showSnackbar('Příběh byl úspěšně aktualizován.', 'success')
+    showSnackbar(t('story.updateSuccess'), 'success')
     await router.push('/story-detail/' + storyId.value + '?person=' + personId.value)
   } catch (error) {
-    showSnackbar('Chyba při aktualizaci příběhu.', 'error')
+    showSnackbar(t('story.updateError'), 'error')
     console.error('Chyba při aktualizaci příběhu:', error)
   }
 }

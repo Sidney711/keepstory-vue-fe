@@ -1,14 +1,14 @@
 <template>
   <v-dialog v-model="dialog" max-width="90%">
     <v-card>
-      <v-card-title class="headline">Editace člena rodiny</v-card-title>
+      <v-card-title class="headline">{{ t('family.editMemberTitle') }}</v-card-title>
       <v-card-text>
         <v-form ref="form" @submit.prevent="submitForm">
           <section class="mb-6">
-            <h2 class="mb-2 text-lg font-bold border-b pb-1">Základní informace</h2>
+            <h2 class="mb-2 text-lg font-bold border-b pb-1">{{ t('family.section.basicInfo') }}</h2>
             <v-text-field
               v-model="state.firstName"
-              label="Jméno"
+              :label="t('family.label.firstName')"
               :error-messages="v$.firstName.$errors.map(e => e.$message)"
               @blur="v$.firstName.$touch"
               required
@@ -17,7 +17,7 @@
             />
             <v-text-field
               v-model="state.lastName"
-              label="Příjmení"
+              :label="t('family.label.lastName')"
               :error-messages="v$.lastName.$errors.map(e => e.$message)"
               @blur="v$.lastName.$touch"
               required
@@ -26,9 +26,9 @@
             />
             <v-textarea
               v-model="state.shortDescription"
+              :label="t('family.label.shortDescription')"
               :error-messages="v$.shortDescription.$errors.map(e => e.$message)"
               @blur="v$.shortDescription.$touch"
-              label="Krátký popis osoby"
               rows="2"
               outlined
               class="mb-4"
@@ -36,14 +36,14 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <v-text-field
                 v-model="state.birthLastName"
-                label="Rodné příjmení"
+                :label="t('family.label.birthLastName')"
                 :error-messages="v$.birthLastName.$errors.map(e => e.$message)"
                 @blur="v$.birthLastName.$touch"
                 outlined
               />
               <v-text-field
                 v-model="state.dateOfBirth"
-                label="Datum narození"
+                :label="t('family.label.dateOfBirth')"
                 type="date"
                 :error-messages="v$.dateOfBirth.$errors.map(e => e.$message)"
                 @blur="v$.dateOfBirth.$touch"
@@ -51,14 +51,14 @@
               />
               <v-text-field
                 v-model="state.birthPlace"
-                label="Místo narození"
+                :label="t('family.label.birthPlace')"
                 :error-messages="v$.birthPlace.$errors.map(e => e.$message)"
                 @blur="v$.birthPlace.$touch"
                 outlined
               />
               <v-text-field
                 v-model="state.birthTime"
-                label="Čas narození"
+                :label="t('family.label.birthTime')"
                 type="time"
                 outlined
               />
@@ -67,20 +67,20 @@
               <v-select
                 v-model="state.gender"
                 :items="genderItems"
-                label="Pohlaví"
+                :label="t('family.label.gender')"
                 outlined
                 clearable
               />
               <v-text-field
                 v-model="state.religion"
-                label="Náboženství"
+                :label="t('family.label.religion')"
                 :error-messages="v$.religion.$errors.map(e => e.$message)"
                 @blur="v$.religion.$touch"
                 outlined
               />
               <v-text-field
                 v-model="state.profession"
-                label="Profese"
+                :label="t('family.label.profession')"
                 :error-messages="v$.profession.$errors.map(e => e.$message)"
                 @blur="v$.profession.$touch"
                 outlined
@@ -89,17 +89,17 @@
           </section>
           <v-checkbox
             v-model="state.isAlive"
-            label="Žije osoba"
+            :label="t('family.label.alive')"
             @change="onAliveChange"
             class="mt-4"
           />
           <template v-if="!state.isAlive">
             <section class="mb-6">
-              <h2 class="mb-2 text-lg font-bold border-b pb-1">Informace o úmrtí</h2>
+              <h2 class="mb-2 text-lg font-bold border-b pb-1">{{ t('family.section.deathInfo') }}</h2>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <v-text-field
                   v-model="state.dateOfDeath"
-                  label="Datum úmrtí"
+                  :label="t('family.label.dateOfDeath')"
                   type="date"
                   :error-messages="v$.dateOfDeath.$errors.map(e => e.$message)"
                   @blur="v$.dateOfDeath.$touch"
@@ -107,7 +107,7 @@
                 />
                 <v-text-field
                   v-model="state.deathTime"
-                  label="Čas úmrtí"
+                  :label="t('family.label.deathTime')"
                   type="time"
                   :error-messages="v$.deathTime.$errors.map(e => e.$message)"
                   @blur="v$.deathTime.$touch"
@@ -115,21 +115,21 @@
                 />
                 <v-text-field
                   v-model="state.deathPlace"
-                  label="Místo úmrtí"
+                  :label="t('family.label.deathPlace')"
                   :error-messages="v$.deathPlace.$errors.map(e => e.$message)"
                   @blur="v$.deathPlace.$touch"
                   outlined
                 />
                 <v-text-field
                   v-model="state.causeOfDeath"
-                  label="Příčina smrti"
+                  :label="t('family.label.causeOfDeath')"
                   :error-messages="v$.causeOfDeath.$errors.map(e => e.$message)"
                   @blur="v$.causeOfDeath.$touch"
                   outlined
                 />
                 <v-text-field
                   v-model="state.burialDate"
-                  label="Datum pohřbu"
+                  :label="t('family.label.burialDate')"
                   type="date"
                   :error-messages="v$.burialDate.$errors.map(e => e.$message)"
                   @blur="v$.burialDate.$touch"
@@ -137,14 +137,14 @@
                 />
                 <v-text-field
                   v-model="state.burialPlace"
-                  label="Místo pohřbu"
+                  :label="t('family.label.burialPlace')"
                   :error-messages="v$.burialPlace.$errors.map(e => e.$message)"
                   @blur="v$.burialPlace.$touch"
                   outlined
                 />
                 <v-text-field
                   v-model="state.internmentPlace"
-                  label="Místo pochování"
+                  :label="t('family.label.internmentPlace')"
                   :error-messages="v$.internmentPlace.$errors.map(e => e.$message)"
                   @blur="v$.internmentPlace.$touch"
                   outlined
@@ -153,12 +153,12 @@
             </section>
           </template>
           <section class="mb-6">
-            <h2 class="mb-2 text-lg font-bold border-b pb-1">Rodinné vazby a další informace</h2>
+            <h2 class="mb-2 text-lg font-bold border-b pb-1">{{ t('family.section.familyInfo') }}</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <v-select
                 v-model="state.motherId"
                 :items="personsItems"
-                label="Matka"
+                :label="t('family.label.mother')"
                 item-title="text"
                 item-value="value"
                 :return-object="false"
@@ -168,7 +168,7 @@
               <v-select
                 v-model="state.fatherId"
                 :items="personsItems"
-                label="Otec"
+                :label="t('family.label.father')"
                 item-title="text"
                 item-value="value"
                 :error-messages="v$.fatherId.$errors.map(e => e.$message)"
@@ -179,7 +179,7 @@
             </div>
             <v-text-field
               v-model="state.hobbies"
-              label="Koníčky a zájmy"
+              :label="t('family.label.hobbies')"
               :error-messages="v$.hobbies.$errors.map(e => e.$message)"
               @blur="v$.hobbies.$touch"
               outlined
@@ -187,7 +187,7 @@
             />
             <v-textarea
               v-model="state.shortMessage"
-              label="Krátký vzkaz"
+              :label="t('family.label.shortMessage')"
               rows="2"
               :error-messages="v$.shortMessage.$errors.map(e => e.$message)"
               @blur="v$.shortMessage.$touch"
@@ -199,8 +199,8 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn color="primary" @click="submitForm">Uložit</v-btn>
-        <v-btn text @click="closeDialog">Zrušit</v-btn>
+        <v-btn color="red" variant="tonal" @click="submitForm">{{ t('general.save') }}</v-btn>
+        <v-btn text @click="closeDialog">{{ t('general.cancel') }}</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -217,8 +217,11 @@ import { useFamilyMembersStore } from '@/stores/familyMemberStore'
 import type { FamilyMember, UpdateFamilyMemberPayload } from '@/interfaces/familyMembers'
 import { FamilyMembersService } from '@/services/FamilyMemberService'
 import { useSnackbar } from '@/composables/useSnackbar'
+import { useI18n } from 'vue-i18n'
 
 const { showSnackbar } = useSnackbar()
+
+const { t } = useI18n()
 
 const withI18nMessage = createI18nMessage({ t: i18n.global.t.bind(i18n) })
 
@@ -290,21 +293,21 @@ const state = reactive({
 const notAfterToday = withI18nMessage((value: string) => {
   if (!value) return true
   return new Date(value) <= new Date()
-}, { message: 'Datum nesmí být pozdější než dnešní.' })
+}, { message: i18n.global.t('validations.notAfterToday') })
 
 const birthBeforeDeath = withI18nMessage((value: string, vm: any) => {
   if (!value || !vm.dateOfBirth) return true
   return new Date(vm.dateOfBirth) <= new Date(value)
-}, { message: 'Datum narození musí být dřívější než datum úmrtí.' })
+}, { message: i18n.global.t('validations.birthBeforeDeath') })
 
 const emptyIfAlive = withI18nMessage((value: any, vm: any) => {
   return vm.isAlive ? (!value || value === '') : true
-}, { message: 'Tato hodnota nesmí být zadána, pokud je osoba naživu.' })
+}, { message: i18n.global.t('validations.emptyIfAlive') })
 
 const differentFromMother = withI18nMessage((value: any, vm: any) => {
   if (!value || !vm.motherId) return true
   return value !== vm.motherId
-}, { message: 'Matka a otec musí být rozdílné osoby.' })
+}, { message: i18n.global.t('validations.differentFromMother') })
 
 const rules = {
   firstName: { required, maxLength: maxLength(100) },
@@ -333,7 +336,7 @@ const personsItems = computed(() =>
   familyStore.allMinifiedFamilyMembers
     .filter(member => member.id !== props.memberId)
     .map(member => ({
-      text: `${member.firstName} ${member.lastName} (nar. ${member.dateOfBirth ? isoToDateLocal(member.dateOfBirth) : '-'})`,
+      text: `${member.firstName} ${member.lastName} (${i18n.global.t('family.text.birthDate')} ${member.dateOfBirth ? isoToDateLocal(member.dateOfBirth) : '-'})`,
       value: member.id
     }))
 )
@@ -452,11 +455,11 @@ const submitForm = async () => {
   try {
     await FamilyMembersService.updateFamilyMember(props.memberId, payload)
     closeDialog()
-    showSnackbar('Údaje byly upraveny.', 'success')
+    showSnackbar(i18n.global.t('family.alert.successUpdate'), 'success')
     emit('memberUpdated')
   } catch (error) {
-    showSnackbar('Při ukládání změn došlo k chybě. Možná není možné, aby některá z vámi zadaných rodinných vazeb nastala.', 'error')
-    console.error('Chyba při aktualizaci člena:', error)
+    showSnackbar(i18n.global.t('family.alert.errorUpdate'), 'error')
+    console.error('Error updating family member:', error)
   }
 }
 

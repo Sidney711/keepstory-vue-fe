@@ -2,10 +2,10 @@
   <v-card flat>
     <v-card-title class="flex items-center justify-between">
       <div class="flex justify-between items-center">
-        <span class="text-lg font-medium">Galerie</span>
-        <v-btn color="secondary" @click="openUploadModal">
+        <span class="text-lg font-medium">{{ $t('gallery.title') }}</span>
+        <v-btn color="red" variant="tonal" @click="openUploadModal">
           <v-icon left>mdi-upload</v-icon>
-          Nahrát fotky
+          {{ $t('gallery.uploadPhotos') }}
         </v-btn>
       </div>
     </v-card-title>
@@ -48,16 +48,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import GalleryUploadModal from '@/components/uploaders/GalleryUploadModal.vue'
-import { FamilyMembersService } from '@/services/FamilyMemberService.ts'
+import { ref, onMounted } from 'vue';
+import GalleryUploadModal from '@/components/uploaders/GalleryUploadModal.vue';
+import { FamilyMembersService } from '@/services/FamilyMemberService.ts';
 import { useI18n } from 'vue-i18n';
-import { useConfirm } from '@/composables/useConfirm.ts'
-import { useSnackbar } from '@/composables/useSnackbar'
+import { useConfirm } from '@/composables/useConfirm.ts';
+import { useSnackbar } from '@/composables/useSnackbar';
 
-const { showSnackbar } = useSnackbar()
-
-const { showConfirm } = useConfirm()
+const { showSnackbar } = useSnackbar();
+const { showConfirm } = useConfirm();
 const { t } = useI18n();
 
 interface GalleryItem {
@@ -68,28 +67,27 @@ interface GalleryItem {
 
 const props = defineProps<{
   memberId: string;
-}>()
+}>();
 
-const currentMemberId = props.memberId
+const currentMemberId = props.memberId;
 
-const galleryItems = ref<GalleryItem[]>([])
-
-const uppyDialog = ref(false)
+const galleryItems = ref<GalleryItem[]>([]);
+const uppyDialog = ref(false);
 
 const openUploadModal = () => {
-  uppyDialog.value = true
-}
+  uppyDialog.value = true;
+};
 
 const deleteGalleryItem = async (item: GalleryItem) => {
   const confirmed = await showConfirm({
-    message: 'Opravdu chcete smazat tuhle fotku?',
-    title: 'Smazání fotky',
+    message: t('gallery.deleteConfirmMessage'),
+    title: t('gallery.deleteTitle'),
     confirmText: t('general.delete'),
     cancelText: t('general.cancel')
-  })
+  });
 
   if (!confirmed) {
-    return
+    return;
   }
 
   try {
@@ -99,20 +97,20 @@ const deleteGalleryItem = async (item: GalleryItem) => {
     galleryItems.value = images.map((img) => ({
       id: img.id.toString(),
       src: `${img.url}`,
-      alt: 'Obrázek'
+      alt: t('gallery.imageAlt')
     }));
-    showSnackbar('Fotka byla úspěšně smazána.', 'success');
+    showSnackbar(t('gallery.photoDeleted'), 'success');
   } catch (error) {
-    showSnackbar('Nepodařilo se smazat fotku.', 'error');
+    showSnackbar(t('gallery.photoDeleteError'), 'error');
     console.error(error);
   }
-}
+};
 
 const downloadGalleryItem = async (item: GalleryItem) => {
   try {
     const response = await fetch(item.src);
     if (!response.ok) {
-      throw new Error('Chyba při načítání obrázku.');
+      throw new Error(t('gallery.photoDownloadError'));
     }
     const blob = await response.blob();
     const url = window.URL.createObjectURL(blob);
@@ -123,12 +121,12 @@ const downloadGalleryItem = async (item: GalleryItem) => {
     a.click();
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
-    showSnackbar('Fotka se za chvilku začne stahovat.', 'success');
+    showSnackbar(t('gallery.photoDownloading'), 'success');
   } catch (error) {
-    showSnackbar('Nepodařilo se stáhnout fotku.', 'error');
+    showSnackbar(t('gallery.photoDownloadError'), 'error');
     console.error(error);
   }
-}
+};
 
 const handleFilesUploaded = async () => {
   try {
@@ -137,13 +135,12 @@ const handleFilesUploaded = async () => {
     galleryItems.value = images.map((img) => ({
       id: img.id.toString(),
       src: `${img.url}`,
-      alt: 'Obrázek'
+      alt: t('gallery.imageAlt')
     }));
   } catch (error) {
     console.error('Chyba při načítání galerie:', error);
   }
-}
-
+};
 
 onMounted(async () => {
   try {
@@ -152,11 +149,10 @@ onMounted(async () => {
     galleryItems.value = images.map((img) => ({
       id: img.id.toString(),
       src: `${img.url}`,
-      alt: 'Obrázek'
+      alt: t('gallery.imageAlt')
     }));
   } catch (error) {
     console.error('Chyba při načítání galerie:', error);
   }
 });
-
 </script>

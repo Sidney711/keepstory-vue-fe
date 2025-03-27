@@ -2,9 +2,9 @@
   <v-card flat>
     <v-card-text>
       <div class="flex justify-end mb-4">
-        <v-btn color="primary" @click="$emit('add-story')">
+        <v-btn color="red" variant="tonal" @click="$emit('add-story')">
           <v-icon left>mdi-plus</v-icon>
-          Nový příběh
+          {{ $t('stories.newStory') }}
         </v-btn>
       </div>
 
@@ -28,8 +28,8 @@
             <div>
               <div class="text-h6 font-medium">{{ story.title }}</div>
               <div class="text-body-2 text-gray-600">
-                <span>Vytvořeno: {{ formatDate(story.createdAt) }}</span>
-                <span v-if="story.date"> | Datum: {{ story.date }}</span>
+                <span>{{ $t('stories.created') }} {{ formatDate(story.createdAt) }}</span>
+                <span v-if="story.date"> | {{ $t('stories.date') }}: {{ story.date }}</span>
               </div>
             </div>
             <v-icon>mdi-chevron-right</v-icon>

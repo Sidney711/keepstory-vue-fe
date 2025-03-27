@@ -1,11 +1,11 @@
 <template>
   <v-dialog v-model="dialog" max-width="500">
     <v-card>
-      <v-card-title>Nahrát dokumenty</v-card-title>
+      <v-card-title>{{ $t('documents.uploadTitle') }}</v-card-title>
       <v-card-text>
         <v-file-input
           v-model="files"
-          label="Přetáhněte dokumenty sem nebo klikněte pro výběr"
+          :label="$t('documents.dropzoneLabel')"
           prepend-icon="mdi-upload"
           multiple
           show-size
@@ -16,8 +16,8 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn text @click="close">Zavřít</v-btn>
-        <v-btn color="primary" text @click="uploadFiles">Nahrát</v-btn>
+        <v-btn text @click="close">{{ $t('general.close') }}</v-btn>
+        <v-btn color="red" variant="tonal" text @click="uploadFiles">{{ $t('documents.upload') }}</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -27,9 +27,10 @@
 import { ref, watch } from 'vue';
 import { FamilyMembersService } from '@/services/FamilyMemberService.ts';
 import { useSnackbar } from '@/composables/useSnackbar'
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 
 const { showSnackbar } = useSnackbar()
-
 
 interface Props {
   modelValue: boolean;
@@ -62,11 +63,11 @@ const uploadFiles = async () => {
 
   try {
     await FamilyMembersService.uploadDocuments(props.memberId, formData);
-    showSnackbar('Dokumenty byly nahrány.', 'success')
+    showSnackbar(t('documents.uploadSuccess'), 'success')
     emit('files-uploaded');
   } catch (error) {
     console.error('Chyba při nahrávání dokumentů:', error);
-    showSnackbar('Nepodařilo se nahrát dokumenty.', 'error')
+    showSnackbar(t('documents.uploadError'), 'error')
   }
   close();
 };

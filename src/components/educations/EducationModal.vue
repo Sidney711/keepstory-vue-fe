@@ -2,7 +2,7 @@
   <v-dialog v-model="dialog" max-width="500">
     <v-card>
       <v-card-title class="headline d-flex justify-space-between align-center">
-        <span>{{ isUpdate ? 'Upravit vzdělání' : 'Přidat vzdělání' }}</span>
+        <span>{{ isUpdate ? t('education.dialog.title.update') : t('education.dialog.title.create') }}</span>
         <v-btn v-if="isUpdate" color="error" @click="deleteEducation" icon>
           <v-icon>mdi-delete</v-icon>
         </v-btn>
@@ -11,30 +11,30 @@
         <v-form ref="form" @submit.prevent="submitForm">
           <v-text-field
             v-model="localState.schoolName"
-            label="Název školy"
+            :label="t('education.field.schoolName')"
             :error-messages="v$.schoolName.$errors.map(e => e.$message)"
             @blur="v$.schoolName.$touch"
             required
           />
           <v-text-field
             v-model="localState.address"
-            label="Adresa školy"
+            :label="t('education.field.address')"
             :error-messages="v$.address.$errors.map(e => e.$message)"
             @blur="v$.address.$touch"
           />
           <v-text-field
             v-model="localState.period"
-            label="Období"
+            :label="t('education.field.period')"
             :error-messages="v$.period.$errors.map(e => e.$message)"
             @blur="v$.period.$touch"
           />
         </v-form>
       </v-card-text>
       <v-card-actions>
-        <v-btn color="primary" @click="submitForm">
-          {{ isUpdate ? 'Upravit' : 'Vytvořit' }}
+        <v-btn color="red" variant="tonal" @click="submitForm">
+          {{ isUpdate ? t('education.button.update') : t('education.button.create') }}
         </v-btn>
-        <v-btn text @click="closeDialog">Zrušit</v-btn>
+        <v-btn text @click="closeDialog">{{ t('general.cancel') }}</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -183,8 +183,8 @@ const deleteEducation = async () => {
   if (!localState.educationId) return
 
   const confirmed = await showConfirm({
-    message: 'Opravdu chcete smazat tohle vzdělání?',
-    title: 'Smazání vzdělání',
+    message: t('education.delete.confirmMessage'),
+    title: t('education.delete.title'),
     confirmText: t('general.delete'),
     cancelText: t('general.cancel')
   })
