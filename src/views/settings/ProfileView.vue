@@ -1,9 +1,9 @@
 <template>
   <AppLayout>
-    <v-container>
+    <v-container class="py-4 d-flex flex-column align-center" fluid>
       <h1 class="text-h4 my-6">{{ t('profile.title') }}</h1>
 
-      <v-card class="pa-6 mb-8" elevation="8" max-width="600">
+      <v-card class="pa-6 mb-8" elevation="8" max-width="800" style="width: 100%;">
         <h2 class="text-h6 mb-4">{{ t('profile.changePassword.title') }}</h2>
         <v-form>
           <v-text-field
@@ -64,7 +64,7 @@
         </v-form>
       </v-card>
 
-      <v-card class="pa-6 mb-8" elevation="8" max-width="600">
+      <v-card class="pa-6 mb-8" elevation="8" max-width="800" style="width: 100%;">
         <h2 class="text-h6 mb-4">{{ t('profile.changeEmail.title') }}</h2>
         <v-form>
           <v-text-field
@@ -107,7 +107,7 @@
         </v-form>
       </v-card>
 
-      <v-card class="pa-6 mb-8" elevation="8" max-width="600">
+      <v-card class="pa-6 mb-8" elevation="8" max-width="800" style="width: 100%;">
         <h2 class="text-h6 mb-4">{{ t('profile.deleteAccount.title') }}</h2>
         <v-form>
           <v-text-field

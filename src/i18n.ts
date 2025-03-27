@@ -9,7 +9,7 @@ const messages = {
       verifyAccountResend: "Znovu odeslat ověřovací e-mail",
       resetPasswordRequest: "Obnovení hesla",
       resetPassword: "Resetování hesla",
-      profile: "Profil",
+      profile: "Nastavení účtu",
       verifyEmailChange: "Ověření změny e-mailu",
       familyMembers: "Moje rodina",
       familyMemberDetail: "Detail člena rodiny",
@@ -150,7 +150,7 @@ const messages = {
     },
     profile: {
       profilePictureAlt: "Profilový obrázek",
-      title: "Profil",
+      title: "Nastavení účtu",
       changePassword: {
         title: "Změna hesla",
         currentPasswordLabel: "Současné heslo",
@@ -194,7 +194,7 @@ const messages = {
     },
     menu: {
       family: "Moje rodina",
-      profile: "Profil",
+      profile: "Nastavení účtu",
       logout: "Odhlásit se",
       language: {
         cs: "CS",
@@ -530,7 +530,7 @@ const messages = {
       verifyAccountResend: "Resend Verification Email",
       resetPasswordRequest: "Reset Password Request",
       resetPassword: "Reset Password",
-      profile: "Profile",
+      profile: "Account Settings",
       verifyEmailChange: "Verify Email Change",
       familyMembers: "My Family",
       familyMemberDetail: "Family Member Detail",
@@ -671,7 +671,7 @@ const messages = {
     },
     profile: {
       profilePictureAlt: "Profile Picture",
-      title: "Profile",
+      title: "Account Settings",
       changePassword: {
         title: "Change Password",
         currentPasswordLabel: "Current Password",
@@ -715,7 +715,7 @@ const messages = {
     },
     menu: {
       family: "My Family",
-      profile: "Profile",
+      profile: "Account Settings",
       logout: "Logout",
       language: {
         cs: "CS",
