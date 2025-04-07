@@ -225,30 +225,21 @@ const { t } = useI18n()
 
 const withI18nMessage = createI18nMessage({ t: i18n.global.t.bind(i18n) })
 
-const isoToDateLocal = (iso: string): string => {
+const isoToDateUTC = (iso: string): string => {
   if (!iso) return ''
   const d = new Date(iso)
-  const year = d.getFullYear()
-  const month = String(d.getMonth() + 1).padStart(2, '0')
-  const day = String(d.getDate()).padStart(2, '0')
+  const year = d.getUTCFullYear()
+  const month = String(d.getUTCMonth() + 1).padStart(2, '0')
+  const day = String(d.getUTCDate()).padStart(2, '0')
   return `${year}-${month}-${day}`
 }
 
-const isoToTimeLocal = (iso: string): string => {
+const isoToTimeUTC = (iso: string): string => {
   if (!iso) return ''
   const d = new Date(iso)
-  const hours = String(d.getHours()).padStart(2, '0')
-  const minutes = String(d.getMinutes()).padStart(2, '0')
+  const hours = String(d.getUTCHours()).padStart(2, '0')
+  const minutes = String(d.getUTCMinutes()).padStart(2, '0')
   return `${hours}:${minutes}`
-}
-
-const convertLocalTimeToUTCString = (time: string): string => {
-  if (!time || !/^\d{2}:\d{2}$/.test(time)) return ''
-  const [hours, minutes] = time.split(':').map(Number)
-  const localDate = new Date()
-  localDate.setHours(hours, minutes, 0, 0)
-  const isoString = localDate.toISOString()
-  return isoString.split('T')[1].split('.')[0]
 }
 
 const props = defineProps<{ memberId: string }>()
@@ -336,7 +327,7 @@ const personsItems = computed(() =>
   familyStore.allMinifiedFamilyMembers
     .filter(member => member.id !== props.memberId)
     .map(member => ({
-      text: `${member.firstName} ${member.lastName} (${i18n.global.t('family.text.birthDate')} ${member.dateOfBirth ? isoToDateLocal(member.dateOfBirth) : '-'})`,
+      text: `${member.firstName} ${member.lastName} (${i18n.global.t('family.text.birthDate')} ${member.dateOfBirth || '-'})`,
       value: member.id
     }))
 )
@@ -349,18 +340,18 @@ const resetForm = () => {
   state.lastName = familyMember.value.lastName
   state.shortDescription = familyMember.value.shortDescription
   state.birthLastName = familyMember.value.birthLastName
-  state.dateOfBirth = isoToDateLocal(familyMember.value.dateOfBirth)
+  state.dateOfBirth = familyMember.value.dateOfBirth ? isoToDateUTC(familyMember.value.dateOfBirth) : ''
   state.birthPlace = familyMember.value.birthPlace
-  state.birthTime = isoToTimeLocal(familyMember.value.birthTime)
+  state.birthTime = familyMember.value.birthTime ? isoToTimeUTC(familyMember.value.birthTime) : ''
   state.gender = familyMember.value.gender
   state.religion = familyMember.value.religion
   state.profession = familyMember.value.profession
   state.isAlive = !familyMember.value.deceased
-  state.dateOfDeath = isoToDateLocal(familyMember.value.dateOfDeath)
-  state.deathTime = isoToTimeLocal(familyMember.value.deathTime)
+  state.dateOfDeath = familyMember.value.dateOfDeath ? isoToDateUTC(familyMember.value.dateOfDeath) : ''
+  state.deathTime = familyMember.value.deathTime ? isoToTimeUTC(familyMember.value.deathTime) : ''
   state.deathPlace = familyMember.value.deathPlace
   state.causeOfDeath = familyMember.value.causeOfDeath
-  state.burialDate = isoToDateLocal(familyMember.value.burialDate)
+  state.burialDate = familyMember.value.burialDate ? isoToDateUTC(familyMember.value.burialDate) : ''
   state.burialPlace = familyMember.value.burialPlace
   state.internmentPlace = familyMember.value.internmentPlace
   const motherRel = familyMember.value.relationShipTree.find(r => r.relationship === 'mother')
@@ -408,8 +399,6 @@ const closeDialog = () => {
 const submitForm = async () => {
   const valid = await v$.value.$validate()
   if (!valid) return
-  const utcBirthTime = state.birthTime ? convertLocalTimeToUTCString(state.birthTime) : ''
-  const utcDeathTime = state.deathTime ? convertLocalTimeToUTCString(state.deathTime) : ''
   if (state.motherId && typeof state.motherId === 'object' && state.motherId.value) {
     state.motherId = state.motherId.value
   }
@@ -426,14 +415,14 @@ const submitForm = async () => {
         'short-description': state.shortDescription,
         'birth-last-name': state.birthLastName,
         'birth-place': state.birthPlace,
-        'birth-time': utcBirthTime,
+        'birth-time': state.birthTime,
         'date-of-birth': state.dateOfBirth,
         'gender': state.gender,
         'religion': state.religion,
         'profession': state.profession,
         'deceased': !state.isAlive,
         'date-of-death': state.dateOfDeath,
-        'death-time': utcDeathTime,
+        'death-time': state.deathTime,
         'death-place': state.deathPlace,
         'cause-of-death': state.causeOfDeath,
         'burial-date': state.burialDate,

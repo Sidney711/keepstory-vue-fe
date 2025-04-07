@@ -534,11 +534,9 @@ function formatTime(time: string): string {
   if (!time) return '';
   const d = new Date(time);
   if (isNaN(d.getTime())) return time;
-  return d.toLocaleTimeString(locale.value, {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  });
+  const hours = String(d.getUTCHours()).padStart(2, '0');
+  const minutes = String(d.getUTCMinutes()).padStart(2, '0');
+  return `${hours}:${minutes}`;
 }
 </script>
 
