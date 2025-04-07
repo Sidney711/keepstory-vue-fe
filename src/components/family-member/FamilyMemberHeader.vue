@@ -31,7 +31,7 @@
         <v-btn icon @click="$emit('delete')">
           <v-icon>mdi-delete</v-icon>
         </v-btn>
-        <v-btn icon @click="$emit('export')">
+        <v-btn data-testid="export-button" icon @click="$emit('export')">
           <v-icon>mdi-file-pdf-box</v-icon>
         </v-btn>
       </div>

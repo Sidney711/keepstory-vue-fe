@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" max-width="500">
+  <v-dialog data-testid="export-pdf-modal" v-model="dialog" max-width="500">
     <v-card>
       <v-card-title class="headline">{{ t('export_pdf.title') }}</v-card-title>
       <v-card-text>
