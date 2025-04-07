@@ -88,7 +88,7 @@
                   >
                     <v-list-item-content>
                       <router-link :to="`/family-member-detail/${relationship.id}`" class="hover:text-red-500">
-                        {{ relationship.firstName }} {{ relationship.lastName }} ({{ relationship.relationship }})
+                        {{ relationship.firstName }} {{ relationship.lastName }} ({{ $t('family.relationship.' + relationship.relationship) }})
                       </router-link>
                     </v-list-item-content>
                   </v-list-item>

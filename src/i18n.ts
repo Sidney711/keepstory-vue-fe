@@ -240,6 +240,13 @@ const messages = {
         female: "Žena",
         other: "Ostatní"
       },
+      relationship: {
+        mother: "Matka",
+        father: "Otec",
+        grandparent: "Prarodič",
+        descendant: "Potomek",
+        sibling: "Sourozenec"
+      },
       text: {
         birthDate: "nar."
       },
@@ -773,6 +780,13 @@ const messages = {
         male: "Male",
         female: "Female",
         other: "Other"
+      },
+      relationship: {
+        mother: "Mother",
+        father: "Father",
+        grandparent: "Grandparent",
+        descendant: "Descendant",
+        sibling: "Sibling"
       },
       hint: {
         dateOfDeath: "Enter the date of death"
