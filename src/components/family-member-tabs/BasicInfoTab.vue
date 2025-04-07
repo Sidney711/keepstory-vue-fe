@@ -28,7 +28,9 @@
                     <div><strong>{{ $t('family.label.birthTime') }}:</strong> {{ formatTime(member.birthTime) }}</div>
                   </v-col>
                   <v-col cols="12" md="6">
-                    <div><strong>{{ $t('family.label.gender') }}:</strong> {{ member.gender }}</div>
+                    <div>
+                      <strong>{{ $t('family.label.gender') }}:</strong> {{ translateGender(member.gender) }}
+                    </div>
                   </v-col>
                   <v-col cols="12" md="6">
                     <div><strong>{{ $t('family.label.religion') }}:</strong> {{ member.religion }}</div>
@@ -522,7 +524,7 @@ const props = defineProps<{
   member: FamilyMember;
 }>();
 
-const { locale } = useI18n();
+const { t, locale } = useI18n();
 
 function formatDate(date: string): string {
   if (!date) return '';
@@ -537,6 +539,20 @@ function formatTime(time: string): string {
   const hours = String(d.getUTCHours()).padStart(2, '0');
   const minutes = String(d.getUTCMinutes()).padStart(2, '0');
   return `${hours}:${minutes}`;
+}
+
+function translateGender(gender: string): string {
+  if (!gender) return '';
+  switch (gender) {
+    case 'male':
+      return t('family.gender.male');
+    case 'female':
+      return t('family.gender.female');
+    case 'other':
+      return t('family.gender.other');
+    default:
+      return gender;
+  }
 }
 </script>
 

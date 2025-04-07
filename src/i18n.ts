@@ -235,6 +235,11 @@ const messages = {
         hobbies: "Koníčky a zájmy",
         shortMessage: "Krátký vzkaz"
       },
+      gender: {
+        male: "Muž",
+        female: "Žena",
+        other: "Ostatní"
+      },
       text: {
         birthDate: "nar."
       },
@@ -763,6 +768,11 @@ const messages = {
         hobbies: "Hobbies and Interests",
         shortMessage: "Short Message",
         alive: "Alive"
+      },
+      gender: {
+        male: "Male",
+        female: "Female",
+        other: "Other"
       },
       hint: {
         dateOfDeath: "Enter the date of death"

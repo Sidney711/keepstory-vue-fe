@@ -68,6 +68,8 @@
                 v-model="state.gender"
                 :items="genderItems"
                 :label="t('family.label.gender')"
+                item-title="text"
+                item-value="value"
                 outlined
                 clearable
               />
@@ -332,7 +334,11 @@ const personsItems = computed(() =>
     }))
 )
 
-const genderItems = ['female', 'male', 'other']
+const genderItems = computed(() => [
+  { text: t('family.gender.female'), value: 'female' },
+  { text: t('family.gender.male'), value: 'male' },
+  { text: t('family.gender.other'), value: 'other' }
+])
 
 const resetForm = () => {
   if (!familyMember.value) return
