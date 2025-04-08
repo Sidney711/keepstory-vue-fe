@@ -1,7 +1,7 @@
 <template>
   <AppLayout>
     <v-container class="py-4" fluid>
-      <v-btn color="red" variant="tonal" class="mb-4" @click="openCreateModal">
+      <v-btn color="red" variant="tonal" class="mb-4" @click="openCreateModal" data-testid="open-create-modal-button">
         {{ t('family.button.create') }}
       </v-btn>
 

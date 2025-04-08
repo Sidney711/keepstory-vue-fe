@@ -9,6 +9,7 @@
           <div @click="focusEditor" style="height: 80vh;">
             <QuillEditor
               ref="quillRef"
+              data-testid="quill-editor"
               v-model:content="storyState.storyContent"
               :modules="modules"
               content-type="html"
@@ -25,6 +26,7 @@
               <v-row dense>
                 <v-col cols="12" lg="6">
                   <v-text-field
+                    data-testid="story-title-field"
                     v-model="storyState.storyTitle"
                     :label="t('story.label.title')"
                     :error-messages="v$.storyTitle.$errors.map(e => e.$message)"
@@ -34,6 +36,7 @@
                 </v-col>
                 <v-col cols="12" lg="6">
                   <v-select
+                    data-testid="selected-persons-select"
                     v-model="storyState.selectedPersons"
                     :items="personsItems"
                     :label="t('story.label.targetMembers')"
@@ -54,6 +57,7 @@
                 </v-col>
                 <v-col v-if="storyState.dateType === 'exact'">
                   <v-text-field
+                    data-testid="story-date-field"
                     v-model="storyState.storyDate"
                     :label="t('story.label.selectDate')"
                     type="date"
@@ -82,7 +86,7 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="red" variant="tonal" @click="publishStory">
+              <v-btn color="red" variant="tonal" @click="publishStory" data-testid="publish-story-button">
                 {{ t('story.button.publish') }}
               </v-btn>
             </v-card-actions>

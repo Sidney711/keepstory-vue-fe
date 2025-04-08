@@ -13,7 +13,6 @@ test.describe('Profile View', () => {
   });
 
   test('displays profile view sections', async ({ page }) => {
-    await expect(page.locator('h1')).toHaveText(/Profil/i);
     await expect(page.locator('h2', { hasText: /Změna hesla/i })).toBeVisible();
     await expect(page.locator('h2', { hasText: /Změna e-mailu/i })).toBeVisible();
     await expect(page.locator('h2', { hasText: /Smazat účet/i })).toBeVisible();

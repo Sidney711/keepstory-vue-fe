@@ -1,10 +1,11 @@
 <template>
-  <v-dialog v-model="dialog" max-width="500">
+  <v-dialog v-model="dialog" max-width="500" data-testid="create-member-modal">
     <v-card>
-      <v-card-title class="headline">{{ t('family.createMemberTitle') }}</v-card-title>
+      <v-card-title class="headline" data-testid="modal-title">{{ t('family.createMemberTitle') }}</v-card-title>
       <v-card-text>
         <v-form ref="form" @submit.prevent="submitForm">
           <v-text-field
+            data-testid="first-name-field"
             v-model="state.firstName"
             :label="t('family.label.firstName')"
             :error-messages="v$.firstName.$errors.map(e => e.$message)"
@@ -12,6 +13,7 @@
             required
           ></v-text-field>
           <v-text-field
+            data-testid="last-name-field"
             v-model="state.lastName"
             :label="t('family.label.lastName')"
             :error-messages="v$.lastName.$errors.map(e => e.$message)"
@@ -19,6 +21,7 @@
             required
           ></v-text-field>
           <v-text-field
+            data-testid="date-of-birth-field"
             v-model="state.dateOfBirth"
             :label="t('family.label.dateOfBirth')"
             type="date"
@@ -26,12 +29,14 @@
             @blur="v$.dateOfBirth.$touch"
           ></v-text-field>
           <v-checkbox
+            data-testid="is-alive-checkbox"
             v-model="state.isAlive"
             :label="t('family.label.isAlive')"
             @change="onAliveChange"
           ></v-checkbox>
           <v-text-field
             v-if="!state.isAlive"
+            data-testid="date-of-death-field"
             v-model="state.dateOfDeath"
             :label="t('family.label.dateOfDeath')"
             type="date"
@@ -43,8 +48,17 @@
         </v-form>
       </v-card-text>
       <v-card-actions>
-        <v-btn color="red" variant="tonal" @click="submitForm">{{ t('family.button.create') }}</v-btn>
-        <v-btn text @click="closeDialog">{{ t('general.cancel') }}</v-btn>
+        <v-btn
+          data-testid="create-family-member-button"
+          color="red"
+          variant="tonal"
+          @click="submitForm"
+        >
+          {{ t('family.button.create') }}
+        </v-btn>
+        <v-btn data-testid="cancel-create-member-button" text @click="closeDialog">
+          {{ t('general.cancel') }}
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
