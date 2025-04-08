@@ -235,6 +235,18 @@ const messages = {
         hobbies: "Koníčky a zájmy",
         shortMessage: "Krátký vzkaz"
       },
+      gender: {
+        male: "Muž",
+        female: "Žena",
+        other: "Ostatní"
+      },
+      relationship: {
+        mother: "Matka",
+        father: "Otec",
+        grandparent: "Prarodič",
+        descendant: "Potomek",
+        sibling: "Sourozenec"
+      },
       text: {
         birthDate: "nar."
       },
@@ -763,6 +775,18 @@ const messages = {
         hobbies: "Hobbies and Interests",
         shortMessage: "Short Message",
         alive: "Alive"
+      },
+      gender: {
+        male: "Male",
+        female: "Female",
+        other: "Other"
+      },
+      relationship: {
+        mother: "Mother",
+        father: "Father",
+        grandparent: "Grandparent",
+        descendant: "Descendant",
+        sibling: "Sibling"
       },
       hint: {
         dateOfDeath: "Enter the date of death"
