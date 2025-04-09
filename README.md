@@ -1,6 +1,6 @@
-# keepstory
+# Keepstory frontend
 
-This template should help get you started developing with Vue 3 in Vite.
+Here you can find the source code of the frontend part of the Keepstory application.
 
 ## Recommended IDE Setup
 
