@@ -104,6 +104,7 @@ import router from '@/router'
 import AppLayout from '@/layouts/AppLayout.vue'
 import { useFamilyMembersStore } from '@/stores/familyMemberStore'
 import BlotFormatter from 'quill-blot-formatter'
+import ImageCompress from 'quill-image-compress'
 import { StoriesService } from '@/services/storiesService'
 import type { NewStoryPayload } from '@/interfaces/stories'
 import { useSnackbar } from '@/composables/useSnackbar'
@@ -116,10 +117,27 @@ const { t } = useI18n()
 const { showSnackbar } = useSnackbar()
 const withI18nMessage = createI18nMessage({ t: i18n.global.t.bind(i18n) })
 
-const modules = {
-  name: 'blotFormatter',
-  module: BlotFormatter
-}
+const modules = [
+  {
+    name: 'imageCompress',
+    module: ImageCompress,
+    options: {
+      quality: 0.5,
+      maxWidth: 500,
+      maxHeight: 500,
+      imageType: 'image/jpeg',
+      debug: true,
+      suppressErrorLogging: false,
+      handleOnPaste: true,
+      insertIntoEditor: undefined,
+    },
+  },
+  {
+    name: 'blotFormatter',
+    module: BlotFormatter,
+    options: {},
+  },
+]
 
 const personId = ref<string>('')
 const route = useRoute()

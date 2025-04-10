@@ -107,15 +107,33 @@ import useVuelidate from '@vuelidate/core'
 import { required, maxLength, createI18nMessage } from '@vuelidate/validators'
 import { i18n } from '@/i18n'
 import { useI18n } from 'vue-i18n'
+import ImageCompress from 'quill-image-compress'
 
 const { t } = useI18n()
 const { showSnackbar } = useSnackbar()
 const withI18nMessage = createI18nMessage({ t: i18n.global.t.bind(i18n) })
 
-const modules = {
-  name: 'blotFormatter',
-  module: BlotFormatter
-}
+const modules = [
+  {
+    name: 'imageCompress',
+    module: ImageCompress,
+    options: {
+      quality: 0.5,
+      maxWidth: 500,
+      maxHeight: 500,
+      imageType: 'image/jpeg',
+      debug: true,
+      suppressErrorLogging: false,
+      handleOnPaste: true,
+      insertIntoEditor: undefined,
+    },
+  },
+  {
+    name: 'blotFormatter',
+    module: BlotFormatter,
+    options: {},
+  },
+]
 
 const personId = ref<string>('')
 const storyId = ref<string>('')
