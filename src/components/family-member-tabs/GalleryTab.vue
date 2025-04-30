@@ -17,7 +17,7 @@
           :key="item.id"
           class="mb-4 break-inside-avoid"
         >
-          <v-img :src="item.src" :alt="item.alt" class="rounded-lg relative">
+          <v-img crossorigin="anonymous" :src="item.src" :alt="item.alt" class="rounded-lg relative">
             <v-icon
               class="cursor-pointer hover:opacity-75 absolute top-2 left-2 bg-white rounded-full p-1"
               color="error"
@@ -113,14 +113,34 @@ const downloadGalleryItem = async (item: GalleryItem) => {
       throw new Error(t('gallery.photoDownloadError'));
     }
     const blob = await response.blob();
-    const url = window.URL.createObjectURL(blob);
+
+    const mime = response.headers.get('Content-Type') || blob.type;
+    const mimeToExt: Record<string, string> = {
+      'image/jpeg': 'jpg',
+      'image/png':  'png',
+      'image/webp': 'webp',
+      'image/gif':  'gif',
+      'image/avif': 'avif'
+    };
+    let ext = mimeToExt[mime];
+
+    if (!ext) {
+      const match = item.src.split('?')[0].match(/\.([a-z0-9]+)$/i);
+      ext = match ? match[1] : 'bin';
+    }
+
+    const baseName = (item.alt || 'download').replace(/\.[a-z0-9]+$/i, '');
+    const fileName = `${baseName}.${ext}`;
+
+    const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = (item.alt ? item.alt : 'download') + '.jpg';
+    a.download = fileName;
     document.body.appendChild(a);
     a.click();
-    document.body.removeChild(a);
-    window.URL.revokeObjectURL(url);
+    a.remove();
+    URL.revokeObjectURL(url);
+
     showSnackbar(t('gallery.photoDownloading'), 'success');
   } catch (error) {
     showSnackbar(t('gallery.photoDownloadError'), 'error');
